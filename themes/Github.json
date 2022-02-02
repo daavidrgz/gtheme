@@ -1,0 +1,35 @@
+{
+	"vscode": "",
+	"wallpaper": "",
+	"colors": {
+		"background": "f4f4f4",
+		"foreground": "3e3e3e",
+		"cursor": "3f3f3f",
+		"selection-background": "a9c1e2",
+		"selection-foreground": "f4f4f4", 
+		
+		"black": "3e3e3e",
+		"black-hg": "666666",
+		
+		"red": "970b16",
+		"red-hg": "de0000",
+		
+		"green": "07962a",
+		"green-hg": "87d5a2",
+		
+		"yellow": "f7edc7",
+		"yellow-hg": "f0cf06",
+		
+		"blue": "003e8a",
+		"blue-hg": "2e6cba",
+		
+		"magenta": "e94691",
+		"magenta-hg": "ffa29f",
+		
+		"cyan": "89d1ec",
+		"cyan-hg": "1cfafe",
+		
+		"white": "ffffff",
+		"white-hg": "ffffff"
+	}
+}

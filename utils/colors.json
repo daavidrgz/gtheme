@@ -1,0 +1,35 @@
+{
+	"vscode": "%vscode%",
+	"wallpaper": "%wallpaper%",
+	"colors": {
+		"background": "%background%",
+		"foreground": "%foreground%",
+		"cursor": "%cursor%",
+		"selection-background": "%selection-background%",
+		"selection-foreground": "%selection-foreground%", 
+		
+		"black": "%black%",
+		"black-hg": "%black-hg%",
+		
+		"red": "%red%",
+		"red-hg": "%red-hg%",
+		
+		"green": "%green%",
+		"green-hg": "%green-hg%",
+		
+		"yellow": "%yellow%",
+		"yellow-hg": "%yellow-hg%",
+		
+		"blue": "%blue%",
+		"blue-hg": "%blue-hg%",
+		
+		"magenta": "%magenta%",
+		"magenta-hg": "%magenta-hg%",
+		
+		"cyan": "%cyan%",
+		"cyan-hg": "%cyan-hg%",
+		
+		"white": "%white%",
+		"white-hg": "%white-hg%"
+	}
+}
