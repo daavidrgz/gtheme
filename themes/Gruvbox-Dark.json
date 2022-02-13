@@ -1,4 +1,5 @@
 {
+	"name": "Gruvbox-Dark",
 	"vscode": "Gruvbox Dark Medium",
 	"wallpaper": "~/.config/gtheme/wallpapers/Gruvbox/gruv-paint.png",
 	"colors": {

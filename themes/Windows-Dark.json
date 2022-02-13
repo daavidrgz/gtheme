@@ -1,4 +1,5 @@
 {
+	"name": "Windows-Dark",
 	"vscode": "Night Owl",
 	"wallpaper": "~/.config/gtheme/wallpapers/Windows/eleven-dark.jpg",
 	"colors": {

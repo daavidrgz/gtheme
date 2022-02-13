@@ -1,4 +1,5 @@
 {
+	"name": "Gruvbox-Light",
 	"vscode": "Gruvbox Light Medium",
 	"wallpaper": "~/.config/gtheme/wallpapers/Gruvbox/dark-archlinux.png",
 	"colors": {

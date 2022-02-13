@@ -1,0 +1,36 @@
+{
+	"name": "fav-themes",
+	"vscode": "",
+	"wallpaper": "",
+	"colors": {
+		"background": "",
+		"foreground": "",
+		"cursor": "",
+		"selection-background": "",
+		"selection-foreground": "", 
+		
+		"black": "",
+		"black-hg": "",
+		
+		"red": "",
+		"red-hg": "",
+		
+		"green": "",
+		"green-hg": "",
+		
+		"yellow": "",
+		"yellow-hg": "",
+		
+		"blue": "",
+		"blue-hg": "",
+		
+		"magenta": "",
+		"magenta-hg": "",
+		
+		"cyan": "",
+		"cyan-hg": "",
+		
+		"white": "",
+		"white-hg": ""
+	}
+}

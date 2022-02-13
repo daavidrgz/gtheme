@@ -1,6 +1,7 @@
 {
+	"name": "Horizon",
 	"vscode": "Horizon Dark",
-	"wallpaper": "~/.config/gtheme/wallpapers/Horizon/sunset.jpg",
+	"wallpaper": "~/.config/gtheme/wallpapers/Horizon/sunset-pier.jpg",
 	"colors": {
 		"background": "1C1E26",
 		"foreground": "BABABA",
