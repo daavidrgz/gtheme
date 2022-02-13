@@ -1,4 +1,4 @@
-%output-file%=./colors.conf
+%output-file%=~/colors.conf
 # %theme-name%
 
 foreground               #%foreground%

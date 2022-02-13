@@ -2,7 +2,6 @@
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::prelude::*;
-
 use regex::Regex;
 use serde::{Serialize,Deserialize};
 
@@ -55,9 +54,14 @@ impl Pattern{
 		assert!(re.is_match(&content),"Pattern does not have output file specified (hint: %output-file%=/path/to/output/file)");
 		let captured = re.captures(&content).unwrap();
 		//captured[0] is the whole matched expression.
+		let mut output_path = String::from(&captured[1]);
+		
+		output_path = shellexpand::tilde(&output_path).to_string();
+		output_path = shellexpand::env(&output_path).unwrap().to_string();
+
 		Pattern{
 			path: String::from(path),
-			output:String::from(&captured[1])
+			output:output_path
 		}
 	}
 }
