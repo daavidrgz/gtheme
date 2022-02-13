@@ -1,0 +1,74 @@
+configuration {
+    font:                           "RobotoMono Nerd Font Bold 11";
+    bw: 							0;
+    location: 					    0;
+    padding: 						0;
+    fixed-num-lines: 				true;
+    show-icons: 					false;
+    sidebar-mode: 					true;
+    separator-style: 				"beam";
+    hide-scrollbar: 				true;
+    scroll-method: 					0;
+    window-format: 					"[{w}] ··· {c} ···   {t}";
+    click-to-exit: 					true;
+    show-match: 					false;
+    combi-hide-mode-prefix: 		false;
+    display-window: 				"Window";
+    display-windowcd: 				"Windowcd";
+    display-run: 					"Commands";
+    display-ssh: 					"Ssh";
+    display-drun: 					" start   ";
+    display-combi: 					"Combi";
+}
+
+@import "~/.config/rofi/colors.rasi"
+
+window {
+    background-color:    @bg;
+    border-radius:       14px;
+    anchor:              south;
+    location:            south;
+    width:               100%;
+    padding:             6px;
+    children:            [ horibox ];
+    border:              3px solid;
+    border-color:        @fg;
+    margin:              5px 5px;
+}
+
+horibox {
+    background-color: @bg;
+    orientation: horizontal;
+    children:   [ entry, listview ];
+}
+
+listview {
+    padding:    0 2px;
+    border:     0px;
+    layout:     horizontal;
+    spacing:    10px;
+    lines:      100;
+}
+
+entry {
+    text-color: @fg;
+    margin:     2px 0 0 15px;
+    expand:     false;
+    width:      10em;
+}
+
+element {
+    padding: 2px 5px;
+}
+element normal.normal {
+    background-color: 				@bg;
+    text-color:       				@fg;
+}
+element alternate.normal {
+    background-color: 				@bg;
+    text-color:       				@fg;
+}
+element selected.normal {
+    background-color: 				@bg;
+    text-color:       				@fg;
+}

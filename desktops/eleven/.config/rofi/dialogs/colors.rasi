@@ -1,0 +1,5 @@
+* {
+		BG:    #000000ff;
+		FG:    #F5F5F5ff;
+		BDR:   #29A0FFff;
+}

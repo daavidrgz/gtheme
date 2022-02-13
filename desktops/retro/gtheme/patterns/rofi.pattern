@@ -1,0 +1,11 @@
+%output-file%=~/.config/rofi/colors.rasi
+// %theme-name%
+
+* {
+  background-color:      #%background%;
+  text-color:            #%foreground%;
+
+  bg: @background-color;
+  fg: @text-color;
+  accent: #%green%;
+}

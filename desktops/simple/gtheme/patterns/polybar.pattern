@@ -1,0 +1,6 @@
+%output-file%=~/.config/polybar/colors.ini
+;; %theme-name%
+
+[color]
+background = #00000000
+foreground = #%background%

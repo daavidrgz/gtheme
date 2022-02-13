@@ -1,0 +1,16 @@
+awesome
+picom-ibhagwan fork
+kitty
+rofi
+feh
+pulseaudio
+brightnessctl
+
+-----
+
+flameshot (Optional)
+firejail (Optional)
+firefox (Optional)
+ranger (Optional)
+better-discord (Optional)
+spicetify (Optional)

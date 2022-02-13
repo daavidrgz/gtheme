@@ -1,0 +1,24 @@
+bspwm
+sxhkd
+picom-ibhagwan fork
+rofi
+kitty
+dunst
+pamixer
+feh
+flameshot
+brightnessctl
+playerctl
+xob
+tint2
+
+-----
+
+pulsectl (pip)
+
+-----
+
+alacritty (Optional)
+better-discord (Optional)
+spicetify (Optional)
+ranger (Optional)

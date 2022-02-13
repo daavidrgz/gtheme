@@ -1,0 +1,54 @@
+configuration {
+  disable-history:  false;
+	sidebar-mode:			false;
+}
+
+@import "~/.config/rofi/colors.rasi"
+
+window {
+	transparency:                   "real";
+	border-radius:                  12px;
+	location:                       south west;
+	x-offset:                       88px;
+	y-offset:                       -32px;
+	width:                          90px;
+}
+
+listview {
+	columns:                        1;
+	lines:                          5;
+	margin:                         5px;
+	spacing:                        5px;
+	cycle:                          false;
+	layout:                         vertical;
+	dynamic: true;
+}
+
+mainbox {
+  children:                       [ listview ];
+}
+
+element {
+	background-color:               @button;
+	orientation:                    vertical;
+	border-radius:                  10px;
+}
+
+element-text {
+	font:				"DejaVuSansMono Nerd Font 18";
+	expand:                         false;
+	horizontal-align:               0.5;
+	vertical-align:		    	1;
+	margin:                         5px 22px 25px 20px;
+}
+
+element-text, element-icon {
+	background-color: 		transparent;
+	text-color:       		inherit;
+}
+
+element selected {
+	background-color:               @accent;
+	text-color:                     @bg;
+	border-radius:                  10px;
+}

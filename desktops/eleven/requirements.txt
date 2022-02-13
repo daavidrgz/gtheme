@@ -1,0 +1,17 @@
+install themes/* in /usr/share/themes
+install icons/* in /usr/share/icons
+
+-- Apps
+
+thunar
+dunstify
+dmenu
+alacritty
+kitty
+firefox
+mpd
+dunst
+
+-- Font
+
+Segoe UI Variable (inluded)

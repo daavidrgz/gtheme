@@ -1,0 +1,5 @@
+#!/bin/sh
+
+killall -q xob
+$HOME/.config/xob/manage-volume | xob -s vol &
+$HOME/.config/xob/manage-brightness | xob -s brightness &

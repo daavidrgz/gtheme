@@ -1,0 +1,13 @@
+//  -------- Gtheme: Japan --------
+
+* {
+  bg:         #f5f4f0;
+  fg:         #3D495B;
+  se:         #3D495B;
+  red:        #F7AA9D;
+  green:      #D8E9A8;
+  yellow:     #FFE699;
+  blue:       #9DB9C5;
+  magenta:    #EBBDCB;
+  cyan:       #C8D1E4;
+}

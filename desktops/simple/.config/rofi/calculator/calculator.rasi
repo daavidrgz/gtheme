@@ -1,0 +1,156 @@
+//  ██████╗ █████╗ ██╗      ██████╗██╗   ██╗██╗      █████╗ ████████╗ ██████╗ ██████╗ 
+// ██╔════╝██╔══██╗██║     ██╔════╝██║   ██║██║     ██╔══██╗╚══██╔══╝██╔═══██╗██╔══██╗
+// ██║     ███████║██║     ██║     ██║   ██║██║     ███████║   ██║   ██║   ██║██████╔╝
+// ██║     ██╔══██║██║     ██║     ██║   ██║██║     ██╔══██║   ██║   ██║   ██║██╔══██╗
+// ╚██████╗██║  ██║███████╗╚██████╗╚██████╔╝███████╗██║  ██║   ██║   ╚██████╔╝██║  ██║
+//  ╚═════╝╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝
+
+
+configuration {
+    font: 							"FiraCode Nerd Font Medium 11";
+    fixed-num-lines: 				true;
+    show-icons: 					false;
+    icon-theme:                     "Papirus";
+    sidebar-mode: 					true;
+    scroll-method: 					0;
+    window-format: 					"[{w}] ··· {c} ···   {t}";
+    click-to-exit: 					true;
+    combi-hide-mode-prefix: 		false;
+    display-calc: 				    "";
+}
+
+@import "~/.config/rofi/colors.rasi"
+
+* {
+    background-color:             	@bg;
+}
+
+window {
+    border: 						0px;
+    border-color: 					@blue;
+    border-radius: 					6px;
+    padding: 						15px;
+    width: 							35%;
+}
+
+prompt {
+    margin:                         10px;
+    spacing: 						0;
+    border: 						0;
+    text-color: 					@fg;
+}
+
+textbox-prompt-colon {
+    font:                           "FiraCode Nerd Font Medium 14";
+    expand: 						false;
+    str: 							" ";
+    margin:							0px 4px 0px 0px;
+    text-color: 					inherit;
+}
+
+entry {
+    font:                           "FiraCode Nerd Font Medium 14";
+    spacing:    					0;
+    text-color: 					@fg;
+}
+
+case-indicator {
+    spacing:    					0;
+    text-color: 					@fg;
+}
+
+inputbar {
+    spacing:    					0px;
+    text-color: 					@fg;
+    padding:    					1px;
+    children: 						[ prompt,textbox-prompt-colon,entry,case-indicator ];
+}
+
+mainbox {
+    border: 						0px;
+    border-color: 					@ac;
+    padding: 						6;
+}
+
+listview {
+    margin:                         20px 0;
+    lines:							6;
+    columns:						1;
+    fixed-height: 					0;
+    border: 						2px 0 0 0;
+    border-color: 					@blue;
+    spacing: 						4px;
+    scrollbar: 						false;
+    padding: 						10px 5px 0px 5px;
+}
+
+element-text, element-icon {
+    background-color: #00000000;
+    text-color:       inherit;
+}
+element-icon {
+    padding: 0px 10px;
+}
+
+element {
+    border: 						0px;
+    border-radius: 					4px;
+    padding: 						6px;
+}
+element normal.normal {
+    background-color: 				@bg;
+    text-color:       				@fg;
+}
+element normal.urgent {
+    background-color: 				@bg;
+    text-color:       				@red;
+}
+element normal.active {
+    background-color: 				@bg;
+    text-color:       				@bg;
+}
+element selected.normal {
+    background-color: 				@bg;
+    text-color:       				@fg;
+}
+element selected.urgent {
+    background-color: 				@bg;
+    text-color:       				@red;
+}
+element selected.active {
+    background-color: 				@bg;
+    text-color:       				@bg;
+}
+element alternate.normal {
+    background-color: 				@bg;
+    text-color:       				@fg;
+}
+element alternate.urgent {
+    background-color: 				@bg;
+    text-color:       				@fg;
+}
+element alternate.active {
+    background-color: 				@bg;
+    text-color:       				@fg;
+}
+
+sidebar {
+    border-radius: 					0px;
+}
+
+
+scrollbar {
+    width:        					4px;
+    border:       					0px;
+    handle-color: 					@fg;
+    handle-width: 					8px;
+    padding:      					0;
+}
+
+message {
+    padding: 						1px;
+}
+
+textbox {
+    text-color: 					@fg;
+}

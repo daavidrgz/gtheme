@@ -1,0 +1,3 @@
+colorscheme default
+
+set output_plugin=pulse

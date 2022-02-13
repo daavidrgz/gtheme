@@ -1,0 +1,26 @@
+-- Apps
+
+bspwm
+sxhkd
+polybar
+rofi
+dunst
+paperview (https://github.com/glouw/paperview)
+firefox
+kitty
+pamixer
+birghtnessctl
+dunstify
+pacman-contrib
+
+-- Fonts
+
+mononoki Nerd Font (included)
+
+-- Optional
+
+firejail (Secure browser)
+flameshot (Screenshots)
+newsboat (News)
+mpd (Music daemon)
+mpd-notification (Music notifications)

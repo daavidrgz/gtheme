@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# •• Wallpaper
+~/.fehbg
+
+# •• Keymap
+setxkbmap es
+
+# •• Polybar
+~/.config/polybar/launch.sh
+
+# •• Compositor
+picom --experimental-backends &
+
+# •• Notifications
+dunst &
+
+# •• Audio daemon
+mpd &
+
+# •• Key press rate
+xset r rate 200 40

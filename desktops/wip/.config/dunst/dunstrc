@@ -1,0 +1,185 @@
+#  -------- Gtheme: Tomorrow-Night-Blue --------
+
+# ██████╗ ██╗   ██╗███╗   ██╗███████╗████████╗
+# ██╔══██╗██║   ██║████╗  ██║██╔════╝╚══██╔══╝
+# ██║  ██║██║   ██║██╔██╗ ██║███████╗   ██║   
+# ██║  ██║██║   ██║██║╚██╗██║╚════██║   ██║   
+# ██████╔╝╚██████╔╝██║ ╚████║███████║   ██║   
+# ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚══════╝   ╚═╝   
+                              
+[global]
+#----------------------
+#   DISPLAY
+#----------------------
+
+monitor = 0
+follow = mouse
+per_monitor_dpi = false
+
+#----------------------
+#   GENERAL
+#----------------------
+
+show_age_threshold = 120
+stack_duplicates = false
+hide_duplicate_count = false
+show_indicators = yes
+indicate_hidden = yes
+browser = /usr/bin/firefox
+
+always_run_script = true
+startup_notification = false
+verbosity = mesg
+force_xinerama = false
+
+#----------------------
+#   FRAME
+#----------------------
+
+geometry = "300x100-32+32"
+corner_radius = 4
+
+shrink = no
+
+transparency = 0
+
+notification_height = 1
+separator_height = 0
+line_height = 6
+padding = 30
+horizontal_padding = 30
+frame_width = 0
+
+frame_color = "#d0f0a8"
+separator_color = frame
+
+sort = yes
+
+idle_threshold = 120
+
+progress_bar = true
+progress_bar_height = 5
+progress_bar_frame_width = 0
+
+#----------------------
+#   FORMAT
+#----------------------
+
+font = DejaVuSansMono Nerd Font Medium 11
+markup = full
+format = "<b>%a</b> | %s\n%b\n"
+alignment = left
+word_wrap = yes
+ellipsize = middle
+ignore_newline = no
+
+#----------------------
+#   ICONS
+#----------------------
+
+icon_position = left
+text_icon_padding = 0
+min_icon_size = 32
+max_icon_size = 70
+
+icon_path = /usr/share/icons/Papirus/64x64/apps
+
+#----------------------
+#   HISTORY
+#----------------------
+
+sticky_history = yes
+
+history_length = 20
+
+#----------------------
+#   MOUSE INTERACTION
+#----------------------
+
+mouse_left_click = do_action
+mouse_middle_click = close_all
+mouse_right_click = close_current
+
+#----------------------
+#   URGENCY LEVELS
+#----------------------
+
+[urgency_low]
+background = "#002450"
+foreground = "#fffefe"
+highlight = "#99ffff"
+timeout = 5
+icon = /usr/share/icons/Papirus/48x48/emblems/emblem-information.svg
+
+[urgency_normal]
+background = "#002450"
+foreground = "#fffefe"
+highlight = "#99ffff"
+timeout = 5
+icon = /usr/share/icons/Papirus/48x48/emblems/emblem-information.svg
+
+[urgency_critical]
+background = "#002450"
+foreground = "#fffefe"
+highlight = "#ff9ca3"
+timeout = 5
+icon = /usr/share/icons/Papirus/48x48/emblems/emblem-important.svg
+
+#----------------------
+#   CUSTOM RULES
+#----------------------
+
+# •• System General
+
+[system]
+appname = System
+new_icon = /usr/share/icons/Papirus/48x48/apps/applications-system.svg
+
+[bspwm]
+appname = System
+summary = bspwm
+new_icon = /usr/share/icons/Papirus/48x48/apps/applications-system.svg
+
+[sxhkd]
+appname = System
+summary = sxhkd
+new_icon = /usr/share/icons/dunst/system/sxhkd.svg
+
+# •• Backlight
+
+[backlight0]
+format = "<b>%s</b>"
+appname = System
+summary = Brightness: [0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-display-brightness-low.svg
+[backlight1]
+format = "<b>%s</b>"
+appname = System
+summary = Brightness: [0-3][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-display-brightness-low.svg
+[backlight2]
+format = "<b>%s</b>"
+appname = System
+summary = Brightness: [4-6][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-display-brightness-medium.svg
+[backlight3]
+format = "<b>%s</b>"
+appname = System
+summary = Brightness: [7-9][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-display-brightness-high.svg
+[backlight4]
+format = "<b>%s</b>"
+appname = System
+summary = Brightness: [7-9][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-display-brightness-full.svg
+
+# •• Applications
+
+[flameshot]
+appname = flameshot
+format = "<b>%a</b>\n%b"
+timeout = 3
+
+[spotify]
+appname = Spotify
+format = "<b>%s</b>\n%b"

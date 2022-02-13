@@ -1,0 +1,153 @@
+%output-file%=~/.config/dunst/dunstrc
+# %theme-name%
+
+# ██████╗ ██╗   ██╗███╗   ██╗███████╗████████╗
+# ██╔══██╗██║   ██║████╗  ██║██╔════╝╚══██╔══╝
+# ██║  ██║██║   ██║██╔██╗ ██║███████╗   ██║   
+# ██║  ██║██║   ██║██║╚██╗██║╚════██║   ██║   
+# ██████╔╝╚██████╔╝██║ ╚████║███████║   ██║   
+# ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚══════╝   ╚═╝   
+                              
+[global]
+monitor = 0
+follow = mouse
+per_monitor_dpi = false
+indicate_hidden = no
+shrink = no
+transparency = 0
+notification_height = 0
+separator_height = 3
+padding = 10
+horizontal_padding = 20
+frame_width = 2
+frame_color = "#%cyan%"
+separator_color = frame
+sort = no
+idle_threshold = 0
+
+### Position ###
+origin = top-right
+offset = 15x50
+
+### Text ###
+
+font = mononoki Nerd Font 11
+line_height = 10
+markup = full
+format = "<b>%s</b>\n%b"
+alignment = right
+show_age_threshold = -1
+word_wrap = no
+ellipsize = middle
+ignore_newline = yes
+stack_duplicates = false
+hide_duplicate_count = true
+show_indicators = no
+
+### Icons ###
+icon_position = left
+max_icon_size = 64
+sticky_history = yes
+icon_path = /usr/share/icons/Papirus/64x64/apps
+
+# Maximum amount of notifications kept in history
+history_length = 1
+title = Dunst
+class = Dunst
+startup_notification = false
+
+[urgency_low]
+background = "#%background%"
+foreground = "#%foreground%"
+timeout = 3
+highlight = "#%blue%"
+
+[urgency_normal]
+background = "#%background%"
+foreground = "#%foreground%"
+timeout = 3
+highlight = "#%blue%"
+
+[urgency_critical]
+background = "#%background%"
+foreground = "#%foreground%"
+timeout = 3
+highlight = "#%blue%"
+
+[repeater]
+background = "#%background%"
+foreground = "#%foreground%"
+timeout = 4
+
+# •• Volume
+
+[volume0]
+format = "<b>%s</b>"
+appname = System
+summary = Volume: [0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-audio-volume-high.svg
+[volume1]
+format = "<b>%s</b>"
+appname = System
+summary = Volume: [0-3][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-audio-volume-low.svg
+[volume2]
+format = "<b>%s</b>"
+appname = System
+summary = Volume: [4-6][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-audio-volume-medium.svg
+[volume3]
+format = "<b>%s</b>"
+appname = System
+summary = Volume: [7-9][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-audio-volume-high.svg
+
+[sound_off]
+format = "<b>%s</b>"
+appname = System
+summary = "Audio Muted"
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-audio-volume-muted.svg
+[sound_on]
+format = "<b>%s</b>"
+appname = System
+summary = "Audio Unmuted"
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-audio-volume-low.svg
+
+# •• Backlight
+
+[backlight0]
+format = "<b>%s</b>"
+appname = System
+summary = Brightness: [0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-display-brightness-low.svg
+[backlight1]
+format = "<b>%s</b>"
+appname = System
+summary = Brightness: [0-3][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-display-brightness-low.svg
+[backlight2]
+format = "<b>%s</b>"
+appname = System
+summary = Brightness: [4-6][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-display-brightness-medium.svg
+[backlight3]
+format = "<b>%s</b>"
+appname = System
+summary = Brightness: [7-9][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-display-brightness-high.svg
+[backlight4]
+format = "<b>%s</b>"
+appname = System
+summary = Brightness: [7-9][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-display-brightness-full.svg
+
+# •• Applications
+
+[flameshot]
+appname = flameshot
+format = "<b>%a</b>\n%b"
+timeout = 3
+
+[spotify]
+appname = Spotify
+format = "<b>%s</b>\n%b"

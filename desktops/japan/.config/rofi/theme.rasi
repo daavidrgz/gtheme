@@ -1,0 +1,79 @@
+configuration {
+	modi: "window,run,drun";
+	font: "mononoki Nerd Font 13";
+	show-icons: false;
+}
+
+@import "~/.config/rofi/colors.rasi"
+
+* {
+  background-color: @bg;
+  highlight: bold underline;
+}
+
+window {
+  transparency: "real";
+  fullscreen: false;
+  width: 50%;
+}
+
+mainbox {
+  padding: 3%;
+  border: 2px solid;
+  border-color: @fg;
+}
+
+inputbar {
+  margin: 0px 0px 20px 0px;
+  children: [textbox-prompt-colon, entry];
+}
+
+prompt {
+  text-color: @blue;
+}
+
+textbox-prompt-colon {
+  expand: false;
+  str: " ";
+  text-color: @blue;
+}
+
+entry {
+  margin: 0px 0px;
+  blink: false;
+  text-color: @fg;
+}
+
+listview {
+  spacing: 4px;
+  dynamic: true;
+  scrollbar: false;
+  lines: 10;
+  columns: 2;
+  fixed-height: true;
+}
+
+element {
+  padding: 8px;
+}
+element-text {
+  text-color: @magenta;
+}
+element-text selected.normal {
+  text-color: @green;
+}
+
+message {
+  padding: 5px;
+  border-radius: 3px;
+  background-color: @yellow;
+  border: 1px;
+  border-color: @fg;
+  text-color: @fg;
+}
+
+button selected {
+  padding: 5px;
+  border-radius: 3px;
+  background-color: @magenta;
+}
