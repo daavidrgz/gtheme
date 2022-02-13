@@ -1,5 +1,5 @@
 %output-file%=./colors.conf
-# %theme-name%
+# %name%
 
 foreground               #%foreground%
 background               #%background%

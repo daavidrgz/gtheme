@@ -1,11 +1,9 @@
 use std::collections::HashMap;
 use std::fs::{self,File};
 use std::io::prelude::*;
-use regex::Regex;
 use serde::{Serialize,Deserialize};
 
 use crate::core;
-use crate::core::pattern::Pattern;
 
 
 #[derive(Debug,Serialize,Deserialize)]
@@ -19,40 +17,18 @@ pub struct Theme{
 impl Theme{
 
 	//TODO: from str or from ThemeFile??
-	pub fn from(path:&str)-> Self{
-		let mut file = File::open(path).expect("Could not open theme file");
+	pub fn from(theme:&ThemeFile)-> Self{
+		let mut file = File::open(theme.get_path()).expect("Could not open theme file");
 		let mut content = String::new();
 		file.read_to_string(&mut content).expect("Could not read theme file");
 		serde_json::from_str(&content).expect("Error while deserializing theme file")
 	}
-	pub fn fill_pattern(&self,pattern:&Pattern){
-		let mut pattern_file = File::open(pattern.get_path()).expect(&format!("Could not open file: {}",pattern.get_path()));
 	
-		let mut content = String::new();
-		pattern_file.read_to_string(&mut content).expect(&format!("Could not read content from: {}",pattern.get_path()));
-		
-		let filled_content =self.fill(content);
-	
-		let mut output_file = File::create(pattern.get_output()).expect(&format!("Could not create file: {}",pattern.get_output()));
-		output_file.write_all(filled_content.as_bytes()).expect(&format!("Could not write content to: {}",pattern.get_output()));
-	}
-	fn fill(&self,content:String) -> String{
-	
-		let mut result = content;
-		for (key,value) in self.colors.iter(){
-			let re = Regex::new(&format!("%{}%",key)).unwrap();
-			result = re.replace_all(&result,value).into_owned();
-		}
-		result
-	}
 	pub fn get_themes()->Vec<ThemeFile>{
 		let gtheme_home:String= core::expand_path("~/github/gtheme");
 		let themes_dir = gtheme_home+"/themes";
 		let entries = fs::read_dir(&themes_dir).expect(&format!("Could not read directory:{}",&themes_dir));
 
-		// let entries_str:Vec<String> = entries.map(|entry|entry.unwrap().file_name().into_string().unwrap()).collect();
-
-		// entries_str
 		let mut vec = Vec::new();
 		for entry in entries{
 			let entry = entry.expect(&format!("Error while reading entry from dir: {}",&themes_dir));
@@ -68,6 +44,8 @@ impl Theme{
 		vec.sort_by(|a,b| a.get_name().to_lowercase().cmp(&b.get_name().to_lowercase()));
 		vec
 	}
+
+	//TODO: inverted theme
 	
 }
 
@@ -77,6 +55,9 @@ pub struct ThemeFile{
 	path:String,
 }
 impl ThemeFile{
+	pub fn to_theme(&self)->Theme{
+		Theme::from(self)
+	}
 	pub fn get_name(&self) ->&String{
 		&self.name
 	}

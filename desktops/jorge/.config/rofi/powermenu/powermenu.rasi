@@ -1,0 +1,119 @@
+// ██████╗  ██████╗ ██╗    ██╗███████╗██████╗ ███╗   ███╗███████╗███╗   ██╗██╗   ██╗
+// ██╔══██╗██╔═══██╗██║    ██║██╔════╝██╔══██╗████╗ ████║██╔════╝████╗  ██║██║   ██║
+// ██████╔╝██║   ██║██║ █╗ ██║█████╗  ██████╔╝██╔████╔██║█████╗  ██╔██╗ ██║██║   ██║
+// ██╔═══╝ ██║   ██║██║███╗██║██╔══╝  ██╔══██╗██║╚██╔╝██║██╔══╝  ██║╚██╗██║██║   ██║
+// ██║     ╚██████╔╝╚███╔███╔╝███████╗██║  ██║██║ ╚═╝ ██║███████╗██║ ╚████║╚██████╔╝
+// ╚═╝      ╚═════╝  ╚══╝╚══╝ ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝ ╚═════╝ 
+
+
+configuration {
+    font:							"FiraCode Nerd Font Medium 14";
+    show-icons:                     false;
+    icon-theme: 					"Papirus";
+    drun-display-format:            "{name}";
+    disable-history:                false;
+    sidebar-mode: 					false;
+}
+
+@import "~/.config/rofi/colors.rasi"
+
+window {
+    transparency:                   "real";
+    background-color:               @bg;
+    text-color:                     @fg;
+    border-radius:                  0px;
+    width:							100%;
+    height:							100%;
+}
+
+prompt {
+    enabled: 						true;
+    padding:                        1% 1% 1% 0%;
+    background-color: 				@blue;
+    text-color: 					@bg;
+}
+
+textbox-prompt-colon {
+    expand: 						false;
+    str: 							"System |";
+    background-color: 				@blue;
+    text-color: 					@bg;
+    padding:                        1% 0.5% 1% 0.5%;
+}
+
+inputbar {
+    children: 						[ textbox-prompt-colon, prompt ];
+    background-color:               @blue;
+    text-color:                     @fg;
+    expand:                         false;
+    border:                  		0;
+    border-radius:                  1%;
+    border-color:                  	@bg;
+    margin:                         0% 59.3% 0% 0%;
+    padding:                        0.5%;
+    position:                       center;
+}
+
+listview {
+    background-color:               @bg;
+    margin:                         0% 0% 0% 0%;
+    spacing:                        3%;
+    cycle:                          true;
+    dynamic:                        true;
+    layout:                         horizontal;
+}
+
+mainbox {
+    background-color:               @bg;
+    children:                       [ inputbar, listview ];
+    spacing:                        5%;
+    padding:                        32.50% 0% 0% 10%;
+}
+
+element {
+    background-color:               @blue;
+    text-color:                     @bg;
+    orientation:                    horizontal;
+    border-radius:                  5%;
+}
+
+element-text {
+    background-color: 				#00000000;
+    text-color:       				inherit;
+    font:							"feather 64";
+    expand:                         true;
+    horizontal-align:               0.5;
+    vertical-align:                 0.5;
+    margin:                         6.5% 4% 6.5% 4%;
+}
+
+element normal.urgent,
+element alternate.urgent {
+    background-color:               @red;
+    text-color:                     @fg;
+    border-radius:                  0.2%;
+}
+
+element normal.active,
+element alternate.active {
+    background-color:               @blue;
+    text-color:                     @fg;
+}
+
+element selected {
+    background-color:               @blue;
+    text-color:                     @fg;
+    border:                  		0% 0.2% 0.2% 0%;
+    border-radius:                  5%;
+    border-color:                  	@fg;
+}
+
+element selected.urgent {
+    background-color:               @red;
+    text-color:                     @fg;
+}
+
+element selected.active {
+    background-color:               @blue;
+    color:                          @fg;
+}

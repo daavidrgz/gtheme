@@ -1,0 +1,41 @@
+%output-file%=/home/jorge/.config/kitty/colors.conf
+# %theme-name%
+
+foreground               #%foreground%
+background               #%background%
+selection_foreground     #%selection-foreground%
+selection_background     #%selection-background%
+
+url_color                #%magenta%
+
+cursor                   #%cursor%
+cursor_text_color        #%foreground%
+
+active_tab_foreground    #%foreground%
+active_tab_background    #%black%
+inactive_tab_foreground  #%black-hg%
+inactive_tab_background  #%background%
+
+color0   #%black%
+color8   #%black-hg%
+
+color1   #%red%
+color9   #%red-hg%
+
+color2   #%green%
+color10  #%green-hg%
+
+color3   #%yellow%
+color11  #%yellow-hg%
+
+color4   #%blue%
+color12  #%blue-hg%
+
+color5   #%magenta%
+color13  #%magenta-hg%
+
+color6   #%cyan%
+color14  #%cyan-hg%
+
+color7   #%white%
+color15  #%white-hg%

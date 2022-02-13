@@ -1,0 +1,38 @@
+#!/bin/sh
+
+# ██████╗ ███████╗██████╗ ██╗    ██╗███╗   ███╗
+# ██╔══██╗██╔════╝██╔══██╗██║    ██║████╗ ████║
+# ██████╔╝███████╗██████╔╝██║ █╗ ██║██╔████╔██║
+# ██╔══██╗╚════██║██╔═══╝ ██║███╗██║██║╚██╔╝██║
+# ██████╔╝███████║██║     ╚███╔███╔╝██║ ╚═╝ ██║
+# ╚═════╝ ╚══════╝╚═╝      ╚══╝╚══╝ ╚═╝     ╚═╝
+
+# •• Wallpaper
+~/.fehbg
+
+# •• Polybar
+~/.config/polybar/launch.sh
+
+pgrep -x sxhkd >/dev/null || sxhkd &
+
+bspc monitor eDP-1 -d I II III IV V VI VII VIII IX X
+bspc monitor HDMI-1 -d I II III IV V VI VII VIII IX X
+
+bspc config border_width         0
+bspc config window_gap          12
+
+bspc config split_ratio          0.52
+bspc config borderless_monocle   true
+bspc config gapless_monocle      true
+
+bspc rule -a Zathura state=tiled
+
+# •• Keymap
+setxkbmap -layout us -variant altgr-intl
+
+# •• Compositor
+picom --experimental-backends &
+
+# •• Key press rate
+xset r rate 200 40
+

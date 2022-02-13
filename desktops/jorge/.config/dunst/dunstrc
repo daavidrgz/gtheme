@@ -1,0 +1,316 @@
+#  -------- Gtheme: Snazzy --------
+
+# ██████╗ ██╗   ██╗███╗   ██╗███████╗████████╗
+# ██╔══██╗██║   ██║████╗  ██║██╔════╝╚══██╔══╝
+# ██║  ██║██║   ██║██╔██╗ ██║███████╗   ██║   
+# ██║  ██║██║   ██║██║╚██╗██║╚════██║   ██║   
+# ██████╔╝╚██████╔╝██║ ╚████║███████║   ██║   
+# ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚══════╝   ╚═╝   
+                              
+[global]
+#----------------------
+#   DISPLAY
+#----------------------
+
+monitor = 0
+
+follow = mouse
+
+per_monitor_dpi = false
+
+#----------------------
+#   GENERAL
+#----------------------
+
+show_age_threshold = 120
+
+stack_duplicates = true
+hide_duplicate_count = false
+
+show_indicators = no
+indicate_hidden = yes
+
+browser = /usr/bin/firefox
+
+always_run_script = true
+
+startup_notification = false
+
+verbosity = mesg
+
+force_xinerama = false
+
+#----------------------
+#   FRAME
+#----------------------
+
+geometry = "320x480-11+32"
+corner_radius = 6
+
+shrink = no
+
+transparency = 0
+
+notification_height = 0
+separator_height = 2
+line_height = 4
+padding = 12
+horizontal_padding = 20
+frame_width = 0
+
+frame_color = "#5AF78E"
+separator_color = frame
+
+sort = yes
+
+idle_threshold = 120
+
+progress_bar = true
+progress_bar_height = 5
+progress_bar_frame_width = 0
+
+#----------------------
+#   FORMAT
+#----------------------
+
+font = DejaVuSansMono Nerd Font Medium 11
+
+markup = full
+
+format = "<b>%a</b> | %s\n%b\n"
+
+alignment = center
+
+word_wrap = yes
+
+ellipsize = middle
+
+ignore_newline = no
+
+#----------------------
+#   ICONS
+#----------------------
+
+icon_position = left
+
+text_icon_padding = 0
+
+min_icon_size = 32
+max_icon_size = 40
+
+icon_path = /usr/share/icons/Papirus/64x64/apps
+
+#----------------------
+#   HISTORY
+#----------------------
+
+sticky_history = yes
+
+history_length = 20
+
+#----------------------
+#   MOUSE INTERACTION
+#----------------------
+
+mouse_left_click = do_action
+mouse_middle_click = close_all
+mouse_right_click = close_current
+
+#----------------------
+#   URGENCY LEVELS
+#----------------------
+
+[urgency_low]
+background = "#112031"
+foreground = "#F1F1F0"
+highlight = "#9AEDFE"
+timeout = 5
+icon = /usr/share/icons/Papirus/48x48/emblems/emblem-information.svg
+
+[urgency_normal]
+background = "#112031"
+foreground = "#F1F1F0"
+highlight = "#9AEDFE"
+timeout = 5
+icon = /usr/share/icons/Papirus/48x48/emblems/emblem-information.svg
+
+[urgency_critical]
+background = "#112031"
+foreground = "#F1F1F0"
+highlight = "#FF5C57"
+timeout = 5
+icon = /usr/share/icons/Papirus/48x48/emblems/emblem-important.svg
+
+#----------------------
+#   CUSTOM RULES
+#----------------------
+
+# •• System General
+
+[system]
+appname = System
+new_icon = /usr/share/icons/Papirus/48x48/apps/applications-system.svg
+
+[bspwm]
+appname = System
+summary = bspwm
+new_icon = /usr/share/icons/Papirus/48x48/apps/applications-system.svg
+
+[sxhkd]
+appname = System
+summary = sxhkd
+new_icon = /usr/share/icons/dunst/system/sxhkd.svg
+
+[welcome]
+appname = System
+summary = Welcome
+format = "<b>%s,\n%b</b>"
+new_icon = /usr/share/icons/dunst/misc/face
+[updates_yes]
+appname = System
+summary = Updates
+body = Available*
+new_icon = /usr/share/icons/dunst/system/updates_yes.svg
+[updates_no]
+appname = System
+summary = Updates
+body = "All packages synced"
+new_icon = /usr/share/icons/dunst/system/updates_no.svg
+
+# •• Volume
+
+[volume0]
+format = "<b>%s</b>"
+appname = System
+summary = Volume: [0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-audio-volume-high.svg
+[volume1]
+format = "<b>%s</b>"
+appname = System
+summary = Volume: [0-3][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-audio-volume-low.svg
+[volume2]
+format = "<b>%s</b>"
+appname = System
+summary = Volume: [4-6][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-audio-volume-medium.svg
+[volume3]
+format = "<b>%s</b>"
+appname = System
+summary = Volume: [7-9][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-audio-volume-high.svg
+
+[sound_off]
+format = "<b>%s</b>"
+appname = System
+summary = "Audio Muted"
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-audio-volume-muted.svg
+[sound_on]
+format = "<b>%s</b>"
+appname = System
+summary = "Audio Unmuted"
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-audio-volume-low.svg
+
+# •• Backlight
+
+[backlight0]
+format = "<b>%s</b>"
+appname = System
+summary = Brightness: [0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-display-brightness-low.svg
+[backlight1]
+format = "<b>%s</b>"
+appname = System
+summary = Brightness: [0-3][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-display-brightness-low.svg
+[backlight2]
+format = "<b>%s</b>"
+appname = System
+summary = Brightness: [4-6][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-display-brightness-medium.svg
+[backlight3]
+format = "<b>%s</b>"
+appname = System
+summary = Brightness: [7-9][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-display-brightness-high.svg
+[backlight4]
+format = "<b>%s</b>"
+appname = System
+summary = Brightness: [7-9][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-display-brightness-full.svg
+
+# •• Keyboard Functions
+
+[capslock_on]
+appname = System
+summary = "Caps Lock Enabled"
+new_icon = /usr/share/icons/dunst/system/caps_on.svg
+[capslock_off]
+appname = System
+summary = "Caps Lock Disabled"
+new_icon = /usr/share/icons/dunst/system/caps_off.svg
+
+# •• Applications
+
+; [color_picker]
+; appname = "Color Picker"
+; format = "<b>%a</b>\n%s\n%b"
+; new_icon = /usr/share/icons/dunst/system/color.svg
+; [color_preview]
+; appname = "Color Preview"
+; format = "#%s"
+; new_icon = ""
+
+[flameshot]
+appname = flameshot
+format = "<b>%a</b>\n%b"
+timeout = 3
+
+[spotify]
+appname = Spotify
+format = "<b>%s</b>\n%b"
+
+; [rofi_calc]
+; appname = Calculator
+; format = "<b>%a</b>\n%s"
+; new_icon = /usr/share/icons/dunst/system/roficalc.svg
+
+; [firefox]
+; desktop_entry = Firefox
+; new_icon = /usr/share/icons/dunst/apps/firefox.svg
+
+
+# •• Powermenu
+
+# [shutdown]
+# appname = Shutdown
+# format = "<b>%a</b>"
+# timeout = 0
+# new_icon = /usr/share/icons/dunst/system/shutdown.svg
+# 
+# [reboot]
+# appname = Reboot
+# format = "<b>%a</b>"
+# timeout = 0
+# new_icon = /usr/share/icons/dunst/system/reboot.svg
+# 
+# [lockscreen]
+# appname = "Lock Screen"
+# format = "<b>%a</b>"
+# timeout = 0
+# new_icon = /usr/share/icons/dunst/system/lock.svg
+# 
+# [logout]
+# appname = "Log Out"
+# format = "<b>%a</b>"
+# timeout = 0
+# new_icon = /usr/share/icons/dunst/system/logout.svg
+# 
+# [logout]
+# appname = Cancel
+# format = "<b>%a</b>"
+# timeout = 0
+# new_icon = /usr/share/icons/dunst/system/cancel.svg
+
+
+# vim: ft=cfg

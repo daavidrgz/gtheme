@@ -1,0 +1,6 @@
+%output-file%=/home/jorge/.config/polybar/colors.ini
+;; %theme-name%
+
+[color]
+background = #00000000
+foreground = #%background%

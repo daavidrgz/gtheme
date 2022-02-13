@@ -1,0 +1,14 @@
+%output-file%=/home/jorge/.config/rofi/colors.rasi
+// %theme-name%
+
+* {
+  bg:         #%background%;
+  fg:         #%foreground%;
+  se:         #%selection-background%;
+  red:        #%red%;
+  green:      #%green%;
+  yellow:     #%yellow%;
+  blue:       #%blue%;
+  magenta:    #%magenta%;
+  cyan:       #%cyan%;
+}

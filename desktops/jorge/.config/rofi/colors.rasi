@@ -1,0 +1,13 @@
+//  -------- Gtheme: Snazzy --------
+
+* {
+  bg:         #112031;
+  fg:         #F1F1F0;
+  se:         #FFFACD;
+  red:        #FF5C57;
+  green:      #5AF78E;
+  yellow:     #F3F99D;
+  blue:       #57C7FF;
+  magenta:    #FF6AC1;
+  cyan:       #9AEDFE;
+}

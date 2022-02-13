@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Home</title>
+    <link
+      rel=" shortcut icon"
+      type="image/png"
+      href="assets/icons/favicon.png"
+    />
+    <link rel="stylesheet" href="app.css" />
+    <script src="assets/icons/feather-icons.min.js"></script>
+  </head>
+
+  <!-- 
+      ╔╗ ╔═╗╔╗╔╔╦╗╔═╗
+      ╠╩╗║╣ ║║║ ║ ║ ║
+      ╚═╝╚═╝╝╚╝ ╩ ╚═╝
+      -->
+
+  <body class="">
+    <!-- <button id="themeButton">
+      <i id="themeButton__icon" data-feather="moon"></i>
+    </button> -->
+    
+    <div class="external-container">
+      <form class="search-bar">
+        <input id="search-input" type="text" placeholder="Search...">
+        <i class="search-bar-icon" data-feather="search" onclick="googleSearch()"></i>
+      </form>
+  
+      <div class="container">
+        <!-- Clock and Greetings  -->
+  
+        <div class="timeBlock">
+          <div class="clock">
+            <div id="hour" class=""></div>
+            <div class="separator"> : </div>
+            <div id="minutes" class=""></div>
+            <!-- <div class="separator"> : </div>
+            <div id="seconds" class=""></div> -->
+          </div>
+          <div id="greetings" class=""></div>
+        </div>
+  
+        <!-- Date and Weather  -->
+  
+        <div class="weatherBlock">
+          <div class="weatherBlock__date">
+            <div id="month" class=""></div>
+            <div id="day" class=""></div>
+          </div>
+          <!-- <div class="weatherBlock__weather">
+            <div class="weather-icon">
+              <img src="assets/icons/OneDark/unknown.png" />
+            </div>
+            <div class="temperature-value">
+              <p class="">- °<span class="g">c</span></p>
+            </div>
+            <div class="temperature-description">
+              <p class=""></p>
+            </div>
+          </div> -->
+        </div>
+  
+        <!-- 
+          ┌┐ ┬ ┬┌┬┐┌┬┐┌─┐┌┐┌┌─┐
+          ├┴┐│ │ │  │ │ ││││└─┐
+          └─┘└─┘ ┴  ┴ └─┘┘└┘└─┘ 
+          -->
+  
+        <div class="buttonLink" id="buttonsContainer"></div>
+  
+        <!-- 
+          ┬  ┬┌─┐┌┬┐┌─┐
+          │  │└─┐ │ └─┐
+          ┴─┘┴└─┘ ┴ └─┘
+          -->
+  
+        <div class="card list list__1" id="list_1"></div>
+  
+        <div class="card list list__2" id="list_2"></div>
+      </div>
+    </div>
+    
+
+    <!-- Config  -->
+    <script src="config.js"></script>
+
+    <!-- Scripts  -->
+    <script src="assets/js/search.js"></script>
+    <script src="assets/js/time.js"></script>
+    <!-- <script src="assets/js/theme.js"></script> -->
+    <script src="assets/js/greeting.js"></script>
+    <!-- <script src="assets/js/weather.js"></script> -->
+
+    <script src="assets/js/cards.js"></script>
+    <script src="assets/js/lists.js"></script>
+    <script>
+      feather.replace();
+    </script>
+  </body>
+
+  <!-- Developed and designed by Miguel R. Ávila: -->
+  <!-- https://github.com/migueravila -->
+</html>
