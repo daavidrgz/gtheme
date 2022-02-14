@@ -1,4 +1,6 @@
 use std::fs::{self};
+use std::process::{Command,Stdio};
+use std::collections::HashMap;
 
 use crate::core;
 
@@ -14,28 +16,52 @@ impl PostScript{
 	pub fn get_path(&self)->&String{
 		&self.path
 	}
-	pub fn get_output(&self)->&String{
-		&self.output
-	}
 	//TODO: use DesktopFile or str?
-	pub fn get_postscripts(desktop:&str)->Vec<PostScript>{
-		let gtheme_home:String= core::expand_path("~/github/gtheme");
-		let patterns_dir = gtheme_home + &format!("/desktops/{}/gtheme/patterns",desktop);
-		let entries = fs::read_dir(&patterns_dir).expect(&format!("Could not read directory:{}",&patterns_dir));
+	pub fn get_postscripts(desktop:&str)->HashMap<String,PostScript>{
+		let gtheme_home:String= core::expand_path(core::GTHEME_HOME);
+		let postscripts_dir = gtheme_home + &format!("/desktops/{}/gtheme/post-scripts",desktop);
+		let entries = fs::read_dir(&postscripts_dir).expect(&format!("Could not read directory:{}",&postscripts_dir));
 
-		let mut vec = Vec::new();
+		let mut map = HashMap::new();
 		for entry in entries{
-			let entry = entry.expect(&format!("Error while reading entry from dir: {}",&patterns_dir));
+			let entry = entry.expect(&format!("Error while reading entry from dir: {}",&postscripts_dir));
 			let file_name =entry.file_name().into_string().expect(&format!("Error while converting OsString to String (invalid unicode data?)"));
 			let path = String::from(entry.path().to_str().expect(&format!("Error while converting OsString to String (invalid utf-8 data?)")));
 
 			let name = match file_name.rsplit_once("."){
-				None => panic!("Error while splitting file name:{}",file_name),
+				None => file_name,
 				Some((prefix,_))=>String::from(prefix)
 			};
-			vec.push(PatternFile{name,path});
+			map.insert(name.clone(), PostScript{name,path});
 		}
-		vec.sort_by(|a,b| a.get_name().to_lowercase().cmp(&b.get_name().to_lowercase()));
-		vec
+		//TODO: decide to sort or not
+		map
+	}
+	pub fn execute(&self,args:Vec<&str>){
+		Command::new(self.get_path())
+			.stdout(Stdio::null())
+			.stdin(Stdio::null())
+			.stderr(Stdio::null())
+			.args(args)
+			.spawn().expect(&format!("Could not execute file:{}",self.get_path()));
+
 	}
 }
+#[cfg(test)]
+mod tests{
+	use super::*;
+	use crate::core::desktop::Desktop;
+	#[test]
+	fn test_get_postscripts(){
+		let desktops = Desktop::get_desktops();
+		let desktop = desktops.into_iter().find(|desktop |desktop.get_name()=="jorge" ).unwrap().to_desktop();
+
+		let postscripts = PostScript::get_postscripts(desktop.get_name());
+
+		for ps in postscripts.values() {
+			println!("post-script {} in {}",ps.get_name(),ps.get_path());
+		}
+	}
+
+}
+

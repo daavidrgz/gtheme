@@ -47,7 +47,7 @@ impl Pattern{
 	}
 	//TODO: use DesktopFile or str?
 	pub fn get_patterns(desktop:&str)->Vec<PatternFile>{
-		let gtheme_home:String= core::expand_path("~/github/gtheme");
+		let gtheme_home:String= core::expand_path(core::GTHEME_HOME);
 		let patterns_dir = gtheme_home + &format!("/desktops/{}/gtheme/patterns",desktop);
 		let entries = fs::read_dir(&patterns_dir).expect(&format!("Could not read directory:{}",&patterns_dir));
 
@@ -58,7 +58,7 @@ impl Pattern{
 			let path = String::from(entry.path().to_str().expect(&format!("Error while converting OsString to String (invalid utf-8 data?)")));
 
 			let name = match file_name.rsplit_once("."){
-				None => panic!("Error while splitting file name:{}",file_name),
+				None => file_name,
 				Some((prefix,_))=>String::from(prefix)
 			};
 			vec.push(PatternFile{name,path});
@@ -66,17 +66,30 @@ impl Pattern{
 		vec.sort_by(|a,b| a.get_name().to_lowercase().cmp(&b.get_name().to_lowercase()));
 		vec
 	}
-	pub fn fill(&self,theme:&Theme){
-		let filled_content =self.fill_values(theme);
+	pub fn fill(&self,theme:&Theme,is_inverted:bool){
+		let filled_content =self.fill_values(theme,is_inverted);
 	
 		let mut output_file = File::create(self.get_output()).expect(&format!("Could not create file: {}",self.get_output()));
 		output_file.write_all(filled_content.as_bytes()).expect(&format!("Could not write content to: {}",self.get_output()));
 	}
-	fn fill_values(&self,theme:&Theme) -> String{
+	fn fill_values(&self,theme:&Theme,is_inverted:bool) -> String{
 	
 		let mut result = String::from(&self.content);
 		for (key,value) in theme.colors.iter(){
-			let re = Regex::new(&format!("%{}%",key)).unwrap();
+
+			let real_key = if is_inverted {
+				match key.as_str(){
+					"foreground"=> "background",
+					"background"=>"foreground",
+					"selection-foreground"=>"selection-background",
+					"selection-background"=>"selection-foreground",
+					_=>key
+				}
+			}else{
+				key
+			};
+
+			let re = Regex::new(&format!("%{}%",real_key)).unwrap();
 			result = re.replace_all(&result,value).into_owned();
 		}
 		result

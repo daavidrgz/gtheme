@@ -1,8 +1,10 @@
 use std::fs::{self};
+use std::collections::HashMap;
 
 use crate::core;
 use crate::core::pattern::*;
 use crate::core::theme::Theme;
+use crate::core::postscript::PostScript;
 
 #[derive(Debug)]
 pub struct Desktop{
@@ -46,7 +48,7 @@ impl Desktop{
 		&self.patterns
 	}
 	pub fn get_desktops()->Vec<DesktopFile>{
-		let gtheme_home:String= core::expand_path("~/github/gtheme");
+		let gtheme_home:String= core::expand_path(core::GTHEME_HOME);
 		let desktops_dir = gtheme_home + &format!("/desktops");
 		let entries = fs::read_dir(&desktops_dir).expect(&format!("Could not read directory:{}",&desktops_dir));
 
@@ -63,12 +65,26 @@ impl Desktop{
 		vec
 	}
 
-	pub fn apply(&self,theme:&Theme){
+	pub fn apply(&self,theme:&Theme,actived:HashMap<String,bool>,inverted:HashMap<String,bool>){
 		//parameter HashMap(pattern_name,bool) in order to implement inverted themes
+		let postscripts = PostScript::get_postscripts(self.get_name());
+
 		for pattern_file in self.get_patterns(){
-			pattern_file.to_pattern().fill(theme)
+			//If not activated,skip pattern
+			let pattern = pattern_file.to_pattern();
+
+			if !*actived.get(pattern.get_name()).unwrap_or(&false){
+				continue;
+			}
+			pattern.fill(theme,*inverted.get(pattern.get_name()).unwrap_or(&false));
+			if let Some(postscript) = postscripts.get(pattern_file.get_name()) {
+				postscript.execute(vec![pattern.get_output()])
+			}
 		}
-		//TODO: Execute postscripts
+		if !&theme.wallpaper.is_empty() && *actived.get("wallpaper").unwrap_or(&false){
+			//TODO: wallpaper actived or
+			postscripts.get("wallpaper").unwrap().execute(vec![&core::expand_path(&theme.wallpaper)]);
+		}
 	}
 	//TODO: delete patterns function for a given directory?
 }

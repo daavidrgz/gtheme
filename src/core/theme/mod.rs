@@ -8,6 +8,7 @@ use crate::core;
 
 #[derive(Debug,Serialize,Deserialize)]
 pub struct Theme{
+	//TODO: getters
 	pub name:String,
 	pub vscode:String,
 	pub wallpaper:String,
@@ -25,7 +26,7 @@ impl Theme{
 	}
 	
 	pub fn get_themes()->Vec<ThemeFile>{
-		let gtheme_home:String= core::expand_path("~/github/gtheme");
+		let gtheme_home:String= core::expand_path(core::GTHEME_HOME);
 		let themes_dir = gtheme_home+"/themes";
 		let entries = fs::read_dir(&themes_dir).expect(&format!("Could not read directory:{}",&themes_dir));
 
@@ -36,7 +37,7 @@ impl Theme{
 			let path = String::from(entry.path().to_str().expect(&format!("Error while converting OsString to String (invalid utf-8 data?)")));
 
 			let name = match file_name.rsplit_once("."){
-				None => panic!("Error while splitting file name"),
+				None => file_name,
 				Some((prefix,_))=>String::from(prefix)
 			};
 			vec.push(ThemeFile{name,path});

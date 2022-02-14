@@ -2,7 +2,10 @@
 pub mod theme;
 pub mod pattern;
 pub mod desktop;
-// pub mod postscript;
+pub mod postscript;
+
+const GTHEME_HOME:&str="~/github/gtheme";
+
 fn expand_path(origin_path:&str) ->String{
 	let mut path = String::from(origin_path);
 	path = shellexpand::tilde(&path).to_string();
@@ -16,6 +19,7 @@ mod tests{
 	// use super::pattern::Pattern;
 	use super::theme::Theme;
 	use super::desktop::Desktop;
+	use std::collections::HashMap;
 	
 	// #[test]
 	// fn test_fill_pattern(){
@@ -48,8 +52,21 @@ mod tests{
 		let desktop = desktops.into_iter().find(|desktop |desktop.get_name()=="jorge" ).unwrap();
 
 		let themes = Theme::get_themes();
-		let theme = themes.into_iter().find(|theme |theme.get_name()=="Nord" ).unwrap().to_theme();
+		let theme = themes.into_iter().find(|theme |theme.get_name()=="Vue" ).unwrap().to_theme();
 
-		desktop.to_desktop().apply(&theme);
+
+		let desktop = desktop.to_desktop();
+		let patterns = desktop.get_patterns();
+		
+		let mut active = HashMap::new();
+		for pattern in patterns{
+			active.insert(String::from(pattern.get_name()),true);
+		}
+		active.insert(String::from("wallpaper"),true);
+
+		let mut inverted = HashMap::new();
+		inverted.insert(String::from("polybar"), true);
+
+		desktop.apply(&theme,active,inverted);
 	}
 }
