@@ -45,7 +45,6 @@ force_xinerama = false
 #   FRAME
 #----------------------
 
-geometry = "320x480-11+32"
 corner_radius = 6
 
 shrink = no
@@ -74,7 +73,7 @@ progress_bar_frame_width = 0
 #   FORMAT
 #----------------------
 
-font = DejaVuSansMono Nerd Font Medium 11
+font = DejaVuSansMono Nerd Font Medium 10
 
 markup = full
 
@@ -96,7 +95,7 @@ icon_position = left
 
 text_icon_padding = 0
 
-min_icon_size = 32
+min_icon_size = 20
 max_icon_size = 40
 
 icon_path = /usr/share/icons/Papirus/64x64/apps
