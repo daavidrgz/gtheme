@@ -33,12 +33,23 @@ impl<T> StatefulList<T> {
 	pub fn get_items(&mut self) -> &ListState {
 		&self.state
 	}
+	
+	pub fn get_selected(&self) -> Option<&T> {
+		match self.state.selected() {
+			Some(idx) => Some(&self.items[idx]),
+			None => None,
+		}
+	}
 
 	pub fn is_selected(&self) -> bool {
 		match self.state.selected() {
 			Some(_) => true,
 			None => false,
 		}
+	}
+
+	pub fn get_length(&self) -> usize {
+		self.items.len()
 	}
 
 	pub fn next(&mut self) {
@@ -78,27 +89,43 @@ impl<'a> ListWidget<'a> {
 
 				let mut text = screen_item.get_name().to_string();
 				text = match stateful_list.get_state().selected() {
-					Some(idx) => if idx == it {format!(" ‣ {}", text)} else {format!("   {}", text)},
+					Some(idx) => {
+						if idx == it {
+							let mut aux_text = format!(" ‣ {}", text);
+							aux_text = if idx == 0 {
+								format!("{} ↓", aux_text)
+							} else if idx == stateful_list.get_length() - 1 {
+								format!("{} ↑", aux_text)
+							} else {
+								format!("{} ↓ ↑", aux_text)
+							};
+							aux_text
+						} else {
+							format!("   {}", text)
+						}
+					},
 					None => format!("   {}", text)
 				};
 
 				it+=1;
 
-				ListItem::new(String::from(text)).style(Style::default().fg(Color::DarkGray).add_modifier(Modifier::DIM))
+				ListItem::new(String::from(text)).style(Style::default().fg(Color::Gray).add_modifier(Modifier::DIM))
 			}).collect();
 		
-		let title_style = Style::default().fg(color).add_modifier(Modifier::BOLD);
-		let title_style = if stateful_list.is_selected() {
-			title_style.add_modifier(Modifier::REVERSED)
+		let mut title_style = Style::default().fg(color).add_modifier(Modifier::BOLD).add_modifier(Modifier::REVERSED);
+
+		let mut border_style = Style::default().fg(color);
+		border_style = if !stateful_list.is_selected() {
+			border_style.add_modifier(Modifier::DIM)
 		}	else {
-			title_style
+			border_style
 		};
-		
+
 		let widget = List::new(items)
 			.block(Block::default()
 				.borders(Borders::ALL)
 				.title(Span::styled(String::from(format!(" {} ", title)), title_style))
-				.border_style(Style::default().fg(color)))
+				.border_style(border_style))
 			.highlight_symbol("")
 			.highlight_style(Style::default().fg(color).add_modifier(Modifier::BOLD).remove_modifier(Modifier::DIM),
 			);

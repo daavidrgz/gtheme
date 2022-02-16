@@ -2,13 +2,11 @@ pub mod widgets;
 pub mod screenitem;
 pub mod appstate;
 
-use std::collections::HashMap;
 use std::io;
 use std::{time::Duration, error::Error};
 use tui::{
 	backend::CrosstermBackend,
 	layout::{Layout, Constraint, Direction},
-	style::Color,
 	Terminal,
 	Frame
 };
@@ -18,7 +16,7 @@ use crossterm::{
 	terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 
-use crate::app::widgets::{ListWidget, LogoWidget, StatefulList};
+use crate::app::widgets::{ListWidget, LogoWidget};
 use crate::app::screenitem::ScreenItem;
 use crate::app::appstate::{AppState, Screen};
 
@@ -91,7 +89,7 @@ impl Ui {
 						app_state.set_screen(screen)
 					},
 					KeyCode::Enter => {
-						
+						lists[current_list].get_selected().unwrap().apply()
 					},
 					_ => {}
 				}
