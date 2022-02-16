@@ -91,15 +91,11 @@ impl<'a> ListWidget<'a> {
 				text = match stateful_list.get_state().selected() {
 					Some(idx) => {
 						if idx == it {
-							let mut aux_text = format!(" ‣ {}", text);
-							aux_text = if idx == 0 {
-								format!("{} ↓", aux_text)
-							} else if idx == stateful_list.get_length() - 1 {
-								format!("{} ↑", aux_text)
-							} else {
-								format!("{} ↓ ↑", aux_text)
-							};
-							aux_text
+							let aux_text = format!(" ‣ {}", text);
+							if idx == 0 { format!("{} ↓", aux_text) }
+							else if idx == stateful_list.get_length() - 1 { format!("{} ↑", aux_text) }
+							else { format!("{} ↓ ↑", aux_text) }
+							
 						} else {
 							format!("   {}", text)
 						}

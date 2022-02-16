@@ -57,12 +57,12 @@ impl AppState {
 		map.insert(Screen::Desktop, 
 			([desktops_list, patterns_list],
 				[Color::Cyan, Color::Magenta],
-				[String::from("DESKTOPS"), String::from("PATTERNS")])
+				[String::from("DESKTOPS "), String::from("PATTERNS ")])
 		);
 		map.insert(Screen::Theme, 
 			([fav_themes_list, themes_list], 
 				[Color::Blue, Color::Yellow], 
-				[String::from("FAV THEMES"), String::from("THEMES")])
+				[String::from("FAV THEMES "), String::from("THEMES ")])
 		);
 		map
 	}
