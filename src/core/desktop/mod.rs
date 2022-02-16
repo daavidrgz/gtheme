@@ -30,9 +30,9 @@ impl Desktop {
 	// 		output:output_path
 	// 	}
 	// }
-	pub fn from(desktop:&DesktopFile) -> Self {
+	pub fn from(desktop: &DesktopFile) -> Self {
 		let patterns = Pattern::get_patterns(desktop.get_name());
-		Desktop{
+		Desktop {
 			name: String::from(desktop.get_name()),
 			path: String::from(desktop.get_path()),
 			patterns
