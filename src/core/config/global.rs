@@ -23,8 +23,11 @@ impl GlobalConfigDto{
 	fn new() -> Self {
 		let mut file = File::open(format!("{}/global_config.json",core::expand_path(core::GTHEME_HOME))).unwrap();
 		let mut content = String::new();
-		file.read_to_string(&mut content).expect("Could not read theme file");
-		serde_json::from_str(&content).expect("Error while deserializing theme file")
+		file.read_to_string(&mut content).expect("Could not read config file");
+		match serde_json::from_str(&content){
+			Ok(config)=>config,
+			_=> Self::default() // If there is any error while parsing config file
+		}
 	}
 	fn from(config:&GlobalConfig)->Self{
 
@@ -61,6 +64,16 @@ impl GlobalConfigDto{
 		&self.fav_themes
 	}
 	
+}
+
+impl Default for GlobalConfigDto{
+	fn default() -> GlobalConfigDto{
+		GlobalConfigDto{
+			current_desktop:None,
+			current_theme:None,
+			fav_themes:Vec::new()
+		}
+	}
 }
 
 impl GlobalConfig{
