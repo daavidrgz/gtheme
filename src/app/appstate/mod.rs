@@ -3,9 +3,9 @@ use crate::app::widgets::StatefulList;
 use tui::style::Color;
 
 use crate::core::{
-	desktop::{DesktopFile, Desktop},
-	theme::{ThemeFile, Theme},
-	pattern::{PatternFile, Pattern}
+	desktop::Desktop,
+	theme::Theme,
+	pattern::Pattern
 };
 
 use crate::app::screenitem::ScreenItem;
@@ -18,7 +18,7 @@ pub enum Screen {
 
 pub struct AppState {
 	current_screen: Screen,
-	lists: HashMap<Screen, ([StatefulList<ScreenItem>; 2], [Color; 2], [String; 2])>
+	lists: HashMap<Screen, [StatefulList<ScreenItem>; 2]>
 }
 impl AppState {
 	pub fn default() -> AppState {
@@ -28,7 +28,7 @@ impl AppState {
 		}
 	}
 	
-	pub fn get_state(&mut self) -> (&mut Screen, &mut HashMap<Screen, ([StatefulList<ScreenItem>; 2], [Color; 2], [String; 2])>) {
+	pub fn get_state(&mut self) -> (&mut Screen, &mut HashMap<Screen, [StatefulList<ScreenItem>; 2]>) {
 		(&mut self.current_screen, &mut self.lists)
 	}
 
@@ -40,30 +40,22 @@ impl AppState {
 		self.current_screen = screen;
 	}
 
-	fn create_lists() -> HashMap<Screen, ([StatefulList<ScreenItem>; 2], [Color; 2], [String; 2])> {
+	fn create_lists() -> HashMap<Screen, [StatefulList<ScreenItem>; 2]> {
 		let desktops = Desktop::get_desktops().into_iter().map(|e|ScreenItem::Desktop(e)).collect();
-		let desktops_list = StatefulList::with_items(desktops, true);
+		let desktops_list = StatefulList::with_items(desktops, Color::Cyan, "DESKTOPS ".to_string(), true);
 
 		let patterns = Pattern::get_patterns("simple").into_iter().map(|e|ScreenItem::Pattern(e)).collect();
-		let patterns_list = StatefulList::with_items(patterns, false);
-
-		let themes = Theme::get_themes().into_iter().map(|e|ScreenItem::Theme(e)).collect();
-		let themes_list = StatefulList::with_items(themes, false);
+		let patterns_list = StatefulList::with_items(patterns, Color::Magenta,  "PATTERNS ".to_string(), false);
 
 		let fav_themes = Theme::get_themes().into_iter().map(|e|ScreenItem::Theme(e)).collect();
-		let fav_themes_list = StatefulList::with_items(fav_themes, true);
+		let fav_themes_list = StatefulList::with_items(fav_themes, Color::Blue, "FAV-THEMES ".to_string(), true);
+
+		let themes = Theme::get_themes().into_iter().map(|e|ScreenItem::Theme(e)).collect();
+		let themes_list = StatefulList::with_items(themes, Color::Green, "THEMES ".to_string(), false);
 
 		let mut map = HashMap::new();
-		map.insert(Screen::Desktop, 
-			([desktops_list, patterns_list],
-				[Color::Cyan, Color::Magenta],
-				[String::from("DESKTOPS "), String::from("PATTERNS ")])
-		);
-		map.insert(Screen::Theme, 
-			([fav_themes_list, themes_list], 
-				[Color::Blue, Color::Yellow], 
-				[String::from("FAV THEMES "), String::from("THEMES ")])
-		);
+		map.insert(Screen::Desktop, [desktops_list, patterns_list]);
+		map.insert(Screen::Theme, [fav_themes_list, themes_list]);
 		map
 	}
 }

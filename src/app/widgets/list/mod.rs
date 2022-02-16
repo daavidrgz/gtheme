@@ -1,7 +1,7 @@
 use tui::{
 	widgets::{Block, Borders, List, ListItem, ListState},
 	style::{Color, Modifier, Style},
-	text::{Span, Spans},
+	text::Span,
 };
 
 use crate::app::ScreenItem;
@@ -10,28 +10,39 @@ pub struct StatefulList<T> {
 	state: ListState,
 	index: usize,
 	items: Vec<T>,
+	color: Color,
+	title: String
 }
 impl<T> StatefulList<T> {
-	pub fn with_items(items: Vec<T>, selected: bool) -> StatefulList<T> {
+	pub fn with_items(items: Vec<T>, color: Color, title: String, selected: bool) -> StatefulList<T> {
 		let mut state = ListState::default();
 		state.select(if selected {Some(0)} else {None});
 		StatefulList {
 			index: 0,
+			color,
+			title,
 			state,
 			items,
 		}
 	}
 
-	pub fn get_state_mut(&mut self) -> &mut ListState {
-		&mut self.state
-	}
-
 	pub fn get_state(&self) -> &ListState {
 		&self.state
 	}
-
-	pub fn get_items(&mut self) -> &ListState {
-		&self.state
+	pub fn get_state_mut(&mut self) -> &mut ListState {
+		&mut self.state
+	}
+	pub fn get_items(&self) -> &Vec<T> {
+		&self.items
+	}
+	pub fn get_color(&self) -> &Color {
+		&self.color
+	}
+	pub fn get_title(&self) -> &String {
+		&self.title
+	}
+	pub fn get_length(&self) -> usize {
+		self.items.len()
 	}
 	
 	pub fn get_selected(&self) -> Option<&T> {
@@ -46,10 +57,6 @@ impl<T> StatefulList<T> {
 			Some(_) => true,
 			None => false,
 		}
-	}
-
-	pub fn get_length(&self) -> usize {
-		self.items.len()
 	}
 
 	pub fn next(&mut self) {
@@ -79,8 +86,10 @@ pub struct ListWidget<'a> {
 	widget: List<'a>
 }
 impl<'a> ListWidget<'a> {
-	pub fn new(title: &str, color: Color, stateful_list: &StatefulList<ScreenItem>) -> ListWidget<'a> {
+	pub fn new(stateful_list: &StatefulList<ScreenItem>) -> ListWidget<'a> {
 
+		let color = *stateful_list.get_color();
+		let title = stateful_list.get_title();
 		let mut it = 0;
 
 		let items: Vec<ListItem> = stateful_list

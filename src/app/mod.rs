@@ -62,37 +62,39 @@ impl Ui {
 
 	fn manage_input(app_state: &mut AppState) -> bool {
 		let (current_screen, map) = app_state.get_state();
-		let (lists, _, _) = map.get_mut(&current_screen).unwrap();
+		let lists = map.get_mut(&current_screen).unwrap();
 
 		let current_list = if lists[0].is_selected() {0} else {1};
 
-		if crossterm::event::poll(Duration::from_millis(250)).unwrap() {
-			if let Event::Key(key) = event::read().unwrap() {
-				match key.code {
-					KeyCode::Char('q') | KeyCode::Char('Q') => return false,
-					KeyCode::Down => lists[current_list].next(),
-					KeyCode::Up => lists[current_list].previous(),
-					KeyCode::Left => {
-						if current_list != 0 {
-							lists[current_list].unselect();
-							lists[current_list - 1].next();
-						}
-					},
-					KeyCode::Right => {
-						if current_list != 1 {
-							lists[current_list].unselect();
-							lists[current_list + 1].next();
-						}
-					},
-					KeyCode::Tab => {
-						let screen = if *app_state.get_screen() == Screen::Desktop {Screen::Theme} else {Screen::Desktop};
-						app_state.set_screen(screen)
-					},
-					KeyCode::Enter => {
-						lists[current_list].get_selected().unwrap().apply()
-					},
-					_ => {}
-				}
+		if !crossterm::event::poll(Duration::from_millis(250)).unwrap() {
+			return true
+		}
+			
+		if let Event::Key(key) = event::read().unwrap() {
+			match key.code {
+				KeyCode::Char('q') | KeyCode::Char('Q') => return false,
+				KeyCode::Down => lists[current_list].next(),
+				KeyCode::Up => lists[current_list].previous(),
+				KeyCode::Left => {
+					if current_list != 0 {
+						lists[current_list].unselect();
+						lists[current_list - 1].next();
+					}
+				},
+				KeyCode::Right => {
+					if current_list != 1 {
+						lists[current_list].unselect();
+						lists[current_list + 1].next();
+					}
+				},
+				KeyCode::Tab => {
+					let screen = if *app_state.get_screen() == Screen::Desktop {Screen::Theme} else {Screen::Desktop};
+					app_state.set_screen(screen)
+				},
+				KeyCode::Enter => {
+					lists[current_list].get_selected().unwrap().apply()
+				},
+				_ => {}
 			}
 		}
 		true
@@ -116,10 +118,10 @@ impl Ui {
 		f.render_widget(logo_widget.get_widget(), logo_container);
 
 		let (current_screen, map) = app_state.get_state();
-		let (lists, colors, titles) = map.get_mut(&current_screen).unwrap();
+		let lists = map.get_mut(&current_screen).unwrap();
 
-		let widget_list_1 = ListWidget::new(titles[0].as_str(), colors[0], &lists[0]);
-		let widget_list_2 = ListWidget::new(titles[1].as_str(), colors[1], &lists[1]);
+		let widget_list_1 = ListWidget::new(&lists[0]);
+		let widget_list_2 = ListWidget::new(&lists[1]);
 
 		f.render_stateful_widget(widget_list_1.get_widget(), h_box[0], lists[0].get_state_mut());
 		f.render_stateful_widget(widget_list_2.get_widget(), h_box[1], lists[1].get_state_mut());
