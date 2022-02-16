@@ -1,5 +1,6 @@
 
 pub mod core;
+pub mod app;
 
 #[cfg(test)]
 mod tests{
