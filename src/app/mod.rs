@@ -1,4 +1,6 @@
 pub mod widgets;
+pub mod screenitem;
+pub mod appstate;
 
 use std::collections::HashMap;
 use std::io;
@@ -16,58 +18,9 @@ use crossterm::{
 	terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 
-use crate::core::{
-	desktop::{DesktopFile, Desktop},
-	theme::{ThemeFile, Theme},
-	pattern::{PatternFile, Pattern}
-};
-use crate::app::widgets::{ListWidget, LogoWidget,StatefulList};
-
-#[derive(Eq, PartialEq, Hash)]
-enum Screen {
-	Desktop,
-	Theme
-}
-
-pub enum ScreenItem {
-	Desktop(DesktopFile),
-	Theme(ThemeFile),
-	Pattern(PatternFile)
-}
-impl ScreenItem {
-	pub fn get_name(&self) -> &str {
-		match self {
-			ScreenItem::Desktop(d) => d.get_name(),
-			ScreenItem::Theme(t) => t.get_name(),
-			ScreenItem::Pattern(p) => p.get_name()
-		}
-	}
-}
-
-struct AppState<T> {
-	current_screen: Screen,
-	lists: HashMap<Screen, ([StatefulList<T>; 2], [Color; 2], [String; 2])>
-}
-impl<T> AppState<T> {
-	pub fn new(lists: HashMap<Screen, ([StatefulList<T>; 2], [Color; 2], [String; 2])>) -> AppState<T> {
-		AppState {
-			current_screen: Screen::Desktop,
-			lists
-		}
-	}
-	
-	pub fn get_state(&mut self) -> (&mut Screen, &mut HashMap<Screen, ([StatefulList<T>; 2], [Color; 2], [String; 2])>) {
-		(&mut self.current_screen, &mut self.lists)
-	}
-
-	pub fn get_screen(&mut self) -> &mut Screen {
-		&mut self.current_screen
-	}
-
-	pub fn set_screen(&mut self, screen: Screen) {
-		self.current_screen = screen;
-	}
-}
+use crate::app::widgets::{ListWidget, LogoWidget, StatefulList};
+use crate::app::screenitem::ScreenItem;
+use crate::app::appstate::{AppState, Screen};
 
 pub struct Ui {
 	terminal: Terminal<CrosstermBackend<io::Stdout>>
@@ -86,17 +39,13 @@ impl Ui {
 		let mut stdout = io::stdout();
 		execute!(stdout, EnterAlternateScreen)?;
 
-		let res = self.run_app();
-		self.exit_ui();
-
-		if let Err(err) = res {
-			println!("{:?}", err)
-		}
+		self.run_app()?;
+		self.exit_ui()?;
 
 		Ok(())
 	}
 
-	fn exit_ui(&mut self) -> Result<(), Box<dyn Error>>  {
+	fn exit_ui(&mut self) -> Result<(), Box<dyn Error>> {
 		disable_raw_mode()?;
 		execute!(self.terminal.backend_mut(), LeaveAlternateScreen,)?;
 		self.terminal.show_cursor()?;
@@ -105,61 +54,53 @@ impl Ui {
 	}
 
 	fn run_app(&mut self) -> Result<(), Box<dyn Error>> {
-		let desktops = Desktop::get_desktops().into_iter().map(|e|ScreenItem::Desktop(e)).collect();
-		let desktops_list = StatefulList::with_items(desktops, true);
-
-		let patterns = Pattern::get_patterns("simple").into_iter().map(|e|ScreenItem::Pattern(e)).collect();
-		let patterns_list = StatefulList::with_items(patterns, false);
-
-		let themes = Theme::get_themes().into_iter().map(|e|ScreenItem::Theme(e)).collect();
-		let themes_list = StatefulList::with_items(themes, true);
-
-		let fav_themes = Theme::get_themes().into_iter().map(|e|ScreenItem::Theme(e)).collect();
-		let fav_themes_list = StatefulList::with_items(fav_themes, false);
-
-		let mut map = HashMap::new();
-		map.insert(Screen::Desktop, ([desktops_list, patterns_list], [Color::Cyan, Color::Magenta], [String::from("DESKTOPS"), String::from("PATTERNS")]));
-		map.insert(Screen::Theme, ([themes_list, fav_themes_list], [Color::Blue, Color::Yellow], [String::from("THEMES"), String::from("FAV THEMES")]));
-
-		let mut app_state = AppState::new(map);
+		let mut app_state = AppState::default();
 
 		loop {
 			self.terminal.draw(|f| Ui::draw_ui(f, &mut app_state))?;
-			
-			let (current_screen, map) = app_state.get_state();
-			let (lists, _, _) = map.get_mut(&current_screen).unwrap();
-
-			let current_list = if lists[0].is_selected() {0} else {1};
-
-			if crossterm::event::poll(Duration::from_millis(250))? {
-				if let Event::Key(key) = event::read()? {
-					match key.code {
-						KeyCode::Char('q') | KeyCode::Char('Q') => return Ok(()),
-						KeyCode::Down => lists[current_list].next(),
-						KeyCode::Up => lists[current_list].previous(),
-						KeyCode::Left => {
-							if current_list != 0 {
-								lists[current_list].unselect();
-								lists[current_list - 1].next();
-							}
-						},
-						KeyCode::Right => {
-							if current_list != 1 {
-								lists[current_list].unselect();
-								lists[current_list + 1].next();
-							}
-						},
-						KeyCode::Tab => {
-							let screen = if *app_state.get_screen() == Screen::Desktop {Screen::Theme} else {Screen::Desktop};
-							app_state.set_screen(screen)}
-						_ => {}
-					}
-				}
-			}
+			if !Ui::manage_input(&mut app_state) {return Ok(())}
 		}
 	}
 
-	fn draw_ui(f: &mut Frame<CrosstermBackend<io::Stdout>>, app_state: &mut AppState<ScreenItem>) {
+	fn manage_input(app_state: &mut AppState) -> bool {
+		let (current_screen, map) = app_state.get_state();
+		let (lists, _, _) = map.get_mut(&current_screen).unwrap();
+
+		let current_list = if lists[0].is_selected() {0} else {1};
+
+		if crossterm::event::poll(Duration::from_millis(250)).unwrap() {
+			if let Event::Key(key) = event::read().unwrap() {
+				match key.code {
+					KeyCode::Char('q') | KeyCode::Char('Q') => return false,
+					KeyCode::Down => lists[current_list].next(),
+					KeyCode::Up => lists[current_list].previous(),
+					KeyCode::Left => {
+						if current_list != 0 {
+							lists[current_list].unselect();
+							lists[current_list - 1].next();
+						}
+					},
+					KeyCode::Right => {
+						if current_list != 1 {
+							lists[current_list].unselect();
+							lists[current_list + 1].next();
+						}
+					},
+					KeyCode::Tab => {
+						let screen = if *app_state.get_screen() == Screen::Desktop {Screen::Theme} else {Screen::Desktop};
+						app_state.set_screen(screen)
+					},
+					KeyCode::Enter => {
+						
+					},
+					_ => {}
+				}
+			}
+		}
+		true
+	}
+
+	fn draw_ui(f: &mut Frame<CrosstermBackend<io::Stdout>>, app_state: &mut AppState) {
 		let padding = 2;
 
 		let mut logo_container = f.size();
@@ -182,7 +123,7 @@ impl Ui {
 		let widget_list_1 = ListWidget::new(titles[0].as_str(), colors[0], &lists[0]);
 		let widget_list_2 = ListWidget::new(titles[1].as_str(), colors[1], &lists[1]);
 
-		f.render_stateful_widget(widget_list_1.get_widget(), h_box[0], lists[0].get_state());
-		f.render_stateful_widget(widget_list_2.get_widget(), h_box[1], lists[1].get_state());
+		f.render_stateful_widget(widget_list_1.get_widget(), h_box[0], lists[0].get_state_mut());
+		f.render_stateful_widget(widget_list_2.get_widget(), h_box[1], lists[1].get_state_mut());
 	}
 }

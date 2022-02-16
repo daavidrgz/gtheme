@@ -22,8 +22,12 @@ impl<T> StatefulList<T> {
 		}
 	}
 
-	pub fn get_state(&mut self) -> &mut ListState {
+	pub fn get_state_mut(&mut self) -> &mut ListState {
 		&mut self.state
+	}
+
+	pub fn get_state(&self) -> &ListState {
+		&self.state
 	}
 
 	pub fn get_items(&mut self) -> &ListState {
@@ -65,13 +69,22 @@ pub struct ListWidget<'a> {
 }
 impl<'a> ListWidget<'a> {
 	pub fn new(title: &str, color: Color, stateful_list: &StatefulList<ScreenItem>) -> ListWidget<'a> {
+
+		let mut it = 0;
+
 		let items: Vec<ListItem> = stateful_list
-			.items
-			.iter()
-			.map(|i| {
-				let text = i.get_name();
-				ListItem::new(String::from(text))
-					.style(Style::default().fg(Color::DarkGray).bg(Color::Reset))
+			.items.iter()
+			.map(|screen_item| {
+
+				let mut text = screen_item.get_name().to_string();
+				text = match stateful_list.get_state().selected() {
+					Some(idx) => if idx == it {format!(" ‣ {}", text)} else {format!("   {}", text)},
+					None => format!("   {}", text)
+				};
+
+				it+=1;
+
+				ListItem::new(String::from(text)).style(Style::default().fg(Color::DarkGray).add_modifier(Modifier::DIM))
 			}).collect();
 		
 		let title_style = Style::default().fg(color).add_modifier(Modifier::BOLD);
@@ -86,8 +99,8 @@ impl<'a> ListWidget<'a> {
 				.borders(Borders::ALL)
 				.title(Span::styled(String::from(format!(" {} ", title)), title_style))
 				.border_style(Style::default().fg(color)))
-			.highlight_symbol(" ‣ ")
-			.highlight_style(Style::default().fg(color).add_modifier(Modifier::BOLD),
+			.highlight_symbol("")
+			.highlight_style(Style::default().fg(color).add_modifier(Modifier::BOLD).remove_modifier(Modifier::DIM),
 			);
 			
 		ListWidget { widget }
