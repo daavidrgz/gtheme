@@ -34,6 +34,15 @@ pub enum ScreenItem {
 	Theme(ThemeFile),
 	Pattern(PatternFile)
 }
+impl ScreenItem {
+	pub fn get_name(&self) -> &str {
+		match self {
+			ScreenItem::Desktop(d) => d.get_name(),
+			ScreenItem::Theme(t) => t.get_name(),
+			ScreenItem::Pattern(p) => p.get_name()
+		}
+	}
+}
 
 struct AppState<T> {
 	current_screen: Screen,

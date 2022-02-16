@@ -68,12 +68,7 @@ impl<'a> ListWidget<'a> {
 			.items
 			.iter()
 			.map(|i| {
-				let name = match i {
-					ScreenItem::Desktop(d) => d.get_name(),
-					ScreenItem::Pattern(p) => p.get_name(),
-					ScreenItem::Theme(t) => t.get_name(),
-				};
-				ListItem::new(String::from(name)).style(Style::default().fg(Color::DarkGray).bg(Color::Reset))
+				ListItem::new(String::from(i.get_name())).style(Style::default().fg(Color::DarkGray).bg(Color::Reset))
 			}).collect();
 
 		let widget = List::new(items)
