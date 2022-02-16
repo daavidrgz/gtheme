@@ -49,7 +49,7 @@ impl Theme{
 	//TODO: inverted theme
 }
 
-#[derive(Debug)]
+#[derive(Debug,Clone)]
 pub struct ThemeFile {
 	name: String,
 	path: String,

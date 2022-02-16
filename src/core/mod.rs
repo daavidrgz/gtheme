@@ -3,6 +3,7 @@ pub mod theme;
 pub mod pattern;
 pub mod desktop;
 pub mod postscript;
+pub mod config;
 
 const GTHEME_HOME:&str="~/github/gtheme";
 const CONFIG_HOME:&str = "~/.config";
