@@ -8,11 +8,11 @@ use crate::core::postscript::PostScript;
 
 #[derive(Debug)]
 pub struct Desktop{
-	name:String,
-	path:String,
-	patterns:Vec<PatternFile>
+	name: String,
+	path: String,
+	patterns: Vec<PatternFile>
 }
-impl Desktop{
+impl Desktop {
 	
 	// pub fn from(path:&str)->Self{
 	// 	let re = Regex::new("%output-file%=(.*)").unwrap();
