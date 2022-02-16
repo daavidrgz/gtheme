@@ -30,7 +30,7 @@ impl Desktop{
 	// 		output:output_path
 	// 	}
 	// }
-	pub fn from(desktop:&DesktopFile)->Self{
+	pub fn from(desktop:&DesktopFile) -> Self {
 		let patterns = Pattern::get_patterns(desktop.get_name());
 		Desktop{
 			name: String::from(desktop.get_name()),
@@ -38,34 +38,34 @@ impl Desktop{
 			patterns
 		}
 	}
-	pub fn get_name(&self)->&String{
+	pub fn get_name(&self) -> &String {
 		&self.name
 	}
-	pub fn get_path(&self)->&String{
+	pub fn get_path(&self) -> &String {
 		&self.path
 	}
-	pub fn get_patterns(&self)->&Vec<PatternFile>{
+	pub fn get_patterns(&self) -> &Vec<PatternFile> {
 		&self.patterns
 	}
-	pub fn get_desktops()->Vec<DesktopFile>{
-		let gtheme_home:String= core::expand_path(core::GTHEME_HOME);
+
+	pub fn get_desktops() -> Vec<DesktopFile> {
+		let gtheme_home:String = core::expand_path(core::GTHEME_HOME);
 		let desktops_dir = gtheme_home + &format!("/desktops");
-		let entries = fs::read_dir(&desktops_dir).expect(&format!("Could not read directory:{}",&desktops_dir));
+		let entries = fs::read_dir(&desktops_dir).expect(&format!("Could not read directory:{}", &desktops_dir));
 
 		let mut vec = Vec::new();
-		for entry in entries{
-			let entry = entry.expect(&format!("Error while reading entry from dir: {}",&desktops_dir));
-			let file_name =entry.file_name().into_string().expect(&format!("Error while converting OsString to String (invalid unicode data?)"));
+		for entry in entries {
+			let entry = entry.expect(&format!("Error while reading entry from dir: {}", &desktops_dir));
+			let file_name = entry.file_name().into_string().expect(&format!("Error while converting OsString to String (invalid unicode data?)"));
 			let path = String::from(entry.path().to_str().expect(&format!("Error while converting OsString to String (invalid utf-8 data?)")));
 
-			
-			vec.push(DesktopFile{name:file_name,path});
+			vec.push(DesktopFile{name: file_name, path});
 		}
 		vec.sort_by(|a,b| a.get_name().to_lowercase().cmp(&b.get_name().to_lowercase()));
 		vec
 	}
 
-	pub fn apply(&self,theme:&Theme,actived:HashMap<String,bool>,inverted:HashMap<String,bool>){
+	pub fn apply(&self, theme: &Theme, actived: HashMap<String,bool>, inverted: HashMap<String,bool>) {
 		//parameter HashMap(pattern_name,bool) in order to implement inverted themes
 		let postscripts = PostScript::get_postscripts(self.get_name());
 
@@ -73,91 +73,88 @@ impl Desktop{
 			let pattern = pattern_file.to_pattern();
 			
 			//If not activated,skip pattern
-			if !*actived.get(pattern.get_name()).unwrap_or(&false){
-				continue;
-			}
-			pattern.fill(theme,*inverted.get(pattern.get_name()).unwrap_or(&false));
+			if !*actived.get(pattern.get_name()).unwrap_or(&false) { continue }
+
+			pattern.fill(theme, *inverted.get(pattern.get_name()).unwrap_or(&false));
 			if let Some(postscript) = postscripts.get(pattern_file.get_name()) {
 				postscript.execute(vec![pattern.get_output()])
 			}
 		}
 		if !&theme.wallpaper.is_empty() && *actived.get("wallpaper").unwrap_or(&false){
 			//TODO: wallpaper actived or
-			if let Some(ps)= postscripts.get("wallpaper"){
+			if let Some(ps) = postscripts.get("wallpaper") {
 				ps.execute(vec![&core::expand_path(&theme.wallpaper)]);
 			}
 		}
 	}
 
-	pub fn uninstall(&self){
+	pub fn uninstall(&self) {
 		let config_home = core::expand_path(core::CONFIG_HOME);
 		
-		let files_to_uninstall:Vec<String> = self.get_config_files().iter().map(|file| String::from(file.file_name().to_str().unwrap())).collect();
-		for entry_name in files_to_uninstall{
-			if let Ok(()) =  fs_extra::dir::remove(format!("{}/{}",config_home,entry_name)){
+		let files_to_uninstall:Vec<String> = self.get_config_files().iter()
+			.map(|file| String::from(file.file_name().to_str().unwrap())).collect();
+
+		for entry_name in files_to_uninstall {
+			if let Ok(()) = fs_extra::dir::remove(format!("{}/{}",config_home,entry_name)) {
 			}
 			// else{
 			// 	println!("Couldnt remove");
 			// }
 		}
 	}
-	pub fn install(&self,previous:&Desktop,theme:&Theme,actived:HashMap<String,bool>,inverted:HashMap<String,bool>){
+
+	pub fn install(&self, previous: &Desktop, theme: &Theme, actived: HashMap<String,bool>, inverted: HashMap<String,bool>) {
 		let config_home = core::expand_path(core::CONFIG_HOME);
 
 		previous.uninstall();
 
 		let files_to_install = self.get_config_files();
 
-		for entry in files_to_install{
-
+		for entry in files_to_install {
 			let from = entry.path();
 			let to = format!("{}/{}",config_home,entry.file_name().to_str().unwrap());
 			let mut options = fs_extra::dir::CopyOptions::new();
-			options.overwrite=true;
-			options.copy_inside=true;
-			if let Ok(_)= fs_extra::dir::copy(from,to,&options){
-
+			options.overwrite = true;
+			options.copy_inside = true;
+			if let Ok(_) = fs_extra::dir::copy(from, to, &options) {
 			}
 			// else{
 			// 	println!("Couldnt copy");
 			// }
 		}
 
-		self.apply(theme,actived,inverted);
-
+		self.apply(theme, actived, inverted);
 	}
 
-	pub fn get_config_files(&self)->Vec<DirEntry>{
-		let gtheme_home:String= core::expand_path(core::GTHEME_HOME);
-		let config_dir = gtheme_home + &format!("/desktops/{}/.config",self.get_name());
-		let entries = fs::read_dir(&config_dir).expect(&format!("Could not read directory:{}",&config_dir));
+	pub fn get_config_files(&self) -> Vec<DirEntry> {
+		let gtheme_home:String = core::expand_path(core::GTHEME_HOME);
+		let config_dir = gtheme_home + &format!("/desktops/{}/.config", self.get_name());
+		let entries = fs::read_dir(&config_dir).expect(&format!("Could not read directory:{}", &config_dir));
 
 		let mut vec = Vec::new();
-		for entry in entries{
-			let entry = entry.expect(&format!("Error while reading entry from dir: {}",&config_dir));
-			
+		for entry in entries {
+			let entry = entry.expect(&format!("Error while reading entry from dir: {}", &config_dir));
 			vec.push(entry);
 		}
 		vec
 	}
-	
 	//TODO: delete patterns function for a given directory?
 }
 
 #[derive(Debug)]
-pub struct DesktopFile{
-	name:String,
-	path:String,
+pub struct DesktopFile {
+	name: String,
+	path: String,
 }
 impl DesktopFile{
-	pub fn to_desktop(&self)->Desktop{
+	pub fn to_desktop(&self) -> Desktop{
 		Desktop::from(self)
 	}
-	pub fn get_name(&self) ->&String{
+	pub fn get_name(&self) -> &String {
 		&self.name
 	}
 
-	pub fn get_path(&self) ->&String{
+	pub fn get_path(&self) -> &String {
 		&self.path
 	}
 }
@@ -167,7 +164,7 @@ mod tests{
 	use super::*;
 	
 	#[test]
-	fn test_install(){
+	fn test_install() {
 		let desktops = Desktop::get_desktops();
 		let desktop = desktops.into_iter().find(|desktop |desktop.get_name()=="jorge" ).unwrap().to_desktop();
 		let desktops = Desktop::get_desktops();
@@ -191,7 +188,7 @@ mod tests{
 	}
 
 	#[test]
-	fn test_get_desktop_config(){
+	fn test_get_desktop_config() {
 		let desktops = Desktop::get_desktops();
 		let desktop = desktops.into_iter().find(|desktop |desktop.get_name()=="jorge" ).unwrap().to_desktop();
 
@@ -199,7 +196,7 @@ mod tests{
 	}
 
 	#[test]
-	fn test_get_desktop_patterns(){
+	fn test_get_desktop_patterns() {
 		let desktops = Desktop::get_desktops();
 		for desktop in &desktops{
 			println!("Desktop: {} in {}",desktop.get_name(),desktop.get_path())

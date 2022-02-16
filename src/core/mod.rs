@@ -7,7 +7,7 @@ pub mod postscript;
 const GTHEME_HOME:&str="~/github/gtheme";
 const CONFIG_HOME:&str = "~/.config";
 
-fn expand_path(origin_path:&str) ->String{
+fn expand_path(origin_path: &str) -> String{ 
 	let mut path = String::from(origin_path);
 	path = shellexpand::tilde(&path).to_string();
 	path = shellexpand::env(&path).unwrap().to_string();
@@ -48,7 +48,7 @@ mod tests{
 	// }
 
 	#[test]
-	fn test_apply_theme(){
+	fn test_apply_theme() {
 		let desktops = Desktop::get_desktops();
 		let desktop = desktops.into_iter().find(|desktop |desktop.get_name()=="jorge" ).unwrap();
 

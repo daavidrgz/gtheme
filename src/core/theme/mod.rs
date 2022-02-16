@@ -7,76 +7,73 @@ use crate::core;
 
 
 #[derive(Debug,Serialize,Deserialize)]
-pub struct Theme{
+pub struct Theme {
 	//TODO: getters
-	pub name:String,
-	pub vscode:String,
-	pub wallpaper:String,
-	pub colors:HashMap<String,String>
+	pub name: String,
+	pub vscode: String,
+	pub wallpaper: String,
+	pub colors: HashMap<String, String>
 }
 
 impl Theme{
 
 	//TODO: from str or from ThemeFile??
-	pub fn from(theme:&ThemeFile)-> Self{
+	pub fn from(theme: &ThemeFile) -> Self {
 		let mut file = File::open(theme.get_path()).expect("Could not open theme file");
 		let mut content = String::new();
 		file.read_to_string(&mut content).expect("Could not read theme file");
 		serde_json::from_str(&content).expect("Error while deserializing theme file")
 	}
 	
-	pub fn get_themes()->Vec<ThemeFile>{
-		let gtheme_home:String= core::expand_path(core::GTHEME_HOME);
-		let themes_dir = gtheme_home+"/themes";
-		let entries = fs::read_dir(&themes_dir).expect(&format!("Could not read directory:{}",&themes_dir));
+	pub fn get_themes() -> Vec<ThemeFile> {
+		let gtheme_home:String = core::expand_path(core::GTHEME_HOME);
+		let themes_dir = gtheme_home + "/themes";
+		let entries = fs::read_dir(&themes_dir).expect(&format!("Could not read directory:{}", &themes_dir));
 
 		let mut vec = Vec::new();
-		for entry in entries{
-			let entry = entry.expect(&format!("Error while reading entry from dir: {}",&themes_dir));
-			let file_name =entry.file_name().into_string().expect(&format!("Error while converting OsString to String (invalid unicode data?)"));
+		for entry in entries {
+			let entry = entry.expect(&format!("Error while reading entry from dir: {}", &themes_dir));
+			let file_name = entry.file_name().into_string().expect(&format!("Error while converting OsString to String (invalid unicode data?)"));
 			let path = String::from(entry.path().to_str().expect(&format!("Error while converting OsString to String (invalid utf-8 data?)")));
 
 			let name = match file_name.rsplit_once("."){
 				None => file_name,
-				Some((prefix,_))=>String::from(prefix)
+				Some((prefix,_)) => String::from(prefix)
 			};
-			vec.push(ThemeFile{name,path});
+			vec.push(ThemeFile { name, path });
 		}
 		vec.sort_by(|a,b| a.get_name().to_lowercase().cmp(&b.get_name().to_lowercase()));
 		vec
 	}
 
 	//TODO: inverted theme
-	
 }
 
 #[derive(Debug)]
-pub struct ThemeFile{
-	name:String,
-	path:String,
+pub struct ThemeFile {
+	name: String,
+	path: String,
 }
 impl ThemeFile{
-	pub fn to_theme(&self)->Theme{
+	pub fn to_theme(&self) -> Theme {
 		Theme::from(self)
 	}
-	pub fn get_name(&self) ->&String{
+	pub fn get_name(&self) -> &String {
 		&self.name
 	}
-
-	pub fn get_path(&self) ->&String{
+	pub fn get_path(&self) -> &String {
 		&self.path
 	}
-
 }
 
 #[cfg(test)]
 mod tests{
 	use super::*;
 	#[test]
-	fn test_get_themes(){
+	fn test_get_themes() {
 		let themes = Theme::get_themes();
-		for theme in &themes{
-			println!("Theme: {} in {}",theme.get_name(),theme.get_path())
+		for theme in &themes {
+			println!("Theme: {} in {}", theme.get_name(), theme.get_path())
 		}
 
 	}
