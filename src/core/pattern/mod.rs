@@ -69,7 +69,11 @@ impl Pattern{
 	pub fn fill(&self,theme:&Theme,is_inverted:bool){
 		let filled_content =self.fill_values(theme,is_inverted);
 	
-		let mut output_file = File::create(self.get_output()).expect(&format!("Could not create file: {}",self.get_output()));
+		//If cant create output file, returns
+		let mut output_file = match File::create(self.get_output()){
+			Ok(file)=>file,
+			_=>return
+		};
 		output_file.write_all(filled_content.as_bytes()).expect(&format!("Could not write content to: {}",self.get_output()));
 	}
 	fn fill_values(&self,theme:&Theme,is_inverted:bool) -> String{

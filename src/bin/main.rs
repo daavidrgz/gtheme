@@ -66,7 +66,7 @@ fn main() -> Result<(), io::Error> {
             )
             .split(f.size());
         
-        f.render_widget(hBox, chunks[1]);
+        // f.render_widget(hBox, chunks[1]);
 
         let paragraph = Paragraph::new(create_logo("./assets/logo.txt"))
             .style(Style::default().fg(Color::White).bg(Color::Black))
