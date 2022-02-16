@@ -46,18 +46,26 @@ impl ScreenItem {
 
 struct AppState<T> {
 	current_screen: Screen,
-	lists: HashMap<Screen, [StatefulList<T>; 2]>
+	lists: HashMap<Screen, ([StatefulList<T>; 2], [Color; 2], [String; 2])>
 }
 impl<T> AppState<T> {
-	pub fn new(lists: HashMap<Screen, [StatefulList<T>; 2]>) -> AppState<T> {
+	pub fn new(lists: HashMap<Screen, ([StatefulList<T>; 2], [Color; 2], [String; 2])>) -> AppState<T> {
 		AppState {
 			current_screen: Screen::Desktop,
 			lists
 		}
 	}
 	
-	pub fn get_state(&mut self) -> (&mut Screen, &mut HashMap<Screen, [StatefulList<T>; 2]>) {
+	pub fn get_state(&mut self) -> (&mut Screen, &mut HashMap<Screen, ([StatefulList<T>; 2], [Color; 2], [String; 2])>) {
 		(&mut self.current_screen, &mut self.lists)
+	}
+
+	pub fn get_screen(&mut self) -> &mut Screen {
+		&mut self.current_screen
+	}
+
+	pub fn set_screen(&mut self, screen: Screen) {
+		self.current_screen = screen;
 	}
 }
 
@@ -110,8 +118,8 @@ impl Ui {
 		let fav_themes_list = StatefulList::with_items(fav_themes, false);
 
 		let mut map = HashMap::new();
-		map.insert(Screen::Desktop, [desktops_list, patterns_list]);
-		map.insert(Screen::Theme, [themes_list, fav_themes_list]);
+		map.insert(Screen::Desktop, ([desktops_list, patterns_list], [Color::Cyan, Color::Magenta], [String::from("DESKTOPS"), String::from("PATTERNS")]));
+		map.insert(Screen::Theme, ([themes_list, fav_themes_list], [Color::Blue, Color::Yellow], [String::from("THEMES"), String::from("FAV THEMES")]));
 
 		let mut app_state = AppState::new(map);
 
@@ -119,7 +127,7 @@ impl Ui {
 			self.terminal.draw(|f| Ui::draw_ui(f, &mut app_state))?;
 			
 			let (current_screen, map) = app_state.get_state();
-			let lists = map.get_mut(current_screen).unwrap();
+			let (lists, _, _) = map.get_mut(&current_screen).unwrap();
 
 			let current_list = if lists[0].is_selected() {0} else {1};
 
@@ -129,10 +137,21 @@ impl Ui {
 						KeyCode::Char('q') | KeyCode::Char('Q') => return Ok(()),
 						KeyCode::Down => lists[current_list].next(),
 						KeyCode::Up => lists[current_list].previous(),
-						KeyCode::Char('n') => {
-							lists[current_list].unselect();
-							lists[(current_list + 1) % 2].next();
+						KeyCode::Left => {
+							if current_list != 0 {
+								lists[current_list].unselect();
+								lists[current_list - 1].next();
+							}
 						},
+						KeyCode::Right => {
+							if current_list != 1 {
+								lists[current_list].unselect();
+								lists[current_list + 1].next();
+							}
+						},
+						KeyCode::Tab => {
+							let screen = if *app_state.get_screen() == Screen::Desktop {Screen::Theme} else {Screen::Desktop};
+							app_state.set_screen(screen)}
 						_ => {}
 					}
 				}
@@ -158,10 +177,10 @@ impl Ui {
 		f.render_widget(logo_widget.get_widget(), logo_container);
 
 		let (current_screen, map) = app_state.get_state();
-		let lists = map.get_mut(&current_screen).unwrap();
+		let (lists, colors, titles) = map.get_mut(&current_screen).unwrap();
 
-		let widget_list_1 = ListWidget::new("DESKTOPS", Color::LightCyan, &lists[0]);
-		let widget_list_2 = ListWidget::new("PATTERNS", Color::Magenta, &lists[1]);
+		let widget_list_1 = ListWidget::new(titles[0].as_str(), colors[0], &lists[0]);
+		let widget_list_2 = ListWidget::new(titles[1].as_str(), colors[1], &lists[1]);
 
 		f.render_stateful_widget(widget_list_1.get_widget(), h_box[0], lists[0].get_state());
 		f.render_stateful_widget(widget_list_2.get_widget(), h_box[1], lists[1].get_state());

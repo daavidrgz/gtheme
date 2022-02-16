@@ -1,6 +1,7 @@
 use tui::{
 	widgets::{Block, Borders, List, ListItem, ListState},
 	style::{Color, Modifier, Style},
+	text::{Span, Spans},
 };
 
 use crate::app::ScreenItem;
@@ -29,7 +30,7 @@ impl<T> StatefulList<T> {
 		&self.state
 	}
 
-	pub fn is_selected(&mut self) -> bool {
+	pub fn is_selected(&self) -> bool {
 		match self.state.selected() {
 			Some(_) => true,
 			None => false,
@@ -68,24 +69,28 @@ impl<'a> ListWidget<'a> {
 			.items
 			.iter()
 			.map(|i| {
-				ListItem::new(String::from(i.get_name())).style(Style::default().fg(Color::DarkGray).bg(Color::Reset))
+				let text = i.get_name();
+				ListItem::new(String::from(text))
+					.style(Style::default().fg(Color::DarkGray).bg(Color::Reset))
 			}).collect();
-
+		
+		let title_style = Style::default().fg(color).add_modifier(Modifier::BOLD);
+		let title_style = if stateful_list.is_selected() {
+			title_style.add_modifier(Modifier::REVERSED)
+		}	else {
+			title_style
+		};
+		
 		let widget = List::new(items)
 			.block(Block::default()
 				.borders(Borders::ALL)
-				.title(format!(" {} ", title))
+				.title(Span::styled(String::from(format!(" {} ", title)), title_style))
 				.border_style(Style::default().fg(color)))
 			.highlight_symbol(" ‣ ")
-			.highlight_style(
-				Style::default()
-					.fg(color)
-					.add_modifier(Modifier::BOLD),
+			.highlight_style(Style::default().fg(color).add_modifier(Modifier::BOLD),
 			);
 			
-		ListWidget {
-			widget
-		}
+		ListWidget { widget }
 	}
 
 	pub fn get_widget(self) -> List<'a> {
