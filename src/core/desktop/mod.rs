@@ -131,7 +131,9 @@ impl Desktop {
 		self.apply(theme, actived, inverted);
 
 		let postscripts = PostScript::get_postscripts(self.get_name());
-
+		if let Some(ps) = postscripts.get("desktop-exit") {
+			ps.execute(vec![]);
+		}
 	}
 
 	pub fn get_config_files(&self) -> Vec<DirEntry> {

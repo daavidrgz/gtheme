@@ -56,7 +56,7 @@ impl ScreenItem {
 		};
 
 		let themes = Theme::get_themes();
-		let theme = themes.into_iter().find(|theme |theme.get_name()=="Japan-Dark" ).unwrap(); 
+		let theme = themes.into_iter().find(|theme |theme.get_name()=="Tomorrow-Night-Blue" ).unwrap(); 
 
 		let patterns = Pattern::get_patterns(next_desktop.get_name());
 		let mut actived = HashMap::new();
