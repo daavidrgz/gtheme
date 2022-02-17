@@ -5,7 +5,8 @@ use tui::style::Color;
 use crate::core::{
 	desktop::Desktop,
 	theme::Theme,
-	pattern::Pattern
+	pattern::Pattern,
+	config::GlobalConfig
 };
 
 use crate::app::screenitem::ScreenItem;
@@ -18,36 +19,40 @@ pub enum Screen {
 
 pub struct AppState {
 	current_screen: Screen,
-	lists: HashMap<Screen, [StatefulList<ScreenItem>; 2]>
+	map: HashMap<Screen, [StatefulList; 2]>,
+	global_config: GlobalConfig
 }
 impl AppState {
-	pub fn default() -> AppState {
+	pub fn default(global_config: GlobalConfig) -> AppState {
 		AppState {
 			current_screen: Screen::Desktop,
-			lists: AppState::create_lists()
+			map: AppState::create_lists(&global_config),
+			global_config: GlobalConfig::new()
 		}
 	}
 	
-	pub fn get_state(&mut self) -> (&mut Screen, &mut HashMap<Screen, [StatefulList<ScreenItem>; 2]>) {
-		(&mut self.current_screen, &mut self.lists)
+	pub fn get_mut_state(&mut self) -> (&mut Screen, &mut HashMap<Screen, [StatefulList; 2]>, &mut GlobalConfig) {
+		(&mut self.current_screen, &mut self.map, &mut self.global_config)
 	}
-
-	pub fn get_screen(&mut self) -> &mut Screen {
+	pub fn get_mut_screen(&mut self) -> &mut Screen {
 		&mut self.current_screen
 	}
 
-	pub fn set_screen(&mut self, screen: Screen) {
-		self.current_screen = screen;
+	pub fn get_global_config(&self) -> &GlobalConfig {
+		&self.global_config
+	}
+	pub fn get_mut_global_config(&mut self) ->&mut GlobalConfig {
+		&mut self.global_config
 	}
 
-	fn create_lists() -> HashMap<Screen, [StatefulList<ScreenItem>; 2]> {
+	fn create_lists(global_config: &GlobalConfig) -> HashMap<Screen, [StatefulList; 2]> {
 		let desktops = Desktop::get_desktops().into_iter().map(|e|ScreenItem::Desktop(e)).collect();
 		let desktops_list = StatefulList::with_items(desktops, Color::Cyan, "DESKTOPS ".to_string(), true);
 
 		let patterns = Pattern::get_patterns("simple").into_iter().map(|e|ScreenItem::Pattern(e)).collect();
 		let patterns_list = StatefulList::with_items(patterns, Color::Magenta,  "PATTERNS ".to_string(), false);
 
-		let fav_themes = Theme::get_themes().into_iter().map(|e|ScreenItem::Theme(e)).collect();
+		let fav_themes = global_config.get_fav_themes().into_iter().map(|e|ScreenItem::Theme(e.clone())).collect();
 		let fav_themes_list = StatefulList::with_items(fav_themes, Color::Blue, "FAV-THEMES ".to_string(), true);
 
 		let themes = Theme::get_themes().into_iter().map(|e|ScreenItem::Theme(e)).collect();

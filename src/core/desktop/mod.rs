@@ -80,10 +80,10 @@ impl Desktop {
 				postscript.execute(vec![pattern.get_output()])
 			}
 		}
-		if !&theme.wallpaper.is_empty() && *actived.get("wallpaper").unwrap_or(&false){
+		if !&theme.get_wallpaper().is_empty() && *actived.get("wallpaper").unwrap_or(&false){
 			//TODO: wallpaper actived or
 			if let Some(ps) = postscripts.get("wallpaper") {
-				ps.execute(vec![&core::expand_path(&theme.wallpaper)]);
+				ps.execute(vec![&core::expand_path(&theme.get_wallpaper())]);
 			}
 		}
 	}
@@ -141,7 +141,7 @@ impl Desktop {
 	//TODO: delete patterns function for a given directory?
 }
 
-#[derive(Debug)]
+#[derive(Debug,Clone)]
 pub struct DesktopFile {
 	name: String,
 	path: String,

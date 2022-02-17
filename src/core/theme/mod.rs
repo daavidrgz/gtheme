@@ -9,13 +9,23 @@ use crate::core;
 #[derive(Debug,Serialize,Deserialize)]
 pub struct Theme {
 	//TODO: getters
-	pub name: String,
-	pub vscode: String,
-	pub wallpaper: String,
-	pub colors: HashMap<String, String>
+	name: String,
+	vscode: String,
+	wallpaper: String,
+	colors: HashMap<String, String>
 }
 
-impl Theme{
+impl Theme {
+
+	pub fn get_name(&self) -> &String {
+		&self.name
+	}
+	pub fn get_wallpaper(&self) -> &String {
+		&self.wallpaper
+	}
+	pub fn get_colors(&self) -> &HashMap<String, String> {
+		&self.colors
+	}
 
 	//TODO: from str or from ThemeFile??
 	pub fn from(theme: &ThemeFile) -> Self {
@@ -36,7 +46,7 @@ impl Theme{
 			let file_name = entry.file_name().into_string().expect(&format!("Error while converting OsString to String (invalid unicode data?)"));
 			let path = String::from(entry.path().to_str().expect(&format!("Error while converting OsString to String (invalid utf-8 data?)")));
 
-			let name = match file_name.rsplit_once("."){
+			let name = match file_name.rsplit_once(".") {
 				None => file_name,
 				Some((prefix,_)) => String::from(prefix)
 			};

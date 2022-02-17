@@ -16,6 +16,8 @@ use crossterm::{
 	terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 
+use crate::core::config::GlobalConfig;
+
 use crate::app::widgets::{ListWidget, LogoWidget};
 use crate::app::screenitem::ScreenItem;
 use crate::app::appstate::{AppState, Screen};
@@ -52,16 +54,19 @@ impl Ui {
 	}
 
 	fn run_app(&mut self) -> Result<(), Box<dyn Error>> {
-		let mut app_state = AppState::default();
+		let mut app_state = AppState::default(GlobalConfig::new());
 
 		loop {
 			self.terminal.draw(|f| Ui::draw_ui(f, &mut app_state))?;
-			if !Ui::manage_input(&mut app_state) {return Ok(())}
+			if !Ui::manage_input(&mut app_state) {break}
 		}
+
+		app_state.get_global_config().save();
+		Ok(())
 	}
 
 	fn manage_input(app_state: &mut AppState) -> bool {
-		let (current_screen, map) = app_state.get_state();
+		let (current_screen, map, global_config) = app_state.get_mut_state();
 		let lists = map.get_mut(&current_screen).unwrap();
 
 		let current_list = if lists[0].is_selected() {0} else {1};
@@ -88,12 +93,21 @@ impl Ui {
 					}
 				},
 				KeyCode::Tab => {
-					let screen = if *app_state.get_screen() == Screen::Desktop {Screen::Theme} else {Screen::Desktop};
-					app_state.set_screen(screen)
+					let screen = if *app_state.get_mut_screen() == Screen::Desktop {Screen::Theme} else {Screen::Desktop};
+					*app_state.get_mut_screen() = screen
 				},
-				KeyCode::Enter => {
-					lists[current_list].get_selected().unwrap().apply()
-				},
+				KeyCode::Enter => lists[current_list].get_selected().unwrap().apply(global_config),
+				KeyCode::Char('f') => {
+					let item = match lists[current_list].get_selected() {
+						Some(item) => item.clone(),
+						None => return true
+					};
+					if current_list == 0 { 
+						lists.get_mut(0).unwrap().remove_fav(&item,global_config)
+					} else {
+						lists.get_mut(0).unwrap().add_fav(&item,global_config)
+					}
+				}
 				_ => {}
 			}
 		}
@@ -117,7 +131,7 @@ impl Ui {
 		let logo_widget = LogoWidget::new();
 		f.render_widget(logo_widget.get_widget(), logo_container);
 
-		let (current_screen, map) = app_state.get_state();
+		let (current_screen, map, _) = app_state.get_mut_state();
 		let lists = map.get_mut(&current_screen).unwrap();
 
 		let widget_list_1 = ListWidget::new(&lists[0]);

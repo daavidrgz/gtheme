@@ -3,18 +3,18 @@ use tui::{
 	style::{Color, Modifier, Style},
 	text::Span,
 };
-
+use crate::core::config::GlobalConfig;
 use crate::app::ScreenItem;
 
-pub struct StatefulList<T> {
+pub struct StatefulList{
 	state: ListState,
 	index: usize,
-	items: Vec<T>,
+	items: Vec<ScreenItem>,
 	color: Color,
 	title: String
 }
-impl<T> StatefulList<T> {
-	pub fn with_items(items: Vec<T>, color: Color, title: String, selected: bool) -> StatefulList<T> {
+impl StatefulList {
+	pub fn with_items(items: Vec<ScreenItem>, color: Color, title: String, selected: bool) -> StatefulList {
 		let mut state = ListState::default();
 		state.select(if selected {Some(0)} else {None});
 		StatefulList {
@@ -25,6 +25,42 @@ impl<T> StatefulList<T> {
 			items,
 		}
 	}
+	
+	pub fn add_fav(&mut self, item:&ScreenItem, global_config: &mut GlobalConfig) {
+		match item {
+			ScreenItem::Theme(t) => {
+				let fav_themes = global_config.get_mut_fav_themes();
+				let idx = fav_themes.iter().position(|item| item.get_name() == t.get_name());
+
+				match idx {
+					Some(_) => (),
+					None => {
+						fav_themes.push(t.clone());
+						self.items.push(ScreenItem::Theme(t.clone()));
+					}
+				}
+			}
+			_ => {}
+		}
+	}
+
+	pub fn remove_fav(&mut self, item:&ScreenItem, global_config: &mut GlobalConfig) {
+		match item {
+			ScreenItem::Theme(t) => {
+				let fav_themes = global_config.get_mut_fav_themes();
+				let idx = fav_themes.iter().position(|item| item.get_name() == t.get_name());
+				
+				match idx {
+					Some(i) => {
+						fav_themes.remove(i);
+						self.items.remove(i);
+					},
+					None => ()
+				}
+			}
+			_ => {}
+		}
+	}
 
 	pub fn get_state(&self) -> &ListState {
 		&self.state
@@ -32,8 +68,11 @@ impl<T> StatefulList<T> {
 	pub fn get_state_mut(&mut self) -> &mut ListState {
 		&mut self.state
 	}
-	pub fn get_items(&self) -> &Vec<T> {
+	pub fn get_items(&self) -> &Vec<ScreenItem> {
 		&self.items
+	}
+	pub fn get_mut_items(&mut self) -> &mut Vec<ScreenItem> {
+		&mut self.items
 	}
 	pub fn get_color(&self) -> &Color {
 		&self.color
@@ -45,9 +84,9 @@ impl<T> StatefulList<T> {
 		self.items.len()
 	}
 	
-	pub fn get_selected(&self) -> Option<&T> {
+	pub fn get_selected(&self) -> Option<&ScreenItem> {
 		match self.state.selected() {
-			Some(idx) => Some(&self.items[idx]),
+			Some(idx) => self.items.get(idx),
 			None => None,
 		}
 	}
@@ -82,11 +121,13 @@ impl<T> StatefulList<T> {
 	}
 }
 
+
+
 pub struct ListWidget<'a> {
 	widget: List<'a>
 }
 impl<'a> ListWidget<'a> {
-	pub fn new(stateful_list: &StatefulList<ScreenItem>) -> ListWidget<'a> {
+	pub fn new(stateful_list: &StatefulList) -> ListWidget<'a> {
 
 		let color = *stateful_list.get_color();
 		let title = stateful_list.get_title();
@@ -114,16 +155,21 @@ impl<'a> ListWidget<'a> {
 
 				it+=1;
 
-				ListItem::new(String::from(text)).style(Style::default().fg(Color::Gray).add_modifier(Modifier::DIM))
+				ListItem::new(String::from(text)).style(Style::default().add_modifier(Modifier::DIM))
 			}).collect();
 		
-		let mut title_style = Style::default().fg(color).add_modifier(Modifier::BOLD).add_modifier(Modifier::REVERSED);
-
 		let mut border_style = Style::default().fg(color);
 		border_style = if !stateful_list.is_selected() {
 			border_style.add_modifier(Modifier::DIM)
 		}	else {
 			border_style
+		};
+
+		let mut title_style = Style::default().fg(color).add_modifier(Modifier::BOLD);
+		title_style = if stateful_list.is_selected() {
+			title_style.add_modifier(Modifier::REVERSED)
+		}	else {
+			title_style
 		};
 
 		let widget = List::new(items)

@@ -46,7 +46,6 @@ impl PostScript{
 			.stderr(Stdio::null())
 			.args(args)
 			.spawn().expect(&format!("Could not execute file:{}", self.get_path()));
-
 	}
 }
 #[cfg(test)]

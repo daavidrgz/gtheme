@@ -82,7 +82,7 @@ impl Pattern {
 
 	fn fill_values(&self, theme: &Theme, is_inverted: bool) -> String {
 		let mut result = String::from(&self.content);
-		for (key,value) in theme.colors.iter() {
+		for (key,value) in theme.get_colors().iter() {
 
 			let real_key = if is_inverted {
 				match key.as_str(){
@@ -104,7 +104,7 @@ impl Pattern {
 	//TODO: delete patterns function for a given directory?
 }
 
-#[derive(Debug)]
+#[derive(Debug,Clone)]
 pub struct PatternFile {
 	name: String,
 	path: String,
