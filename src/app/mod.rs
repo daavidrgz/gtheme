@@ -131,11 +131,11 @@ impl Ui {
 		let logo_widget = LogoWidget::new();
 		f.render_widget(logo_widget.get_widget(), logo_container);
 
-		let (current_screen, map, _) = app_state.get_mut_state();
+		let (current_screen, map, global_config) = app_state.get_mut_state();
 		let lists = map.get_mut(&current_screen).unwrap();
 
-		let widget_list_1 = ListWidget::new(&lists[0]);
-		let widget_list_2 = ListWidget::new(&lists[1]);
+		let widget_list_1 = ListWidget::new(&lists[0], global_config);
+		let widget_list_2 = ListWidget::new(&lists[1], global_config);
 
 		f.render_stateful_widget(widget_list_1.get_widget(), h_box[0], lists[0].get_state_mut());
 		f.render_stateful_widget(widget_list_2.get_widget(), h_box[1], lists[1].get_state_mut());

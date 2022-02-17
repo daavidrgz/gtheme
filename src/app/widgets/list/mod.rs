@@ -1,7 +1,7 @@
 use tui::{
 	widgets::{Block, Borders, List, ListItem, ListState},
 	style::{Color, Modifier, Style},
-	text::Span,
+	text::{Span, Spans},
 };
 use crate::core::config::GlobalConfig;
 use crate::app::ScreenItem;
@@ -127,7 +127,7 @@ pub struct ListWidget<'a> {
 	widget: List<'a>
 }
 impl<'a> ListWidget<'a> {
-	pub fn new(stateful_list: &StatefulList) -> ListWidget<'a> {
+	pub fn new(stateful_list: &StatefulList, global_config: &GlobalConfig) -> ListWidget<'a> {
 
 		let color = *stateful_list.get_color();
 		let title = stateful_list.get_title();
@@ -136,26 +136,13 @@ impl<'a> ListWidget<'a> {
 		let items: Vec<ListItem> = stateful_list
 			.items.iter()
 			.map(|screen_item| {
-
-				let mut text = screen_item.get_name().to_string();
-				text = match stateful_list.get_state().selected() {
-					Some(idx) => {
-						if idx == it {
-							let aux_text = format!(" ‣ {}", text);
-							if idx == 0 { format!("{} ↓", aux_text) }
-							else if idx == stateful_list.get_length() - 1 { format!("{} ↑", aux_text) }
-							else { format!("{} ↓ ↑", aux_text) }
-							
-						} else {
-							format!("   {}", text)
-						}
-					},
-					None => format!("   {}", text)
-				};
-
-				it+=1;
-
-				ListItem::new(String::from(text)).style(Style::default().add_modifier(Modifier::DIM))
+				let (name, active_text, arrows) = Self::get_item_text(it, screen_item, stateful_list, global_config);
+				it += 1;
+				ListItem::new(Spans::from(vec![
+					Span::from(name), 
+					Span::styled(active_text, Style::default().fg(color).add_modifier(Modifier::ITALIC).add_modifier(Modifier::BOLD)), 
+					Span::from(arrows)
+				])).style(Style::default().add_modifier(Modifier::DIM))
 			}).collect();
 		
 		let mut border_style = Style::default().fg(color);
@@ -182,6 +169,33 @@ impl<'a> ListWidget<'a> {
 			);
 			
 		ListWidget { widget }
+	}	
+
+	fn get_item_text(it: usize, screen_item: &ScreenItem, stateful_list: &StatefulList, global_config: &GlobalConfig ) -> (String, String, String) {
+		let mut name = screen_item.get_name().to_string();
+		let mut arrows = String::new();
+
+		name = match stateful_list.get_state().selected() {
+			Some(idx) => {
+				if idx == it {
+					arrows = if idx == 0 { "↓".to_string() }
+					else if idx == stateful_list.get_length() - 1 { "↑".to_string() }
+					else { "↓ ↑".to_string() };
+
+					format!(" ‣ {} ", name)
+				} else {
+					format!("   {} ", name)
+				}
+			},
+			None => format!("   {} ", name)
+		};
+ 
+		let mut active_text = String::new();
+		if screen_item.is_active(global_config) {
+			active_text = "• Active ".to_string();
+		};
+
+		(name, active_text, arrows)
 	}
 
 	pub fn get_widget(self) -> List<'a> {

@@ -30,6 +30,25 @@ impl ScreenItem {
 		}
 	}
 
+	pub fn is_active(&self, global_config: &GlobalConfig) -> bool {
+		match self {
+			ScreenItem::Desktop(d) => {
+				match global_config.get_current_desktop() {
+					Some(current_desktop) => d.get_name() == current_desktop.get_name(),
+					None => false
+				}
+			},
+			ScreenItem::Theme(t) => {
+				match global_config.get_current_theme() {
+					Some(current_theme) => t.get_name() == current_theme.get_name(),
+					None => false
+				}
+			},
+			ScreenItem::Pattern(_) => false
+		}
+	}
+
+
 	fn apply_theme(theme: ThemeFile, global_config: &mut GlobalConfig) {
 		let current_desktop = global_config.get_current_desktop().as_ref()
 			.expect("Can not apply a theme, there is no desktop installed").to_desktop();
@@ -56,7 +75,7 @@ impl ScreenItem {
 		};
 
 		let themes = Theme::get_themes();
-		let theme = themes.into_iter().find(|theme |theme.get_name()=="Tomorrow-Night-Blue" ).unwrap(); 
+		let theme = themes.into_iter().find(|theme |theme.get_name() == "Tomorrow-Night-Blue").unwrap(); 
 
 		let patterns = Pattern::get_patterns(next_desktop.get_name());
 		let mut actived = HashMap::new();
