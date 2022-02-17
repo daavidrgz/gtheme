@@ -1,4 +1,4 @@
-%output-file%=~/.config/rofi/colors.rasi
+%output-file%=/home/david/.config/rofi/colors.rasi
 // %theme-name%
 
 * {

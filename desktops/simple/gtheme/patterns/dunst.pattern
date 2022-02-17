@@ -1,4 +1,4 @@
-%output-file%=~/.config/dunst/dunstrc
+%output-file%=/home/david/.config/dunst/dunstrc
 # %theme-name%
 
 # ██████╗ ██╗   ██╗███╗   ██╗███████╗████████╗
@@ -73,7 +73,7 @@ progress_bar_frame_width = 0
 #   FORMAT
 #----------------------
 
-font = DejaVuSansMono Nerd Font Medium 10
+font = DejaVuSansMono Nerd Font Medium 9
 
 markup = full
 

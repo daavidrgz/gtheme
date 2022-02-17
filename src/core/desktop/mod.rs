@@ -6,7 +6,7 @@ use crate::core::pattern::*;
 use crate::core::theme::Theme;
 use crate::core::postscript::PostScript;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Desktop{
 	name: String,
 	path: String,
@@ -80,10 +80,14 @@ impl Desktop {
 				postscript.execute(vec![pattern.get_output()])
 			}
 		}
-		if !&theme.get_wallpaper().is_empty() && *actived.get("wallpaper").unwrap_or(&false){
-			//TODO: wallpaper actived or
+		if !theme.get_wallpaper().is_empty() && *actived.get("wallpaper").unwrap_or(&false) {
 			if let Some(ps) = postscripts.get("wallpaper") {
 				ps.execute(vec![&core::expand_path(&theme.get_wallpaper())]);
+			}
+		}
+		if !theme.get_vscode().is_empty() && *actived.get("vscode").unwrap_or(&false) {
+			if let Some(ps) = postscripts.get("vscode") {
+				ps.execute(vec![theme.get_vscode()]);
 			}
 		}
 	}
@@ -107,6 +111,7 @@ impl Desktop {
 		let config_home = core::expand_path(core::CONFIG_HOME);
 
 		previous.uninstall();
+		self.uninstall();
 
 		let files_to_install = self.get_config_files();
 
@@ -124,6 +129,9 @@ impl Desktop {
 		}
 
 		self.apply(theme, actived, inverted);
+
+		let postscripts = PostScript::get_postscripts(self.get_name());
+
 	}
 
 	pub fn get_config_files(&self) -> Vec<DirEntry> {

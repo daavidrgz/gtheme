@@ -1,4 +1,4 @@
-%output-file%=~/.mozilla/firefox/l6lop2co.default-release/chrome/userChrome.css
+%output-file%=/home/david/.mozilla/firefox/l6lop2co.default-release/chrome/userChrome.css
 /* %theme-name% */
 
 :root {

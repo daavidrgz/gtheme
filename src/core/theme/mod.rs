@@ -20,6 +20,9 @@ impl Theme {
 	pub fn get_name(&self) -> &String {
 		&self.name
 	}
+	pub fn get_vscode(&self) -> &String {
+		&self.vscode
+	}
 	pub fn get_wallpaper(&self) -> &String {
 		&self.wallpaper
 	}

@@ -1,4 +1,4 @@
-#  -------- Gtheme: Gruvbox-Light --------
+#  -------- Gtheme: Snazzy --------
 
 # ██████╗ ██╗   ██╗███╗   ██╗███████╗████████╗
 # ██╔══██╗██║   ██║████╗  ██║██╔════╝╚══██╔══╝
@@ -32,27 +32,30 @@ browser = /usr/bin/firefox
 
 always_run_script = true
 
+startup_notification = false
+
+verbosity = mesg
+
 force_xinerama = false
 
 #----------------------
 #   FRAME
 #----------------------
 
-width = 300
-height = 300
 corner_radius = 6
 
 shrink = no
 
 transparency = 0
 
+notification_height = 0
 separator_height = 2
 line_height = 4
 padding = 12
 horizontal_padding = 20
 frame_width = 0
 
-frame_color = "#98971a"
+frame_color = "#5AF78E"
 separator_color = frame
 
 sort = yes
@@ -89,10 +92,10 @@ icon_position = left
 
 text_icon_padding = 0
 
-min_icon_size = 32
-max_icon_size = 40
+min_icon_size = 20
+max_icon_size = 32
 
-icon_path = /usr/share/icons/Papirus/64x64/mimetypes
+icon_path = /usr/share/icons/Papirus/64x64/apps
 
 #----------------------
 #   HISTORY
@@ -115,23 +118,23 @@ mouse_right_click = close_current
 #----------------------
 
 [urgency_low]
-background = "#fbf1c7"
-foreground = "#3c3836"
-highlight = "#689d6a"
+background = "#112031"
+foreground = "#F1F1F0"
+highlight = "#9AEDFE"
 timeout = 5
 icon = /usr/share/icons/Papirus/48x48/emblems/emblem-information.svg
 
 [urgency_normal]
-background = "#fbf1c7"
-foreground = "#3c3836"
-highlight = "#689d6a"
+background = "#112031"
+foreground = "#F1F1F0"
+highlight = "#9AEDFE"
 timeout = 5
 icon = /usr/share/icons/Papirus/48x48/emblems/emblem-information.svg
 
 [urgency_critical]
-background = "#fbf1c7"
-foreground = "#3c3836"
-highlight = "#cc241d"
+background = "#112031"
+foreground = "#F1F1F0"
+highlight = "#FF5C57"
 timeout = 5
 icon = /usr/share/icons/Papirus/48x48/emblems/emblem-important.svg
 

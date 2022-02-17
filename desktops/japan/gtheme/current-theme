@@ -1,12 +1,12 @@
 alacritty: Horizon
-bspwm: Japan-Dark
-discord: Japan-Dark
-dunst: Japan-Dark
-firefox-homepage: Japan-Dark
-firefox: Japan-Dark
-kitty: Japan-Dark
-polybar: Japan-Dark
-rofi: Japan-Dark
-spotify: Japan-Dark
-vscode: Rosé Pine
+bspwm: Japan-Light
+discord: Japan-Light
+dunst: Japan-Light
+firefox-homepage: Japan-Light
+firefox: Japan-Light
+kitty: Japan-Light
+polybar: Japan-Light
+rofi: Japan-Light
+spotify: Japan-Light
+vscode: Rosé Pine Dawn
 wallpaper: ~/.config/gtheme/wallpapers/Japan/8bit-city.png

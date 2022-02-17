@@ -1,4 +1,4 @@
-%output-file%=~/.config/alacritty/alacritty.yml
+%output-file%=/home/david/.config/alacritty/alacritty.yml
 # %theme-name%
 
 window:

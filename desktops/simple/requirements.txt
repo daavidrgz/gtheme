@@ -1,6 +1,6 @@
 bspwm
 sxhkd
-picom or picom-ibhagwan fork (better)
+picom-ibhagwan fork
 rofi
 kitty
 dunst

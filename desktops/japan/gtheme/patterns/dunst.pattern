@@ -1,4 +1,4 @@
-%output-file%=~/.config/dunst/dunstrc
+%output-file%=/home/david/.config/dunst/dunstrc
 # %theme-name%
 
 # ██████╗ ██╗   ██╗███╗   ██╗███████╗████████╗
