@@ -1,4 +1,3 @@
-
 •• GLOBAL
 
 'Tab'    #switch view Desktop/Patterns or Themes/Fav-Themes

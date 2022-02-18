@@ -1,9 +1,8 @@
 use tui::{
-	widgets::{Block, Borders, List, ListItem, ListState},
+	widgets::{Block, Borders},
 	style::{Color, Modifier, Style},
-	text::{Span, Spans},
+	text::Span,
 };
-use crate::core::config::GlobalConfig;
 
 pub struct OptionsWidget<'a> {
 	widget: Block<'a>

@@ -1,5 +1,5 @@
 use crate::core::{
-	desktop::{DesktopFile, Desktop},
+	desktop::DesktopFile,
 	theme::{ThemeFile, Theme},
 	pattern::{PatternFile, Pattern},
 	config::GlobalConfig

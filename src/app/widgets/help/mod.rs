@@ -1,43 +1,33 @@
-use std::fs::File;
-use std::io::{self, BufRead};
-
 use tui::{
-	widgets::{Block, Borders, Paragraph},
-	layout::Alignment,
+	widgets::{Block, Borders, List, ListItem},
 	style::{Color, Modifier, Style},
 	text::{Span, Spans},
 };
 
-use crate::core;
+use crate::app::statefullist::StatefulList;
 
 pub struct HelpWidget<'a> {
-	widget: Paragraph<'a>
+	widget: List<'a>
 }
 impl<'a> HelpWidget<'a> {
-	pub fn new() -> HelpWidget<'a> {
-		let path = core::expand_path(&format!("{}/assets/help.txt", core::GTHEME_HOME));
+	pub fn new(stateful_list: &StatefulList<String>) -> HelpWidget<'a> {
+		let items = Self::create_help(stateful_list);
 
-		let spans = Self::create_help(path);
-
-		let title_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD).add_modifier(Modifier::REVERSED);
+		let title_style = Style::default().fg(*stateful_list.get_color()).add_modifier(Modifier::BOLD).add_modifier(Modifier::REVERSED);
 		let block = Block::default()
-			.title(Span::styled(" HELP  ", title_style))
+			.title(Span::styled(stateful_list.get_title().clone(), title_style))
 			.borders(Borders::ALL)
-			.border_style(Style::default().fg(Color::Yellow));
+			.border_style(Style::default().fg(*stateful_list.get_color()));
 
-		let paragraph = Paragraph::new(spans)
-			.block(block)
-			.alignment(Alignment::Left);
+		let list = List::new(items)
+			.block(block);
 
 		HelpWidget {
-			widget: paragraph
+			widget: list
 		}
 	}
 
-	fn create_help(help_path: String) -> Vec<Spans<'a>> {
-		let help_file = File::open(&help_path).expect(&format!("Error while opening logo file in {}", &help_path));
-		let file_lines = io::BufReader::new(help_file).lines();
-
+	fn create_help(stateful_list: &StatefulList<String>) -> Vec<ListItem<'a>> {
 		let title_style = Style::default().fg(Color::Blue)
 			.add_modifier(Modifier::BOLD)
 			.add_modifier(Modifier::ITALIC);
@@ -45,9 +35,13 @@ impl<'a> HelpWidget<'a> {
 			.add_modifier(Modifier::BOLD);
 		let entry_value_style = Style::default().add_modifier(Modifier::BOLD);
 
-		let mut spans: Vec<Spans> = vec![];
-		for l in file_lines {
-			let line = l.expect("Error while reading help file");
+		let items: Vec<ListItem> = stateful_list.get_items().iter().enumerate().map(|(it, line)| {
+			let bar = match stateful_list.get_state().selected() {
+				Some(idx) => if idx == it {" │ "} else {"   "},
+				None => "   "
+			};
+			let bar_span = Span::styled(bar, Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD));
+
 			let words: Vec<&str> = line.split('#').collect();
 			
 			if words.len() > 2 {
@@ -56,19 +50,18 @@ impl<'a> HelpWidget<'a> {
 
 			// Its a section title
 			if words.len() == 1 {
-				spans.push(Spans::from(Span::styled(String::from(words[0]), title_style)));
-				continue
+				return ListItem::new(Spans::from(vec![bar_span, Span::styled(String::from(words[0]), title_style)]));
 			}
 
 			// Its a section entry
 			let entry_key = Span::styled(String::from(words[0]), entry_key_style);
 			let entry_value = Span::styled(String::from(words[1]), entry_value_style);
-			spans.push(Spans::from(vec![entry_key, entry_value]));
-		}
-		spans
+			ListItem::new(Spans::from(vec![bar_span, entry_key, entry_value]))
+		}).collect();
+		items
 	}
 
-	pub fn get_widget(self) -> Paragraph<'a> {
+	pub fn get_widget(self) -> List<'a> {
 		self.widget
 	}
 }

@@ -1,6 +1,7 @@
 pub mod widgets;
 pub mod screenitem;
 pub mod appstate;
+pub mod statefullist;
 
 use std::io;
 use std::{time::Duration, error::Error};
@@ -20,7 +21,6 @@ use crossterm::{
 use crate::core::config::GlobalConfig;
 
 use crate::app::widgets::{ListWidget, LogoWidget, OptionsWidget, HelpWidget};
-use crate::app::screenitem::ScreenItem;
 use crate::app::appstate::{AppState, Screen};
 
 pub struct Ui {
@@ -67,7 +67,7 @@ impl Ui {
 	}
 
 	fn manage_input(app_state: &mut AppState) -> bool {
-		let (current_screen, map, global_config, show_popup) = app_state.get_mut_state();
+		let (current_screen, map, global_config, show_popup, help_list) = app_state.get_mut_state();
 		let lists = map.get_mut(&current_screen).unwrap();
 
 		let current_list = if lists[0].is_selected() {0} else {1};
@@ -79,26 +79,37 @@ impl Ui {
 		if let Event::Key(key) = event::read().unwrap() {
 			match key.code {
 				KeyCode::Char('q') | KeyCode::Char('Q') => return false,
-				KeyCode::Char('h') | KeyCode::Char('H') => *show_popup = !*show_popup,
-				KeyCode::Down => lists[current_list].next(),
-				KeyCode::Up => lists[current_list].previous(),
+				KeyCode::Char('h') | KeyCode::Char('H') => {
+					lists[0].unselect();
+					lists[1].unselect();
+					*show_popup = !*show_popup;
+					help_list.next()
+				},
+				KeyCode::Down => if !*show_popup { lists[current_list].next() } else { help_list.next() },
+				KeyCode::Up => if !*show_popup { lists[current_list].previous() } else { help_list.previous() },
 				KeyCode::Left => {
-					if current_list != 0 {
+					if current_list != 0 && !*show_popup {
 						lists[current_list].unselect();
 						lists[current_list - 1].next();
 					}
 				},
 				KeyCode::Right => {
-					if current_list != 1 {
+					if current_list != 1 && !*show_popup {
 						lists[current_list].unselect();
 						lists[current_list + 1].next();
 					}
 				},
 				KeyCode::Tab => {
-					let screen = if *app_state.get_mut_screen() == Screen::Desktop {Screen::Theme} else {Screen::Desktop};
-					*app_state.get_mut_screen() = screen
+					if !*show_popup {
+						let screen = if *app_state.get_mut_screen() == Screen::Desktop {Screen::Theme} else {Screen::Desktop};
+						*app_state.get_mut_screen() = screen
+					}
 				},
-				KeyCode::Enter => lists[current_list].get_selected().unwrap().apply(global_config),
+				KeyCode::Enter => {
+					if !*show_popup {
+						lists[current_list].get_selected().unwrap().apply(global_config)
+					}
+				},
 				KeyCode::Char('f') | KeyCode::Char('F') => {
 					let item = match lists[current_list].get_selected() {
 						Some(item) => item.clone(),
@@ -117,7 +128,7 @@ impl Ui {
 	}
 
 	fn draw_ui(f: &mut Frame<CrosstermBackend<io::Stdout>>, app_state: &mut AppState) {
-		let (current_screen, map, global_config, show_popup) = app_state.get_mut_state();
+		let (current_screen, map, global_config, show_popup, help_list) = app_state.get_mut_state();
 		let lists = map.get_mut(&current_screen).unwrap();
 
 		let theme = if *current_screen == Screen::Theme {
@@ -171,15 +182,15 @@ impl Ui {
 		// Lists
 		let widget_list_1 = ListWidget::new(&lists[0], global_config);
 		let widget_list_2 = ListWidget::new(&lists[1], global_config);
-		f.render_stateful_widget(widget_list_1.get_widget(), h_box[0], lists[0].get_state_mut());
-		f.render_stateful_widget(widget_list_2.get_widget(), h_box[1], lists[1].get_state_mut());
+		f.render_stateful_widget(widget_list_1.get_widget(), h_box[0], lists[0].get_mut_state());
+		f.render_stateful_widget(widget_list_2.get_widget(), h_box[1], lists[1].get_mut_state());
 
 		// Help
 		if *show_popup {
-			let help_widget = HelpWidget::new();
+			let help_widget = HelpWidget::new(help_list);
 			let area = Self::centered_rect(60, 70, f.size());
 			f.render_widget(Clear, area); //this clears out the background
-			f.render_widget(help_widget.get_widget(), area);
+			f.render_stateful_widget(help_widget.get_widget(), area, help_list.get_mut_state());
 		}
 	}
 
