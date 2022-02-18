@@ -20,19 +20,21 @@ pub enum Screen {
 pub struct AppState {
 	current_screen: Screen,
 	map: HashMap<Screen, [StatefulList; 2]>,
-	global_config: GlobalConfig
+	global_config: GlobalConfig, 
+	show_popup: bool
 }
 impl AppState {
 	pub fn default(global_config: GlobalConfig) -> AppState {
 		AppState {
 			current_screen: Screen::Desktop,
 			map: AppState::create_lists(&global_config),
-			global_config: GlobalConfig::new()
+			global_config: GlobalConfig::new(),
+			show_popup: false
 		}
 	}
 	
-	pub fn get_mut_state(&mut self) -> (&mut Screen, &mut HashMap<Screen, [StatefulList; 2]>, &mut GlobalConfig) {
-		(&mut self.current_screen, &mut self.map, &mut self.global_config)
+	pub fn get_mut_state(&mut self) -> (&mut Screen, &mut HashMap<Screen, [StatefulList; 2]>, &mut GlobalConfig, &mut bool) {
+		(&mut self.current_screen, &mut self.map, &mut self.global_config, &mut self.show_popup)
 	}
 	pub fn get_mut_screen(&mut self) -> &mut Screen {
 		&mut self.current_screen

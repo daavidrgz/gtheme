@@ -1,0 +1,28 @@
+
+•• GLOBAL
+
+'Tab'    #switch view Desktop/Patterns or Themes/Fav-Themes
+'Up'     #previous item
+'Down'   #next item
+'Left'   #focus left panel
+'Right'  #focus right panel
+'c'      #toggle colors preview
+'q'      #quit
+'h'      #show/hide this popup
+
+•• PATTERNS
+
+'Enter'  #activate/desactivate patter
+'i'      #toggle invert pattern's colors
+'p'      #edit pattern's post-script
+'e'      #edit pattern's file in $VISUAL env var
+
+•• DESKTOPS
+
+'Enter'  #apply desktop
+
+•• THEMES
+
+'Enter'  #apply theme
+'f'      #flag/unflag as favourite
+'e'      #edit pattern's file in $VISUAL env var

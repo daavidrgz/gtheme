@@ -121,8 +121,6 @@ impl StatefulList {
 	}
 }
 
-
-
 pub struct ListWidget<'a> {
 	widget: List<'a>
 }

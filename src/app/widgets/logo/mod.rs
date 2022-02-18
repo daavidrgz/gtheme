@@ -9,7 +9,6 @@ use tui::{
 };
 
 use crate::core;
-
 use crate::core::theme::Theme;
 
 pub struct LogoWidget<'a> {
@@ -35,7 +34,7 @@ impl<'a> LogoWidget<'a> {
 		};
 
 		LogoWidget {
-			widget: Paragraph::new(LogoWidget::create_logo(path,colors))
+			widget: Paragraph::new(Self::create_logo(path,colors))
 				.alignment(Alignment::Left)
 		}
 	}
@@ -48,10 +47,7 @@ impl<'a> LogoWidget<'a> {
 		let logo_file = File::open(&logo_path).expect(&format!("Error while opening logo file in {}", &logo_path));
 		let file_lines = io::BufReader::new(logo_file).lines();
 
-		
-
 		let mut spans: Vec<Spans> = vec![];
-
 		for l in file_lines {
 			let line = l.expect("Error while reading logo file");
 			let words: Vec<&str> = line.split('$').collect();
