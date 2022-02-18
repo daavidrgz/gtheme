@@ -18,7 +18,7 @@ use crossterm::{
 
 use crate::core::config::GlobalConfig;
 
-use crate::app::widgets::{ListWidget, LogoWidget};
+use crate::app::widgets::{ListWidget, LogoWidget, OptionsWidget};
 use crate::app::screenitem::ScreenItem;
 use crate::app::appstate::{AppState, Screen};
 
@@ -115,24 +115,50 @@ impl Ui {
 	}
 
 	fn draw_ui(f: &mut Frame<CrosstermBackend<io::Stdout>>, app_state: &mut AppState) {
-		let padding = 2;
+		let (current_screen, map, global_config) = app_state.get_mut_state();
+
+		let lists = map.get_mut(&current_screen).unwrap();
+
+		let theme = if *current_screen == Screen::Theme {
+			let selected_theme = match lists.get(0).unwrap().get_selected() {
+				None => None,
+				Some(i) => Some(i.get_theme().unwrap().to_theme())
+			};
+
+			match lists.get(1).unwrap().get_selected() {
+				None => selected_theme,
+				Some(i) => Some(i.get_theme().unwrap().to_theme())
+			}
+		} else {
+			None
+		};
+
+		let v_padding = 2;
+		let h_padding = 4;
 
 		let mut logo_container = f.size();
 			logo_container.height = 6;
+			logo_container.width = logo_container.width / 2;
+
+		let mut options_container = f.size();
+			options_container.height = 6;
+			options_container.width = options_container.width / 2 - h_padding;
+			options_container.x = logo_container.width + h_padding;
+
 		let mut main_container = f.size();
-		main_container.height = main_container.height + logo_container.height + padding;
+			main_container.height = main_container.height + logo_container.height + v_padding;
 	
 		let h_box = Layout::default()
 			.direction(Direction::Horizontal)
-			.vertical_margin(logo_container.height + padding)
+			.vertical_margin(logo_container.height + v_padding)
 			.constraints([Constraint::Percentage(50),Constraint::Percentage(50)].as_ref())
 			.split(main_container);
 		
-		let logo_widget = LogoWidget::new();
+		let logo_widget = LogoWidget::new(theme);
 		f.render_widget(logo_widget.get_widget(), logo_container);
 
-		let (current_screen, map, global_config) = app_state.get_mut_state();
-		let lists = map.get_mut(&current_screen).unwrap();
+		let options_widget = OptionsWidget::new();
+		f.render_widget(options_widget.get_widget(), options_container);
 
 		let widget_list_1 = ListWidget::new(&lists[0], global_config);
 		let widget_list_2 = ListWidget::new(&lists[1], global_config);

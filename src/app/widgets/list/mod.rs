@@ -131,16 +131,14 @@ impl<'a> ListWidget<'a> {
 
 		let color = *stateful_list.get_color();
 		let title = stateful_list.get_title();
-		let mut it = 0;
 
 		let items: Vec<ListItem> = stateful_list
-			.items.iter()
-			.map(|screen_item| {
+			.items.iter().enumerate()
+			.map(|(it, screen_item)| {
 				let (name, active_text, arrows) = Self::get_item_text(it, screen_item, stateful_list, global_config);
-				it += 1;
 				ListItem::new(Spans::from(vec![
-					Span::from(name), 
-					Span::styled(active_text, Style::default().fg(color).add_modifier(Modifier::ITALIC).add_modifier(Modifier::BOLD)), 
+					Span::from(name),
+					Span::styled(active_text, Style::default().fg(color).add_modifier(Modifier::ITALIC).add_modifier(Modifier::BOLD).remove_modifier(Modifier::DIM)), 
 					Span::from(arrows)
 				])).style(Style::default().add_modifier(Modifier::DIM))
 			}).collect();

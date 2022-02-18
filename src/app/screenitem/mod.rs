@@ -22,6 +22,28 @@ impl ScreenItem {
 		}
 	}
 
+	pub fn get_theme(&self) -> Option<&ThemeFile> {
+		match self {
+			ScreenItem::Desktop(_) => None,
+			ScreenItem::Theme(t) => Some(t),
+			ScreenItem::Pattern(_) => None
+		}
+	}
+	pub fn get_desktop(&self) -> Option<&DesktopFile> {
+		match self {
+			ScreenItem::Desktop(d) => Some(d),
+			ScreenItem::Theme(_) => None,
+			ScreenItem::Pattern(_) => None
+		}
+	}
+	pub fn get_pattern(&self) -> Option<&PatternFile> {
+		match self {
+			ScreenItem::Desktop(_) => None,
+			ScreenItem::Theme(_) => None,
+			ScreenItem::Pattern(p) => Some(p)
+		}
+	}
+
 	pub fn apply(&self, global_config: &mut GlobalConfig) {
 		match self {
 			ScreenItem::Desktop(d) => ScreenItem::install_desktop(d.clone(), global_config),
@@ -75,7 +97,7 @@ impl ScreenItem {
 		};
 
 		let themes = Theme::get_themes();
-		let theme = themes.into_iter().find(|theme |theme.get_name() == "Tomorrow-Night-Blue").unwrap(); 
+		let theme = themes.into_iter().find(|theme |theme.get_name() == "Japan-Dark").unwrap(); 
 
 		let patterns = Pattern::get_patterns(next_desktop.get_name());
 		let mut actived = HashMap::new();

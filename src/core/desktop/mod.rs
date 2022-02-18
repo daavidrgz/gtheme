@@ -130,7 +130,7 @@ impl Desktop {
 
 		self.apply(theme, actived, inverted);
 
-		let postscripts = PostScript::get_postscripts(self.get_name());
+		let postscripts = PostScript::get_postscripts(previous.get_name());
 		if let Some(ps) = postscripts.get("desktop-exit") {
 			ps.execute(vec![]);
 		}
