@@ -49,7 +49,7 @@ impl Desktop {
 		vec
 	}
 
-	pub fn apply(&self, theme: &Theme, actived: HashMap<String,bool>, inverted: HashMap<String,bool>) {
+	pub fn apply(&self, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>) {
 		//parameter HashMap(pattern_name,bool) in order to implement inverted themes
 		let postscripts = PostScript::get_postscripts(self.get_name());
 
