@@ -72,9 +72,10 @@ impl<'a> ExtrasWidget<'a> {
 			None => format!("   {} ", name)
 		};
  
-		let mut active_text = String::new();
-		if screen_item.is_active(global_config) {
-			active_text = "• ON ".to_string();
+		let active_text = if screen_item.is_active(global_config) {
+			"• ON ".to_string()
+		} else {
+			"• OFF ".to_string()
 		};
 
 		(name, active_text, arrows)

@@ -82,11 +82,12 @@ impl Ui {
 				KeyCode::Char('h') | KeyCode::Char('H') => {
 					let help_list = popups.get_mut(&Popup::Help).unwrap();
 					match current_popup {
-						Some(_) => {
+						Some(Popup::Help) => {
 							lists[0].next();
 							help_list.unselect();
 							*current_popup = None
 						},
+						Some(_) => {}
 						None => {
 							lists[0].unselect();
 							lists[1].unselect();
@@ -98,17 +99,18 @@ impl Ui {
 				KeyCode::Char('o') | KeyCode::Char('O') => {
 					let extras_list = popups.get_mut(&Popup::Extras).unwrap();
 					match current_popup {
-						Some(_) => {
+						Some(Popup::Extras) => {
 							lists[0].next();
 							extras_list.unselect();
 							*current_popup = None
 						},
+						Some(_) => {},
 						None => {
 							lists[0].unselect();
 							lists[1].unselect();
 							extras_list.next();
 							*current_popup = Some(Popup::Extras)
-						}
+						},
 					}
 				},
 				KeyCode::Down => {
