@@ -86,6 +86,10 @@ mod tests{
 		for ps in postscripts.values() {
 			println!("post-script {} in {}",ps.get_name(),ps.get_path());
 		}
+		println!();
+		for extra_ps in PostScript::get_extras(desktop.get_name()) {
+			println!("extra post-script {} in {}",extra_ps.get_name(),extra_ps.get_path());
+		}
 	}
 
 }
