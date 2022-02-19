@@ -14,17 +14,32 @@ pub struct StatefulList<T> {
 	title: String
 }
 impl<T> StatefulList<T> {
-	pub fn with_items(items: Vec<T>, color: Color, title: String, selected: bool, infinite: bool) -> StatefulList<T> {
-		let mut state = ListState::default();
-		state.select(if selected {Some(0)} else {None});
+	pub fn with_items(items: Vec<T>) -> StatefulList<T> {
 		StatefulList {
 			index: 0,
-			infinite,
-			color,
-			title,
-			state,
+			infinite: false,
+			color: Color::White,
+			title: "".to_string(),
+			state: ListState::default(),
 			items,
 		}
+	}
+
+	pub fn title(mut self, title: String) -> Self {
+		self.title = title;
+		self
+	}
+	pub fn color(mut self, color: Color) -> Self {
+		self.color = color;
+		self
+	}
+	pub fn selected(mut self, selected: bool) -> Self {
+		self.state.select(if selected {Some(0)} else {None});
+		self
+	}
+	pub fn infinite(mut self, infinite: bool) -> Self {
+		self.infinite = infinite;
+		self
 	}
 
 	pub fn get_state(&self) -> &ListState {
@@ -100,7 +115,6 @@ impl<T> StatefulList<T> {
 		self.state.select(None);
 	}
 }
-
 
 impl StatefulList<ScreenItem> {
 	pub fn add_fav(&mut self, item: &ScreenItem, global_config: &mut GlobalConfig) {

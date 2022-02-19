@@ -53,16 +53,27 @@ impl AppState {
 
 	fn create_lists(global_config: &GlobalConfig) -> HashMap<Screen, [StatefulList<ScreenItem>; 2]> {
 		let desktops = Desktop::get_desktops().into_iter().map(|e|ScreenItem::Desktop(e)).collect();
-		let desktops_list = StatefulList::with_items(desktops, Color::Cyan, "DESKTOPS ".to_string(), true, false);
+		let desktops_list = StatefulList::with_items(desktops)
+			.color(Color::Cyan)
+			.title("DESKTOPS ".to_string())
+			.selected(true);
 
 		let patterns = Pattern::get_patterns("simple").into_iter().map(|e|ScreenItem::Pattern(e)).collect();
-		let patterns_list = StatefulList::with_items(patterns, Color::Magenta,  "PATTERNS ".to_string(), false, false);
+		let patterns_list = StatefulList::with_items(patterns)
+			.color(Color::Magenta)
+			.title("PATTERNS ".to_string());
 
 		let fav_themes = global_config.get_fav_themes().into_iter().map(|e|ScreenItem::Theme(e.clone())).collect();
-		let fav_themes_list = StatefulList::with_items(fav_themes, Color::Blue, "FAV-THEMES ".to_string(), true, false);
+		let fav_themes_list = StatefulList::with_items(fav_themes)
+			.color(Color::Blue)
+			.title("FAV-THEMES ".to_string())
+			.selected(true);
 
 		let themes = Theme::get_themes().into_iter().map(|e|ScreenItem::Theme(e)).collect();
-		let themes_list = StatefulList::with_items(themes, Color::Green, "THEMES ".to_string(), false, true);
+		let themes_list = StatefulList::with_items(themes)
+			.color(Color::Green)
+			.title("THEMES ".to_string())
+			.infinite(true);
 
 		let mut map = HashMap::new();
 		map.insert(Screen::Desktop, [desktops_list, patterns_list]);
@@ -76,6 +87,8 @@ impl AppState {
 		let file_lines = io::BufReader::new(help_file).lines();
 
 		let lines: Vec<String> = file_lines.into_iter().map(|line| line.unwrap()).collect();
-		StatefulList::with_items(lines, Color::Yellow, " HELP  ".to_string(), false, false)
+		StatefulList::with_items(lines)
+			.color(Color::Yellow)
+			.title(" HELP  ".to_string())
 	}
 }

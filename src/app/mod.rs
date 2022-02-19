@@ -145,7 +145,6 @@ impl Ui {
 			None
 		};
 
-
 		// •• Layout definition ••
 
 		let v_padding = 2;

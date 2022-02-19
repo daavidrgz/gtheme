@@ -70,7 +70,6 @@ impl ScreenItem {
 		}
 	}
 
-
 	fn apply_theme(theme: ThemeFile, global_config: &mut GlobalConfig) {
 		let current_desktop = global_config.get_current_desktop().as_ref()
 			.expect("Can not apply a theme, there is no desktop installed").to_desktop();
