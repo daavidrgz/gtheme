@@ -11,17 +11,21 @@ pub struct StatefulList<T> {
 	infinite: bool,
 	items: Vec<T>,
 	color: Color,
-	title: String
+	title: String,
+	active_text: String,
+	inactive_text: String
 }
 impl<T> StatefulList<T> {
 	pub fn with_items(items: Vec<T>) -> StatefulList<T> {
 		StatefulList {
+			items,
+			state: ListState::default(),
 			index: 0,
 			infinite: false,
 			color: Color::White,
 			title: "".to_string(),
-			state: ListState::default(),
-			items,
+			active_text: " • Active ".to_string(),
+			inactive_text: "".to_string(),
 		}
 	}
 
@@ -39,6 +43,14 @@ impl<T> StatefulList<T> {
 	}
 	pub fn infinite(mut self, infinite: bool) -> Self {
 		self.infinite = infinite;
+		self
+	}
+	pub fn active_text(mut self, active_text: &str) -> Self {
+		self.active_text = active_text.to_string();
+		self
+	}
+	pub fn inactive_text(mut self, inactive_text: &str) -> Self {
+		self.inactive_text = inactive_text.to_string();
 		self
 	}
 
@@ -59,6 +71,12 @@ impl<T> StatefulList<T> {
 	}
 	pub fn get_title(&self) -> &String {
 		&self.title
+	}
+	pub fn get_active_text(&self) -> &String {
+		&self.active_text
+	}
+	pub fn get_inactive_text(&self) -> &String {
+		&self.inactive_text
 	}
 	pub fn get_infinite(&self) -> &bool {
 		&self.infinite

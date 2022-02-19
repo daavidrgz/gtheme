@@ -1,7 +1,7 @@
 use tui::{
 	widgets::{Block, Borders, List, ListItem},
 	style::{Modifier, Style, Color},
-	text::{Span, Spans},
+	text::{Span, Spans}
 };
 
 use crate::core::config::GlobalConfig;

@@ -72,9 +72,10 @@ impl<'a> ListWidget<'a> {
 			None => format!("   {} ", name)
 		};
  
-		let mut active_text = String::new();
-		if screen_item.is_active(global_config) {
-			active_text = "• Active ".to_string();
+		let active_text = if screen_item.is_active(global_config) {
+			stateful_list.get_active_text().clone()
+		} else {
+			stateful_list.get_inactive_text().clone()
 		};
 
 		(name, active_text, arrows)

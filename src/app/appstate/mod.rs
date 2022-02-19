@@ -36,7 +36,7 @@ impl AppState {
 	pub fn default(global_config: GlobalConfig) -> AppState {
 		AppState {
 			current_screen: Screen::Desktop,
-			screens: Self::create_lists(&global_config),
+			screens: Self::create_screens(&global_config),
 			current_popup: None,
 			popups: Self::create_popups(&global_config),
 			global_config,
@@ -57,7 +57,7 @@ impl AppState {
 		&mut self.global_config
 	}
 
-	fn create_lists(global_config: &GlobalConfig) -> HashMap<Screen, [StatefulList<ScreenItem>; 2]> {
+	fn create_screens(global_config: &GlobalConfig) -> HashMap<Screen, [StatefulList<ScreenItem>; 2]> {
 		let current_desktop = global_config.get_current_desktop();
 		let desktop_str = match current_desktop {
 			Some(d) => d.get_name(),
@@ -73,7 +73,8 @@ impl AppState {
 		let patterns = Pattern::get_patterns(desktop_str).into_iter().map(|p|ScreenItem::Pattern(p)).collect();
 		let patterns_list = StatefulList::with_items(patterns)
 			.color(Color::Magenta)
-			.title("PATTERNS ");
+			.title("PATTERNS ")
+			.inactive_text(" • Inactive ");
 
 		let fav_themes = global_config.get_fav_themes().into_iter().map(|f|ScreenItem::Theme(f.clone())).collect();
 		let fav_themes_list = StatefulList::with_items(fav_themes)
@@ -107,8 +108,8 @@ impl AppState {
 
 		let lines = file_lines.into_iter().map(|line| ScreenItem::Help(line.unwrap())).collect();
 		StatefulList::with_items(lines)
-			.title("HELP ")
 			.color(Color::Yellow)
+			.title("HELP ")
 	}
 
 	fn create_extras_list(global_config: &GlobalConfig) -> StatefulList<ScreenItem> {
@@ -122,5 +123,7 @@ impl AppState {
 		StatefulList::with_items(extras)
 			.color(Color::Red)
 			.title("EXTRAS ")
+			.active_text(" • ON ")
+			.inactive_text(" • OFF ")
 	}
 }
