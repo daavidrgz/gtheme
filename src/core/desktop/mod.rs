@@ -14,22 +14,6 @@ pub struct Desktop{
 }
 impl Desktop {
 	
-	// pub fn from(path:&str)->Self{
-	// 	let re = Regex::new("%output-file%=(.*)").unwrap();
-	// 	let mut file = File::open(path).expect(&format!("Error while opening pattern: {}",path));
-	// 	let mut content = String::new();
-	// 	file.read_to_string(&mut content).expect(&format!("Error while reading pattern: {}",path));
-
-	// 	assert!(re.is_match(&content),"Pattern does not have output file specified (hint: %output-file%=/path/to/output/file)");
-	// 	let captured = re.captures(&content).unwrap();
-	// 	//captured[0] is the whole matched expression.
-	// 	let output_path = core::expand_path(&captured[1]);
-		
-	// 	Pattern{
-	// 		path: String::from(path),
-	// 		output:output_path
-	// 	}
-	// }
 	pub fn from(desktop: &DesktopFile) -> Self {
 		let patterns = Pattern::get_patterns(desktop.get_name());
 		Desktop {
@@ -77,18 +61,14 @@ impl Desktop {
 
 			pattern.fill(theme, *inverted.get(pattern.get_name()).unwrap_or(&false));
 			if let Some(postscript) = postscripts.get(pattern_file.get_name()) {
-				postscript.execute(vec![pattern.get_output()])
+				postscript.execute(&vec![String::from(pattern.get_output())])
 			}
 		}
-		if !theme.get_wallpaper().is_empty() && *actived.get("wallpaper").unwrap_or(&false) {
-			if let Some(ps) = postscripts.get("wallpaper") {
-				ps.execute(vec![&core::expand_path(&theme.get_wallpaper())]);
-			}
-		}
-		if !theme.get_vscode().is_empty() && *actived.get("vscode").unwrap_or(&false) {
-			if let Some(ps) = postscripts.get("vscode") {
-				ps.execute(vec![theme.get_vscode()]);
-			}
+
+		let args_map = theme.get_extras();
+		for extra_ps in PostScript::get_extras(self.get_name()){
+			if !*actived.get(extra_ps.get_name()).unwrap_or(&false){continue}
+			extra_ps.execute(args_map.get(extra_ps.get_name()).unwrap_or(&vec![]));
 		}
 	}
 
@@ -132,7 +112,7 @@ impl Desktop {
 
 		let postscripts = PostScript::get_postscripts(previous.get_name());
 		if let Some(ps) = postscripts.get("desktop-exit") {
-			ps.execute(vec![]);
+			ps.execute(&vec![]);
 		}
 	}
 

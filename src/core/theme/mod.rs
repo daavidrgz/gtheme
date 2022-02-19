@@ -10,8 +10,7 @@ use crate::core;
 pub struct Theme {
 	//TODO: getters
 	name: String,
-	vscode: String,
-	wallpaper: String,
+	extras:HashMap<String,Vec<String>>,
 	colors: HashMap<String, String>
 }
 
@@ -20,11 +19,8 @@ impl Theme {
 	pub fn get_name(&self) -> &String {
 		&self.name
 	}
-	pub fn get_vscode(&self) -> &String {
-		&self.vscode
-	}
-	pub fn get_wallpaper(&self) -> &String {
-		&self.wallpaper
+	pub fn get_extras(&self) -> &HashMap<String,Vec<String>> {
+		&self.extras
 	}
 	pub fn get_colors(&self) -> &HashMap<String, String> {
 		&self.colors

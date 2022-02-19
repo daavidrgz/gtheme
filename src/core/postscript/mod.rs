@@ -63,7 +63,7 @@ impl PostScript{
 		extras_vec
 	}
 
-	pub fn execute(&self, args: Vec<&str>) {
+	pub fn execute(&self, args: &Vec<String>) {
 		Command::new(self.get_path())
 			.stdout(Stdio::null())
 			.stdin(Stdio::null())
