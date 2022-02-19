@@ -64,12 +64,12 @@ impl<'a> ListWidget<'a> {
 					else if idx == stateful_list.get_length() - 1 { "↑".to_string() }
 					else { "↓ ↑".to_string() };
 
-					format!(" ‣ {} ", name)
+					format!(" ‣ {:<13} ", name)
 				} else {
-					format!("   {} ", name)
+					format!("   {:<13} ", name)
 				}
 			},
-			None => format!("   {} ", name)
+			None => format!("   {:<13} ", name)
 		};
  
 		let active_text = if screen_item.is_active(global_config) {

@@ -63,7 +63,7 @@ impl ScreenItem {
 			ScreenItem::Desktop(d) => ScreenItem::install_desktop(d.clone(), global_config),
 			ScreenItem::Theme(t) => ScreenItem::apply_theme(t.clone(), global_config),
 			ScreenItem::Pattern(_) => {},
-			ScreenItem::Extra(e) => {},
+			ScreenItem::Extra(_) => {},
 			ScreenItem::Help(_) => {}
 		}
 	}
@@ -83,7 +83,7 @@ impl ScreenItem {
 				}
 			},
 			ScreenItem::Pattern(_) => false,
-			ScreenItem::Extra(e) => true,
+			ScreenItem::Extra(_) => true,
 			ScreenItem::Help(_) => false
 		}
 	}

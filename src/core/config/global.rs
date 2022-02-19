@@ -20,13 +20,18 @@ pub struct GlobalConfig {
 impl GlobalConfigDto {
 	fn new() -> Self {
 		let path = format!("{}/global_config.json",core::expand_path(core::GTHEME_HOME));
-		let mut file = File::open(path).unwrap();
-
+		let mut file = match File::open(path){
+			Ok(file)=>file,
+			_ => return Self::default()
+		};
 		let mut content = String::new();
-		file.read_to_string(&mut content).expect("Could not read config file");
-		match serde_json::from_str(&content) {
+		match  file.read_to_string(&mut content){
+			Ok(_)=>(),
+			_ => return Self::default()
+		};
+		match serde_json::from_str(&content){
 			Ok(config) => config,
-			_ => Self::default() // If there is any error while parsing config file
+			_ => Self::default()
 		}
 	}
 
@@ -52,7 +57,7 @@ impl GlobalConfigDto {
 	fn save(&self) {
 		let content = serde_json::to_string(self).unwrap();
 		let path = format!("{}/global_config.json",core::expand_path(core::GTHEME_HOME));
-		let mut file = OpenOptions::new().write(true).truncate(true).open(path).expect("Could not open global config file with write permissions");
+		let mut file = OpenOptions::new().create(true).write(true).truncate(true).open(path).expect("Could not open global config file with write permissions");
 		file.write_all(&content.as_bytes()).expect("Error while saving config file");
 	}
 
