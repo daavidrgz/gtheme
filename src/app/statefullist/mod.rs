@@ -25,8 +25,8 @@ impl<T> StatefulList<T> {
 		}
 	}
 
-	pub fn title(mut self, title: String) -> Self {
-		self.title = title;
+	pub fn title(mut self, title: &str) -> Self {
+		self.title = title.to_string();
 		self
 	}
 	pub fn color(mut self, color: Color) -> Self {

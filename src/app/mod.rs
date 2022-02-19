@@ -20,8 +20,8 @@ use crossterm::{
 
 use crate::core::config::GlobalConfig;
 
-use crate::app::widgets::{ListWidget, LogoWidget, OptionsWidget, HelpWidget};
-use crate::app::appstate::{AppState, Screen};
+use crate::app::widgets::{ListWidget, LogoWidget, OptionsWidget, HelpWidget, ExtrasWidget};
+use crate::app::appstate::{AppState, Screen, Popup};
 
 pub struct Ui {
 	terminal: Terminal<CrosstermBackend<io::Stdout>>
@@ -67,8 +67,8 @@ impl Ui {
 	}
 
 	fn manage_input(app_state: &mut AppState) -> bool {
-		let (current_screen, map, global_config, show_popup, help_list) = app_state.get_mut_state();
-		let lists = map.get_mut(&current_screen).unwrap();
+		let (current_screen, screens, current_popup, popups, global_config) = app_state.get_mut_state();
+		let lists = screens.get_mut(&current_screen).unwrap();
 
 		let current_list = if lists[0].is_selected() {0} else {1};
 
@@ -80,39 +80,77 @@ impl Ui {
 			match key.code {
 				KeyCode::Char('q') | KeyCode::Char('Q') => return false,
 				KeyCode::Char('h') | KeyCode::Char('H') => {
-					if *show_popup {
-						lists[0].next();
-						help_list.unselect();
-					} else {
-						lists[0].unselect();
-						lists[1].unselect();
-						help_list.next()
+					let help_list = popups.get_mut(&Popup::Help).unwrap();
+					match current_popup {
+						Some(_) => {
+							lists[0].next();
+							help_list.unselect();
+							*current_popup = None
+						},
+						None => {
+							lists[0].unselect();
+							lists[1].unselect();
+							help_list.next();
+							*current_popup = Some(Popup::Help)
+						}
 					}
-					*show_popup = !*show_popup;
 				},
-				KeyCode::Down => if !*show_popup { lists[current_list].next() } else { help_list.next() },
-				KeyCode::Up => if !*show_popup { lists[current_list].previous() } else { help_list.previous() },
+				KeyCode::Char('o') | KeyCode::Char('O') => {
+					let extras_list = popups.get_mut(&Popup::Extras).unwrap();
+					match current_popup {
+						Some(_) => {
+							lists[0].next();
+							extras_list.unselect();
+							*current_popup = None
+						},
+						None => {
+							lists[0].unselect();
+							lists[1].unselect();
+							extras_list.next();
+							*current_popup = Some(Popup::Extras)
+						}
+					}
+				},
+				KeyCode::Down => {
+					match current_popup {
+						Some(p) => {
+							let popup_list = popups.get_mut(p).unwrap();
+							popup_list.next()
+						},
+						None => lists[current_list].next()
+					}
+				},
+				KeyCode::Up => {
+					match current_popup {
+						Some(p) => {
+							let popup_list = popups.get_mut(p).unwrap();
+							popup_list.previous()
+						},
+						None => lists[current_list].previous()
+					}
+				},
 				KeyCode::Left => {
-					if current_list != 0 && !*show_popup {
+					if current_list != 0 && *current_popup == None {
 						lists[current_list].unselect();
 						lists[current_list - 1].next();
 					}
 				},
 				KeyCode::Right => {
-					if current_list != 1 && !*show_popup {
+					if current_list != 1 && *current_popup == None {
 						lists[current_list].unselect();
 						lists[current_list + 1].next();
 					}
 				},
 				KeyCode::Tab => {
-					if !*show_popup {
+					if *current_popup == None {
 						let screen = if *app_state.get_mut_screen() == Screen::Desktop {Screen::Theme} else {Screen::Desktop};
 						*app_state.get_mut_screen() = screen
 					}
 				},
 				KeyCode::Enter => {
-					if !*show_popup {
-						lists[current_list].get_selected().unwrap().apply(global_config)
+					match current_popup {
+						Some(p) => popups.get_mut(p).unwrap().get_selected().unwrap().apply(global_config),
+						None => lists[current_list].get_selected().unwrap().apply(global_config)
 					}
 				},
 				KeyCode::Char('f') | KeyCode::Char('F') => {
@@ -133,8 +171,8 @@ impl Ui {
 	}
 
 	fn draw_ui(f: &mut Frame<CrosstermBackend<io::Stdout>>, app_state: &mut AppState) {
-		let (current_screen, map, global_config, show_popup, help_list) = app_state.get_mut_state();
-		let lists = map.get_mut(&current_screen).unwrap();
+		let (current_screen, screens, current_popup, popups, global_config) = app_state.get_mut_state();
+		let lists = screens.get_mut(&current_screen).unwrap();
 
 		let theme = if *current_screen == Screen::Theme {
 			let selected_theme = match lists.get(0).unwrap().get_selected() {
@@ -189,12 +227,22 @@ impl Ui {
 		f.render_stateful_widget(widget_list_1.get_widget(), h_box[0], lists[0].get_mut_state());
 		f.render_stateful_widget(widget_list_2.get_widget(), h_box[1], lists[1].get_mut_state());
 
-		// Help
-		if *show_popup {
+		// Help popup
+		if *current_popup == Some(Popup::Help) {
+			let help_list = popups.get_mut(&Popup::Help).unwrap();
 			let help_widget = HelpWidget::new(help_list);
 			let area = Self::centered_rect(60, 70, f.size());
 			f.render_widget(Clear, area); //this clears out the background
 			f.render_stateful_widget(help_widget.get_widget(), area, help_list.get_mut_state());
+		}
+
+		// Extras popup
+		if *current_popup == Some(Popup::Extras) {
+			let extras_list = popups.get_mut(&Popup::Extras).unwrap();
+			let extras_widget = ExtrasWidget::new(extras_list, global_config);
+			let area = Self::centered_rect(60, 70, f.size());
+			f.render_widget(Clear, area); //this clears out the background
+			f.render_stateful_widget(extras_widget.get_widget(), area, extras_list.get_mut_state());
 		}
 	}
 

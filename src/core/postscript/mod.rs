@@ -4,7 +4,7 @@ use std::collections::HashMap;
 
 use crate::core;
 
-#[derive(Debug)]
+#[derive(Debug,Clone)]
 pub struct PostScript {
 	name: String,
 	path: String,
@@ -24,7 +24,7 @@ impl PostScript{
 		let entries = fs::read_dir(&postscripts_dir).expect(&format!("Could not read directory:{}", &postscripts_dir));
 
 		let mut map = HashMap::new();
-		for entry in entries{
+		for entry in entries {
 			let entry = entry.expect(&format!("Error while reading entry from dir: {}", &postscripts_dir));
 			let file_name = entry.file_name().into_string().expect(&format!("Error while converting OsString to String (invalid unicode data?)"));
 			let path = String::from(entry.path().to_str().expect(&format!("Error while converting OsString to String (invalid utf-8 data?)")));
@@ -37,6 +37,26 @@ impl PostScript{
 		}
 		//TODO: decide to sort or not
 		map
+	}
+
+	pub fn get_extras(desktop: &str) -> Vec<PostScript> {
+		let gtheme_home:String = core::expand_path(core::GTHEME_HOME);
+		let extras_dir = gtheme_home + &format!("/desktops/{}/gtheme/extras", desktop);
+		let entries = fs::read_dir(&extras_dir).expect(&format!("Could not read directory:{}", &extras_dir));
+
+		let mut extras_vec: Vec<PostScript> = Vec::new();
+		for entry in entries {
+			let entry = entry.expect(&format!("Error while reading entry from dir: {}", &extras_dir));
+			let file_name = entry.file_name().into_string().expect(&format!("Error while converting OsString to String (invalid unicode data?)"));
+			let path = String::from(entry.path().to_str().expect(&format!("Error while converting OsString to String (invalid utf-8 data?)")));
+
+			let name = match file_name.rsplit_once(".") {
+				None => file_name,
+				Some((prefix,_)) => String::from(prefix)
+			};
+			extras_vec.push(PostScript { name, path });
+		}
+		extras_vec
 	}
 
 	pub fn execute(&self, args: Vec<&str>) {

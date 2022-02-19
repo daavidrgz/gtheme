@@ -5,17 +5,18 @@ use tui::{
 };
 
 use crate::app::statefullist::StatefulList;
+use crate::app::screenitem::ScreenItem;
 
 pub struct HelpWidget<'a> {
 	widget: List<'a>
 }
 impl<'a> HelpWidget<'a> {
-	pub fn new(stateful_list: &StatefulList<String>) -> HelpWidget<'a> {
+	pub fn new(stateful_list: &StatefulList<ScreenItem>) -> HelpWidget<'a> {
 		let items = Self::create_help(stateful_list);
 
 		let title_style = Style::default().fg(*stateful_list.get_color()).add_modifier(Modifier::BOLD).add_modifier(Modifier::REVERSED);
 		let block = Block::default()
-			.title(Span::styled(stateful_list.get_title().clone(), title_style))
+			.title(Span::styled(format!(" {} ", stateful_list.get_title()), title_style))
 			.borders(Borders::ALL)
 			.border_style(Style::default().fg(*stateful_list.get_color()));
 
@@ -27,7 +28,7 @@ impl<'a> HelpWidget<'a> {
 		}
 	}
 
-	fn create_help(stateful_list: &StatefulList<String>) -> Vec<ListItem<'a>> {
+	fn create_help(stateful_list: &StatefulList<ScreenItem>) -> Vec<ListItem<'a>> {
 		let title_style = Style::default().fg(Color::Blue)
 			.add_modifier(Modifier::BOLD)
 			.add_modifier(Modifier::ITALIC);
@@ -35,7 +36,9 @@ impl<'a> HelpWidget<'a> {
 			.add_modifier(Modifier::BOLD);
 		let entry_value_style = Style::default().add_modifier(Modifier::BOLD);
 
-		let items: Vec<ListItem> = stateful_list.get_items().iter().enumerate().map(|(it, line)| {
+		let items: Vec<ListItem> = stateful_list.get_items().iter().enumerate().map(|(it, item)| {
+			let line = item.get_name();
+			
 			let bar = match stateful_list.get_state().selected() {
 				Some(idx) => if idx == it {" │ "} else {"   "},
 				None => "   "
