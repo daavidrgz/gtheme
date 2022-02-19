@@ -1,7 +1,9 @@
 {
 	"name": "Monokai-Pro-(Filter-Octagon)",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "3a3d4b",
 		"foreground": "eaf2f1",

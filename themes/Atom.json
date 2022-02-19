@@ -1,7 +1,9 @@
 {
 	"name": "Atom",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "161718",
 		"foreground": "c4c8c5",

@@ -1,7 +1,9 @@
 {
 	"name": "Cobalt-Neon",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "142838",
 		"foreground": "8ff586",

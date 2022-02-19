@@ -1,7 +1,9 @@
 {
 	"name": "Eighties-light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "f2f0ec",
 		"foreground": "515151",

@@ -1,7 +1,9 @@
 {
 	"name": "Panda",
-	"vscode": "Panda Syntax",
-	"wallpaper": "",
+	"extras": {
+		"vscode": ["Panda Syntax"],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "292a2b",
 		"foreground": "e6e6e6",

@@ -1,7 +1,9 @@
 {
 	"name": "Gutterslob-lumifoo",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1e2021",
 		"foreground": "888a8c",

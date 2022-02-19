@@ -1,7 +1,9 @@
 {
 	"name": "Nord",
-	"vscode": "Nord",
-	"wallpaper": "~/.config/gtheme/wallpapers/Nord/caravan.png",
+	"extras": {
+		"vscode": ["Nord"],
+		"wallpaper": ["~/.config/gtheme/wallpapers/Nord/caravan.png"]
+	},
 	"colors": {
 		"background": "2e3440",
 		"foreground": "d8dee9",

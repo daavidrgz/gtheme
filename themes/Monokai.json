@@ -1,7 +1,9 @@
 {
 	"name": "Monokai",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "272822",
 		"foreground": "f8f8f2",

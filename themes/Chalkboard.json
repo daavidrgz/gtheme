@@ -1,7 +1,9 @@
 {
 	"name": "Chalkboard",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "29262f",
 		"foreground": "d9e6f2",

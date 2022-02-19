@@ -1,7 +1,9 @@
 {
 	"name": "Bright-Lights",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "191919",
 		"foreground": "b2c8d6",

@@ -1,7 +1,9 @@
 {
 	"name": "Iceberg-Dark",
-	"vscode": "Iceberg",
-	"wallpaper": "~/.config/gtheme/wallpapers/Iceberg/snow-mountain.jpg",
+	"extras": {
+		"vscode": ["Iceberg"],
+		"wallpaper": ["~/.config/gtheme/wallpapers/Iceberg/snow-mountain.jpg"]
+	},
 	"colors": {
 		"background": "161821",
 		"foreground": "d2d4de",

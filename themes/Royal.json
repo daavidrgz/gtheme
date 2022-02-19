@@ -1,7 +1,9 @@
 {
 	"name": "Royal",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "100814",
 		"foreground": "504868",

@@ -1,7 +1,9 @@
 {
 	"name": "Tartan",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "2b2b2b",
 		"foreground": "dedede",

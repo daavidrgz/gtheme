@@ -1,7 +1,9 @@
 {
 	"name": "Navy-and-ivory",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "021b21",
 		"foreground": "e8dfd6",

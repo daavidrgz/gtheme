@@ -1,7 +1,9 @@
 {
 	"name": "Darkside",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "222324",
 		"foreground": "BABABA",

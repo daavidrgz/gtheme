@@ -1,7 +1,9 @@
 {
 	"name": "Shaman",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "001014",
 		"foreground": "405555",

@@ -1,7 +1,9 @@
 {
 	"name": "Ayu-Mirage",
-	"vscode": "Ayu Mirage",
-	"wallpaper": "",
+	"extras": {
+		"vscode": ["Ayu Mirage"],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "212733",
 		"foreground": "d9d7ce",

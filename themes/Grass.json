@@ -1,7 +1,9 @@
 {
 	"name": "Grass",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "12773d",
 		"foreground": "fff0a4",

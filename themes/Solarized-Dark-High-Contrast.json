@@ -1,7 +1,9 @@
 {
 	"name": "Solarized-Dark-High-Contrast",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "001e26",
 		"foreground": "9bc1c2",

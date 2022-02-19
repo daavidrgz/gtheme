@@ -1,7 +1,9 @@
 {
 	"name": "Bright-dark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "000000",
 		"foreground": "e0e0e0",

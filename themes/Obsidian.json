@@ -1,7 +1,9 @@
 {
 	"name": "Obsidian",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "273032",
 		"foreground": "cccccc",

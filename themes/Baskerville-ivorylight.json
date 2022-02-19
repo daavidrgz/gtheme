@@ -1,7 +1,9 @@
 {
 	"name": "Baskerville-ivorylight",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "fef9ec",
 		"foreground": "6d727e",

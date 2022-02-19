@@ -1,7 +1,9 @@
 {
 	"name": "3024-Night",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "090200",
 		"foreground": "a4a1a1",

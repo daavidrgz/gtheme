@@ -1,7 +1,9 @@
 {
 	"name": "Paraiso.light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "e7e9db",
 		"foreground": "4f424c",

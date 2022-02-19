@@ -1,7 +1,9 @@
 {
 	"name": "Espresso-Libre",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "2a211c",
 		"foreground": "b8a898",

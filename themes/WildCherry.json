@@ -1,7 +1,9 @@
 {
 	"name": "WildCherry",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1f1626",
 		"foreground": "d9faff",

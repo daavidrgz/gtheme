@@ -1,7 +1,9 @@
 {
 	"name": "N0tch2k",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "222222",
 		"foreground": "a0a0a0",

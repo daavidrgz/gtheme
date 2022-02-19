@@ -1,7 +1,9 @@
 {
 	"name": "Awesome",
-	"vscode": "Gruvbox Light Hard",
-	"wallpaper": "~/.config/gtheme/wallpapers/Gruvbox/gruv-paint.png",
+	"extras": {
+		"vscode": ["Gruvbox Light Hard"],
+		"wallpaper": ["~/.config/gtheme/wallpapers/Gruvbox/gruv-paint.png"]
+	},
 	"colors": {
 		"background": "FFF4DE",
 		"foreground": "272727",

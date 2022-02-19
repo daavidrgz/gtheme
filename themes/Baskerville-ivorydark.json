@@ -1,7 +1,9 @@
 {
 	"name": "Baskerville-ivorydark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "2d2c28",
 		"foreground": "a4a6ab",

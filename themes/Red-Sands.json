@@ -1,7 +1,9 @@
 {
 	"name": "Red-Sands",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "79241d",
 		"foreground": "d6c8a7",

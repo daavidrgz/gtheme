@@ -1,7 +1,9 @@
 {
 	"name": "Embers-dark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "16130F",
 		"foreground": "A39A90",

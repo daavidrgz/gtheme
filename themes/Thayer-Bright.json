@@ -1,7 +1,9 @@
 {
 	"name": "Thayer-Bright",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1b1d1e",
 		"foreground": "f8f8f8",

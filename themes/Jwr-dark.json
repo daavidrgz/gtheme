@@ -1,7 +1,9 @@
 {
 	"name": "Jwr-dark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "000000",
 		"foreground": "ffffff",

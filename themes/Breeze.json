@@ -1,7 +1,9 @@
 {
 	"name": "Breeze",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "232627",
 		"foreground": "fcfcfc",

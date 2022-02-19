@@ -1,7 +1,9 @@
 {
 	"name": "Google-light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "ffffff",
 		"foreground": "373b41",

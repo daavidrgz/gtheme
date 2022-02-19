@@ -1,7 +1,9 @@
 {
 	"name": "Grape",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "161423",
 		"foreground": "9e9ea0",

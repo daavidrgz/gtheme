@@ -1,7 +1,9 @@
 {
 	"name": "Smyck",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1b1b1b",
 		"foreground": "f7f7f7",

@@ -1,7 +1,9 @@
 {
 	"name": "Dkeg-panels",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "000000",
 		"foreground": "d3d3d3",

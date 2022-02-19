@@ -1,7 +1,9 @@
 {
 	"name": "Argonaut",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "0d0f18",
 		"foreground": "fffaf3",

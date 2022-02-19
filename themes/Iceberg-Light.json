@@ -1,7 +1,9 @@
 {
 	"name": "Iceberg-Light",
-	"vscode": "Iceberg Light",
-	"wallpaper": "~/.config/gtheme/wallpapers/Iceberg/snow-mountain.jpg",
+	"extras": {
+		"vscode": ["Iceberg Light"],
+		"wallpaper": ["~/.config/gtheme/wallpapers/Iceberg/snow-mountain.jpg"]
+	},
 	"colors": {
 		"background": "e8e9ec",
 		"foreground": "33374c",

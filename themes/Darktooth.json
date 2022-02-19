@@ -1,7 +1,9 @@
 {
 	"name": "Darktooth",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "282828",
 		"foreground": "fdf4c1",

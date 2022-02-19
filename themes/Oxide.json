@@ -1,7 +1,9 @@
 {
 	"name": "Oxide",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "212121",
 		"foreground": "c0c5ce",

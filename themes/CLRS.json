@@ -1,7 +1,9 @@
 {
 	"name": "CLRS",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "ffffff",
 		"foreground": "262626",

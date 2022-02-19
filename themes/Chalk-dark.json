@@ -1,7 +1,9 @@
 {
 	"name": "Chalk-dark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "151515",
 		"foreground": "d0d0d0",

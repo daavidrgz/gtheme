@@ -74,7 +74,11 @@ impl AppState {
 		let patterns_list = StatefulList::with_items(patterns)
 			.color(Color::Magenta)
 			.title("PATTERNS ")
-			.inactive_text("• Inactive ");
+			.active_text("• ON ")
+			.inactive_text("• OFF ")
+			.active_text_color(Color::Green)
+			.inactive_text_color(Color::Red)
+			.alignment(true);
 
 		let fav_themes = global_config.get_fav_themes().into_iter().map(|f|ScreenItem::Theme(f.clone())).collect();
 		let fav_themes_list = StatefulList::with_items(fav_themes)
@@ -121,9 +125,12 @@ impl AppState {
 
 		let extras = PostScript::get_extras(desktop_str).into_iter().map(|e|ScreenItem::Extra(e)).collect();
 		StatefulList::with_items(extras)
-			.color(Color::Red)
+			.color(Color::Magenta)
 			.title("EXTRAS ")
 			.active_text("• ON ")
 			.inactive_text("• OFF ")
+			.active_text_color(Color::Green)
+			.inactive_text_color(Color::Red)
+			.alignment(true)
 	}
 }

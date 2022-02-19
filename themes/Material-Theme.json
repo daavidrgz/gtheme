@@ -1,7 +1,9 @@
 {
 	"name": "Material-Theme",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "263238",
 		"foreground": "eeffff",

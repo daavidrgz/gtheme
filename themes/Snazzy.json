@@ -1,7 +1,9 @@
 {
 	"name": "Snazzy",
-	"vscode": "Night Owl",
-	"wallpaper": "~/.config/gtheme/wallpapers/Snazzy/sunset-mountain.jpg",
+	"extras": {
+		"vscode": ["Night Owl"],
+		"wallpaper": ["~/.config/gtheme/wallpapers/Snazzy/sunset-mountain.jpg"]
+	},
 	"colors": {
 		"background": "112031",
 		"foreground": "F1F1F0",

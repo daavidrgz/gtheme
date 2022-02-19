@@ -1,7 +1,9 @@
 {
 	"name": "Atelierdune-light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "fefbec",
 		"foreground": "6e6b5e",

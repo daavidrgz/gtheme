@@ -1,7 +1,9 @@
 {
 	"name": "Campbell",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "0c0c0c",
 		"foreground": "cccccc",

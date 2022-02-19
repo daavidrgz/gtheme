@@ -1,7 +1,9 @@
 {
 	"name": "Ayu-Light",
-	"vscode": "Ayu Light",
-	"wallpaper": "",
+	"extras": {
+		"vscode": ["Ayu Light"],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "fafafa",
 		"foreground": "5b6673",

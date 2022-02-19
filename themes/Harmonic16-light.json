@@ -1,7 +1,9 @@
 {
 	"name": "Harmonic16-light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "f7f9fb",
 		"foreground": "405c79",

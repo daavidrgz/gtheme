@@ -1,7 +1,9 @@
 {
 	"name": "Embers-light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "DBD6D1",
 		"foreground": "433B32",

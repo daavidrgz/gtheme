@@ -1,7 +1,9 @@
 {
 	"name": "Rose-Pine",
-	"vscode": "Rosé Pine",
-	"wallpaper": "~/.config/gtheme/wallpapers/Rose-Pine/beachhouses.jpg",
+	"extras": {
+		"vscode": ["Rosé Pine"],
+		"wallpaper": ["~/.config/gtheme/wallpapers/Rose-Pine/beachhouses.jpg"]
+	},
 	"colors": {
 		"background": "191724",
 		"foreground": "e0def4",

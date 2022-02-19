@@ -1,7 +1,9 @@
 {
 	"name": "Flat-light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "ECF0F1",
 		"foreground": "7F8C8D",

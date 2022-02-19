@@ -1,7 +1,9 @@
 {
 	"name": "Ollie",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "212024",
 		"foreground": "8a8dae",

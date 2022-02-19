@@ -1,7 +1,9 @@
 {
 	"name": "Spacedust",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "0a1e24",
 		"foreground": "ecefc1",

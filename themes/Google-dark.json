@@ -1,7 +1,9 @@
 {
 	"name": "Google-dark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1d1f21",
 		"foreground": "c5c8c6",

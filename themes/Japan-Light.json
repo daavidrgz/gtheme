@@ -1,7 +1,9 @@
 {
 	"name": "Japan-Light",
-	"vscode": "Rosé Pine Dawn",
-	"wallpaper": "~/.config/gtheme/wallpapers/Japan/8bit-city.png",
+	"extras": {
+		"vscode": ["Rosé Pine Dawn"],
+		"wallpaper": ["~/.config/gtheme/wallpapers/Japan/8bit-city.png"]
+	},
 	"colors": {
 		"background": "faf4ed",
 		"foreground": "3D495B",

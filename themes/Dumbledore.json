@@ -1,7 +1,9 @@
 {
 	"name": "Dumbledore",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "422553",
 		"foreground": "c4c8c5",

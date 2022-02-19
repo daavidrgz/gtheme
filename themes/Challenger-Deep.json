@@ -1,7 +1,9 @@
 {
 	"name": "Challenger-Deep",
-	"vscode": "Challenger Deep",
-	"wallpaper": "",
+	"extras": {
+		"vscode": ["Challenger Deep"],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1e1c31",
 		"foreground": "cbe3e7",

@@ -1,7 +1,9 @@
 {
 	"name": "Materia",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "263238",
 		"foreground": "c9ccd3",

@@ -1,7 +1,9 @@
 {
 	"name": "Solarized-Light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "fdf6e3",
 		"foreground": "52676f",

@@ -1,7 +1,9 @@
 {
 	"name": "Neopolitan",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "271f19",
 		"foreground": "ffffff",

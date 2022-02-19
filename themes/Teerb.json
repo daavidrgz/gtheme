@@ -1,7 +1,9 @@
 {
 	"name": "Teerb",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "262626",
 		"foreground": "d0d0d0",

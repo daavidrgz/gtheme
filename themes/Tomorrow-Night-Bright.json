@@ -1,7 +1,9 @@
 {
 	"name": "Tomorrow-Night-Bright",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "000000",
 		"foreground": "e9e9e9",

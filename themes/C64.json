@@ -1,7 +1,9 @@
 {
 	"name": "C64",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "40318d",
 		"foreground": "7869c4",

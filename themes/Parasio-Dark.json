@@ -1,7 +1,9 @@
 {
 	"name": "Parasio-Dark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "2f1d2e",
 		"foreground": "a39d9b",

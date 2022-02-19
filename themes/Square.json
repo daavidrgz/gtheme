@@ -1,7 +1,9 @@
 {
 	"name": "Square",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1a1a1a",
 		"foreground": "acacab",

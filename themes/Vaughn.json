@@ -1,7 +1,9 @@
 {
 	"name": "Vaughn",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "25234e",
 		"foreground": "dcdccc",

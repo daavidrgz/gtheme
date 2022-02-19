@@ -1,7 +1,9 @@
 {
 	"name": "Brewer-light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "fcfdfe",
 		"foreground": "515253",

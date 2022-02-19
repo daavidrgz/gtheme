@@ -1,7 +1,9 @@
 {
 	"name": "Ashes-dark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1C2023",
 		"foreground": "C7CCD1",

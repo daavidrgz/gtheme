@@ -1,7 +1,9 @@
 {
 	"name": "Base16-Default-Dark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "181818",
 		"foreground": "d8d8d8",

@@ -1,7 +1,9 @@
 {
 	"name": "Tlh",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "101010",
 		"foreground": "66ff66",

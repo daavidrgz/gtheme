@@ -1,7 +1,9 @@
 {
 	"name": "Gutterslob-aikofog",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "f1eee9",
 		"foreground": "b2b3b8",

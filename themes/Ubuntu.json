@@ -1,7 +1,9 @@
 {
 	"name": "Ubuntu",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "300a24",
 		"foreground": "eeeeec",

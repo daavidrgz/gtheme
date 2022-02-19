@@ -1,7 +1,9 @@
 {
 	"name": "Visibone-alt-2",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "333333",
 		"foreground": "CCCCCC",

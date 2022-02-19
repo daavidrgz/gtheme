@@ -1,7 +1,9 @@
 {
 	"name": "Seti",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "111213",
 		"foreground": "cacecd",

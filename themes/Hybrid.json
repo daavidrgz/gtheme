@@ -1,7 +1,9 @@
 {
 	"name": "Hybrid",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "161718",
 		"foreground": "b7bcb9",

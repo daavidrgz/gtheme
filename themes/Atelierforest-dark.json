@@ -1,7 +1,9 @@
 {
 	"name": "Atelierforest-dark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1b1918",
 		"foreground": "a8a19f",

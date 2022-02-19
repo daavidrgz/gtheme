@@ -1,7 +1,9 @@
 {
 	"name": "Monokai-Pro-(Filter-Machine)",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "3a4449",
 		"foreground": "f2fffc",

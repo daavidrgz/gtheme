@@ -1,7 +1,9 @@
 {
 	"name": "Github",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "f4f4f4",
 		"foreground": "3e3e3e",

@@ -1,7 +1,9 @@
 {
 	"name": "PencilLight",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "f0f0f0",
 		"foreground": "414141",

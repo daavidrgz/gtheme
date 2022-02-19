@@ -1,7 +1,9 @@
 {
 	"name": "Sundried",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1a1818",
 		"foreground": "c8c8c8",

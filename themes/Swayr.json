@@ -1,7 +1,9 @@
 {
 	"name": "Swayr",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1c1709",
 		"foreground": "c2b9a1",

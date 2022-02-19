@@ -1,7 +1,9 @@
 {
 	"name": "Harmonic16-dark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "0b1c2c",
 		"foreground": "cbd6e2",

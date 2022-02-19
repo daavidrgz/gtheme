@@ -1,7 +1,9 @@
 {
 	"name": "Earthsong",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "282420",
 		"foreground": "e5c6a8",

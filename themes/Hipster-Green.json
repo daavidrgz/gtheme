@@ -1,7 +1,9 @@
 {
 	"name": "Hipster-Green",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "0f0a05",
 		"foreground": "84c137",

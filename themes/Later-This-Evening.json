@@ -1,7 +1,9 @@
 {
 	"name": "Later-This-Evening",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "212121",
 		"foreground": "949494",

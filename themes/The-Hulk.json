@@ -1,7 +1,9 @@
 {
 	"name": "The-Hulk",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1b1d1e",
 		"foreground": "b4b4b4",

@@ -1,7 +1,9 @@
 {
 	"name": "Misterioso",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "2d3743",
 		"foreground": "e1e1e0",

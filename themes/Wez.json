@@ -1,7 +1,9 @@
 {
 	"name": "Wez",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "000000",
 		"foreground": "b3b3b3",

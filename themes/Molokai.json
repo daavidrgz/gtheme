@@ -1,7 +1,9 @@
 {
 	"name": "Molokai",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "121212",
 		"foreground": "bbbbbb",

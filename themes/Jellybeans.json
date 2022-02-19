@@ -1,7 +1,9 @@
 {
 	"name": "Jellybeans",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "111111",
 		"foreground": "dedede",

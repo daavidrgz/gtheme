@@ -1,7 +1,9 @@
 {
 	"name": "Dracula",
-	"vscode": "Dracula",
-	"wallpaper": "~/.config/gtheme/wallpapers/Dracula/arch-linux-light.png",
+	"extras": {
+		"vscode": ["Dracula"],
+		"wallpaper": ["~/.config/gtheme/wallpapers/Dracula/arch-linux-light.png"]
+	},
 	"colors": {
 		"background": "1e1f28",
 		"foreground": "f8f8f2",

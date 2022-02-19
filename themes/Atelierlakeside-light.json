@@ -1,7 +1,9 @@
 {
 	"name": "Atelierlakeside-light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "ebf8ff",
 		"foreground": "516d7b",

@@ -1,7 +1,9 @@
 {
 	"name": "OneDark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "282c34",
 		"foreground": "979eab",

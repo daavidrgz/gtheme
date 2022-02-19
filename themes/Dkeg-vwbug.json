@@ -1,7 +1,9 @@
 {
 	"name": "Dkeg-vwbug",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "170f0d",
 		"foreground": "746c48",

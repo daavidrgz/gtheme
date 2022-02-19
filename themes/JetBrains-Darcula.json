@@ -1,7 +1,9 @@
 {
 	"name": "JetBrains-Darcula",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "202020",
 		"foreground": "adadad",

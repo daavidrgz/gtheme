@@ -1,7 +1,9 @@
 {
 	"name": "IC-Green-PPL",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "3a3c3e",
 		"foreground": "d9eed2",

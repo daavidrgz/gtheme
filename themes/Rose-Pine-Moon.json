@@ -1,7 +1,9 @@
 {
 	"name": "Rose-Pine-Moon",
-	"vscode": "Rosé Pine Moon",
-	"wallpaper": "",
+	"extras": {
+		"vscode": ["Rosé Pine Moon"],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "232136",
 		"foreground": "e0def4",

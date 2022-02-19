@@ -1,7 +1,9 @@
 {
 	"name": "FishTank",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "222436",
 		"foreground": "eceffd",

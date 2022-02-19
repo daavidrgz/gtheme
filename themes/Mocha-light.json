@@ -1,7 +1,9 @@
 {
 	"name": "Mocha-light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "f5eeeb",
 		"foreground": "645240",

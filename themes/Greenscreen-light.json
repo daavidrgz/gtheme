@@ -1,7 +1,9 @@
 {
 	"name": "Greenscreen-light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "00ff00",
 		"foreground": "005500",

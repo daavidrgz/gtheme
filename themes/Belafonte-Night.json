@@ -1,7 +1,9 @@
 {
 	"name": "Belafonte-Night",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "20111a",
 		"foreground": "958b83",

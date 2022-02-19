@@ -1,7 +1,9 @@
 {
 	"name": "Eqie6",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "111111",
 		"foreground": "cccccc",

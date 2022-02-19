@@ -1,7 +1,9 @@
 {
 	"name": "MaterialDark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "222221",
 		"foreground": "e4e4e4",

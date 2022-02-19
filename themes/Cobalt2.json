@@ -1,7 +1,9 @@
 {
 	"name": "Cobalt2",
-	"vscode": "Cobalt2",
-	"wallpaper": "",
+	"extras": {
+		"vscode": ["Cobalt2"],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "193549",
 		"foreground": "ffffff",

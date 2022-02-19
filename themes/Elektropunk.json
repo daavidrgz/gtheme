@@ -1,7 +1,9 @@
 {
 	"name": "Elektropunk",
-	"vscode": "Activate UMBRA protocol",
-	"wallpaper": "~/.config/gtheme/wallpapers/Elektropunk/purple-punk.png",
+	"extras": {
+		"vscode": ["Activate UMBRA protocol"],
+		"wallpaper": ["~/.config/gtheme/wallpapers/Elektropunk/purple-punk.png"]
+	},
 	"colors": {
 		"background": "050028",
 		"foreground": "00FFFF",

@@ -1,7 +1,9 @@
 {
 	"name": "Rose-Pine-Dawn",
-	"vscode": "Rosé Pine Dawn",
-	"wallpaper": "~/.config/gtheme/wallpapers/Rose-Pine/Ashim.jpg",
+	"extras": {
+		"vscode": ["Rosé Pine Dawn"],
+		"wallpaper": ["~/.config/gtheme/wallpapers/Rose-Pine/Ashim.jpg"]
+	},
 	"colors": {
 		"background": "faf4ed",
 		"foreground": "575279",

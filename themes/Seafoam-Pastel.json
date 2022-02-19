@@ -1,7 +1,9 @@
 {
 	"name": "Seafoam-Pastel",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "243335",
 		"foreground": "d3e6d3",

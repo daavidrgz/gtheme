@@ -1,7 +1,9 @@
 {
 	"name": "DotGov",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "252b35",
 		"foreground": "eaeaea",

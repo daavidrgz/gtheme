@@ -1,7 +1,9 @@
 {
 	"name": "NightLion-v2",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "171717",
 		"foreground": "bbbbbb",

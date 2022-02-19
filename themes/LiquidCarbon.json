@@ -1,7 +1,9 @@
 {
 	"name": "LiquidCarbon",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "2f2f2f",
 		"foreground": "afc2c2",

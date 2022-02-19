@@ -1,7 +1,9 @@
 {
 	"name": "X-dotshare",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "151515",
 		"foreground": "D7D0C7",

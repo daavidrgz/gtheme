@@ -1,7 +1,9 @@
 {
 	"name": "Codeschool-dark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "232c31",
 		"foreground": "9ea7a6",

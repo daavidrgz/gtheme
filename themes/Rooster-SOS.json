@@ -1,7 +1,9 @@
 {
 	"name": "Rooster-SOS",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "373b43",
 		"foreground": "78796f",

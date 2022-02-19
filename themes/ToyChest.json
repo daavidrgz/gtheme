@@ -1,7 +1,9 @@
 {
 	"name": "ToyChest",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "23364a",
 		"foreground": "30cf7b",

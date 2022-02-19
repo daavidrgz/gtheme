@@ -1,7 +1,9 @@
 {
 	"name": "Ocean",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "214fbc",
 		"foreground": "ffffff",

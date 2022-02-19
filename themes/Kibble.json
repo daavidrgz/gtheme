@@ -1,7 +1,9 @@
 {
 	"name": "Kibble",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "0e100a",
 		"foreground": "f7f7f7",

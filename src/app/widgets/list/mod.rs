@@ -20,9 +20,15 @@ impl<'a> ListWidget<'a> {
 			.get_items().iter().enumerate()
 			.map(|(it, screen_item)| {
 				let (name, active_text, arrows) = Self::get_item_text(it, screen_item, stateful_list, global_config);
+
+				let state_color = match (stateful_list.get_active_text_color(), stateful_list.get_inactive_text_color()) {
+					(Some(active), Some(inactive)) => if screen_item.is_active(global_config) { *active } else { *inactive },
+					_ => color 
+				};
+
 				ListItem::new(Spans::from(vec![
 					Span::from(name),
-					Span::styled(active_text, Style::default().fg(color).add_modifier(Modifier::ITALIC).add_modifier(Modifier::BOLD)), 
+					Span::styled(active_text, Style::default().fg(state_color).add_modifier(Modifier::ITALIC).add_modifier(Modifier::BOLD)), 
 					Span::from(arrows)
 				])).style(Style::default().add_modifier(Modifier::DIM))
 			}).collect();
@@ -61,22 +67,26 @@ impl<'a> ListWidget<'a> {
 			Some(idx) => {
 				if idx == it {
 					arrows = if idx == 0 { "↓".to_string() }
-					else if idx == stateful_list.get_length() - 1 { "↑".to_string() }
+					else if idx + 1 == stateful_list.get_length() { "↑".to_string() }
 					else { "↓ ↑".to_string() };
 
-					format!(" ‣ {:<13} ", name)
+					if *stateful_list.get_alignment() { format!(" ‣ {:<20} ", name) } else { format!(" ‣ {} ", name) }
 				} else {
-					format!("   {:<13} ", name)
+					if *stateful_list.get_alignment() { format!("   {:<20} ", name) } else { format!("   {} ", name) }
 				}
 			},
-			None => format!("   {:<13} ", name)
+			None => if *stateful_list.get_alignment() { format!("   {:<20} ", name) } else { format!("   {} ", name) }
 		};
- 
-		let active_text = if screen_item.is_active(global_config) {
+	
+		let mut active_text = if screen_item.is_active(global_config) {
 			stateful_list.get_active_text().clone()
 		} else {
 			stateful_list.get_inactive_text().clone()
 		};
+
+		if screen_item.is_inverted() { 
+			active_text = format!("{} Inverted ", active_text.trim());
+		}
 
 		(name, active_text, arrows)
 	}

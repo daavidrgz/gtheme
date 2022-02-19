@@ -1,7 +1,9 @@
 {
 	"name": "Bespin.dark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "28211c",
 		"foreground": "8a8986",

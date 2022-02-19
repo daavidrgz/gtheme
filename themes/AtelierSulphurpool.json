@@ -1,7 +1,9 @@
 {
 	"name": "AtelierSulphurpool",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "202745",
 		"foreground": "969cb3",

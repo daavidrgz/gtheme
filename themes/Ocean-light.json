@@ -1,7 +1,9 @@
 {
 	"name": "Ocean-light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "eff1f5",
 		"foreground": "4f5b66",

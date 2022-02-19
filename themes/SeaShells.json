@@ -1,7 +1,9 @@
 {
 	"name": "SeaShells",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "08131a",
 		"foreground": "deb88d",

@@ -1,7 +1,9 @@
 {
 	"name": "GoaBase",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "2f0033",
 		"foreground": "f6ed00",

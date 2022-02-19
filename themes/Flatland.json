@@ -1,7 +1,9 @@
 {
 	"name": "Flatland",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1c1e20",
 		"foreground": "b8daee",

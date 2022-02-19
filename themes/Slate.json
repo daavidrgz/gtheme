@@ -1,7 +1,9 @@
 {
 	"name": "Slate",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "212121",
 		"foreground": "34b0d2",

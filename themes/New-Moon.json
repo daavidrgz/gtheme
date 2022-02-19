@@ -1,7 +1,9 @@
 {
 	"name": "New-Moon",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "2D2D2D",
 		"foreground": "B3B9C5",

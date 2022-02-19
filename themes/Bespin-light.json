@@ -1,7 +1,9 @@
 {
 	"name": "Bespin-light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "baae9e",
 		"foreground": "5e5d5c",

@@ -1,7 +1,9 @@
 {
 	"name": "Red-Alert",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "762423",
 		"foreground": "ffffff",

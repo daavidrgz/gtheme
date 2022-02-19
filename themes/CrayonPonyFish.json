@@ -1,7 +1,9 @@
 {
 	"name": "CrayonPonyFish",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "140607",
 		"foreground": "685259",

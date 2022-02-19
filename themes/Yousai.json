@@ -1,7 +1,9 @@
 {
 	"name": "Yousai",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "F5E7DE",
 		"foreground": "34302D",

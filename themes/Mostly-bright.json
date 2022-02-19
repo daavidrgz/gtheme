@@ -1,7 +1,9 @@
 {
 	"name": "Mostly-bright",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "F3F3F3",
 		"foreground": "707070",

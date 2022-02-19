@@ -1,7 +1,9 @@
 {
 	"name": "Gotham",
-	"vscode": "Gotham",
-	"wallpaper": "",
+	"extras": {
+		"vscode": ["Gotham"],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "0a0f14",
 		"foreground": "98d1ce",

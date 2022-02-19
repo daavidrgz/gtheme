@@ -1,7 +1,9 @@
 {
 	"name": "PaulMillr",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "000000",
 		"foreground": "f1f1f1",

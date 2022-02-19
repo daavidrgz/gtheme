@@ -1,7 +1,9 @@
 {
 	"name": "Jmbi",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1e1e1e",
 		"foreground": "ffffff",

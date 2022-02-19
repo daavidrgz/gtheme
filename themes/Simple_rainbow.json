@@ -1,7 +1,9 @@
 {
 	"name": "Simple_rainbow",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "575757",
 		"foreground": "dcdccc",

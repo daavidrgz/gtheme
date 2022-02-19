@@ -1,7 +1,9 @@
 {
 	"name": "Everforest-Dark-Hard",
-	"vscode": "Everforest Dark",
-	"wallpaper": "~/.config/gtheme/wallpapers/Everforest/forest.jpg",
+	"extras": {
+		"vscode": ["Everforest Dark"],
+		"wallpaper": ["~/.config/gtheme/wallpapers/Everforest/forest.jpg"]
+	},
 	"colors": {
 		"background": "2b3339",
 		"foreground": "d3c6aa",

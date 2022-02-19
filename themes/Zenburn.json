@@ -1,7 +1,9 @@
 {
 	"name": "Zenburn",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "3f3f3f",
 		"foreground": "dcdccc",

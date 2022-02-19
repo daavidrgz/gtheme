@@ -1,7 +1,9 @@
 {
 	"name": "Elemental",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "21211c",
 		"foreground": "807973",

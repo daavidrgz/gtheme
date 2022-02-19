@@ -67,6 +67,13 @@ impl ScreenItem {
 			ScreenItem::Help(_) => {}
 		}
 	}
+	
+	pub fn is_inverted(&self) -> bool {
+		match self {
+			ScreenItem::Pattern(p) => true,
+			_ => false
+		}
+	}
 
 	pub fn is_active(&self, global_config: &GlobalConfig) -> bool {
 		match self {

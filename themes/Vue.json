@@ -1,7 +1,9 @@
 {
 	"name": "Vue",
-	"vscode": "Vue Theme",
-	"wallpaper": "~/.config/gtheme/wallpapers/Vue/odin-dark.jpg",
+	"extras": {
+		"vscode": ["Vue Theme"],
+		"wallpaper": ["~/.config/gtheme/wallpapers/Vue/odin-dark.jpg"]
+	},
 	"colors": {
 		"background": "002b36",
 		"foreground": "e6e6e6",

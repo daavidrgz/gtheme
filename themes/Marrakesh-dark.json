@@ -1,7 +1,9 @@
 {
 	"name": "Marrakesh-dark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "201602",
 		"foreground": "948e48",

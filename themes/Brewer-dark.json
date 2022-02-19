@@ -1,7 +1,9 @@
 {
 	"name": "Brewer-dark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "0c0d0e",
 		"foreground": "b7b8b9",

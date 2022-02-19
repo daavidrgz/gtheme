@@ -1,7 +1,9 @@
 {
 	"name": "DimmedMonokai",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1e1e1e",
 		"foreground": "b8bcb9",

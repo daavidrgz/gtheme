@@ -1,7 +1,9 @@
 {
 	"name": "Apprentice",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "323232",
 		"foreground": "c8c8c8",

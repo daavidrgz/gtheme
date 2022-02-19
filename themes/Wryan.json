@@ -1,7 +1,9 @@
 {
 	"name": "Wryan",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "101010",
 		"foreground": "999993",

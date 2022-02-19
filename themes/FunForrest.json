@@ -1,7 +1,9 @@
 {
 	"name": "FunForrest",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "241200",
 		"foreground": "ddc165",

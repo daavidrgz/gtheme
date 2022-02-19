@@ -1,7 +1,9 @@
 {
 	"name": "Floraverse",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "0e0c15",
 		"foreground": "dbd0b9",

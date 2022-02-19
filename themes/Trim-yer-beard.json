@@ -1,7 +1,9 @@
 {
 	"name": "Trim-yer-beard",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "191716",
 		"foreground": "DABA8B",

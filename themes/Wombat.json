@@ -1,7 +1,9 @@
 {
 	"name": "Wombat",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "171717",
 		"foreground": "ded9ce",

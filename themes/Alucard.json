@@ -1,7 +1,9 @@
 {
 	"name": "Alucard",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "222330",
 		"foreground": "cef3ff",

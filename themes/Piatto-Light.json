@@ -1,7 +1,9 @@
 {
 	"name": "Piatto-Light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "ffffff",
 		"foreground": "414141",

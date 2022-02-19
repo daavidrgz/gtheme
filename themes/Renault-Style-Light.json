@@ -1,7 +1,9 @@
 {
 	"name": "Renault-Style-Light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "3a3a3a",
 		"foreground": "e9cb7b",

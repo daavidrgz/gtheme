@@ -1,7 +1,9 @@
 {
 	"name": "Railscasts-light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "f9f7f3",
 		"foreground": "3a4055",

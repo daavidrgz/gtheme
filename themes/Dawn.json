@@ -1,7 +1,9 @@
 {
 	"name": "Dawn",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "181B20",
 		"foreground": "9B9081",

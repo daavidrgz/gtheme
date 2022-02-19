@@ -1,7 +1,9 @@
 {
 	"name": "Monokai-Pro-(Filter-Spectrum)",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "363537",
 		"foreground": "f7f1ff",

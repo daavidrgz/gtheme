@@ -1,7 +1,9 @@
 {
 	"name": "Lavandula",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "050014",
 		"foreground": "736d7c",

@@ -1,7 +1,9 @@
 {
 	"name": "Twilight-dark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1e1e1e",
 		"foreground": "a7a7a7",

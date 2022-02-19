@@ -1,7 +1,9 @@
 {
 	"name": "Atelierseaside-light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "f0fff0",
 		"foreground": "5e6e5e",

@@ -1,7 +1,9 @@
 {
 	"name": "Tomorrow",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "ffffff",
 		"foreground": "4c4c4c",

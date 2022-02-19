@@ -1,7 +1,9 @@
 {
 	"name": "FrontEndDelight",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1b1b1d",
 		"foreground": "acacac",

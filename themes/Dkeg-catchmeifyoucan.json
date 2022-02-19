@@ -1,7 +1,9 @@
 {
 	"name": "Dkeg-catchmeifyoucan",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "170f0d",
 		"foreground": "f9f9f9",

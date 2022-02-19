@@ -1,7 +1,9 @@
 {
 	"name": "Monokai-Soda",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "191919",
 		"foreground": "c4c4b5",

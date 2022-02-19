@@ -1,7 +1,9 @@
 {
 	"name": "Atelierheath-dark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1b181b",
 		"foreground": "ab9bab",

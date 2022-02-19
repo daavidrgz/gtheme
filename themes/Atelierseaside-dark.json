@@ -1,7 +1,9 @@
 {
 	"name": "Atelierseaside-dark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "131513",
 		"foreground": "8ca68c",

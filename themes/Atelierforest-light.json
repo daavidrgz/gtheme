@@ -1,7 +1,9 @@
 {
 	"name": "Atelierforest-light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "f1efee",
 		"foreground": "68615e",

@@ -1,7 +1,9 @@
 {
 	"name": "Pop!-OS",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "333333",
 		"foreground": "F2F2F2",

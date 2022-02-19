@@ -1,7 +1,9 @@
 {
 	"name": "Tangoish",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "2e3436",
 		"foreground": "eeeeec",

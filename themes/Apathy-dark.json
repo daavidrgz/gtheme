@@ -1,7 +1,9 @@
 {
 	"name": "Apathy-dark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "031A16",
 		"foreground": "81B5AC",

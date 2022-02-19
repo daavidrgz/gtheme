@@ -1,7 +1,9 @@
 {
 	"name": "Vacuous2",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "101010",
 		"foreground": "d2c5bc",

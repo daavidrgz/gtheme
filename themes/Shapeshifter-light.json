@@ -1,7 +1,9 @@
 {
 	"name": "Shapeshifter-light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "f9f9f9",
 		"foreground": "102015",

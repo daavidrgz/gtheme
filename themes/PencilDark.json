@@ -1,7 +1,9 @@
 {
 	"name": "PencilDark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "202020",
 		"foreground": "f0f0f0",

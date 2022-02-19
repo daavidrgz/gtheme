@@ -1,7 +1,9 @@
 {
 	"name": "Ashes-light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "F3F4F5",
 		"foreground": "565E65",

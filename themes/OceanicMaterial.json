@@ -1,7 +1,9 @@
 {
 	"name": "OceanicMaterial",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1c262b",
 		"foreground": "c1c8d6",

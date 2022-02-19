@@ -1,7 +1,9 @@
 {
 	"name": "Phrak1",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "000000",
 		"foreground": "a8a8a8",

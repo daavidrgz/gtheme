@@ -1,7 +1,9 @@
 {
 	"name": "Rezza",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "222222",
 		"foreground": "dddddd",

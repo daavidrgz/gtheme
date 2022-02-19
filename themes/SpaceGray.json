@@ -1,7 +1,9 @@
 {
 	"name": "SpaceGray",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "20232c",
 		"foreground": "b2b8c2",

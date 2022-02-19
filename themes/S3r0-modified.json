@@ -1,7 +1,9 @@
 {
 	"name": "S3r0-modified",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1F1F1F",
 		"foreground": "C0B18B",

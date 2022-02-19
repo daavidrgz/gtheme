@@ -1,7 +1,9 @@
 {
 	"name": "Neutron",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1b1d22",
 		"foreground": "e6e8ee",

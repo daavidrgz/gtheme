@@ -1,7 +1,9 @@
 {
 	"name": "Japanesque",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1d1d1d",
 		"foreground": "f7f6ec",

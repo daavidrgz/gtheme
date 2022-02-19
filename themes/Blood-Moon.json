@@ -1,7 +1,9 @@
 {
 	"name": "Blood-Moon",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "10100E",
 		"foreground": "C6C6C4",

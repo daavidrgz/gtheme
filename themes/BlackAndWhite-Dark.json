@@ -1,7 +1,9 @@
 {
 	"name": "BlackAndWhite-Dark",
-	"vscode": "White",
-	"wallpaper": "~/.config/gtheme/wallpapers/BlackAndWhite/city.jpg",
+	"extras": {
+		"vscode": ["White"],
+		"wallpaper": ["~/.config/gtheme/wallpapers/BlackAndWhite/city.jpg"]
+	},
 	"colors": {
 		"background": "000000",
 		"foreground": "ffffff",

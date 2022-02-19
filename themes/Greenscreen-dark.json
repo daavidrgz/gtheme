@@ -1,7 +1,9 @@
 {
 	"name": "Greenscreen-dark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "001100",
 		"foreground": "00bb00",

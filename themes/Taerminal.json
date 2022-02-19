@@ -1,7 +1,9 @@
 {
 	"name": "Taerminal",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "26282a",
 		"foreground": "f0f0f0",

@@ -1,7 +1,9 @@
 {
 	"name": "Pretty-and-pastel",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "151515",
 		"foreground": "888888",

@@ -1,7 +1,9 @@
 {
 	"name": "OK100-Matrix",
-	"vscode": "Matrix",
-	"wallpaper": "~/.config/gtheme/wallpapers/Matrix/black.png",
+	"extras": {
+		"vscode": ["Matrix"],
+		"wallpaper": ["~/.config/gtheme/wallpapers/Matrix/black.png"]
+	},
 	"colors": {
 		"background": "000000",
 		"foreground": "00cc00",

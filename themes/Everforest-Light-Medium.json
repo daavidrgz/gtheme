@@ -1,7 +1,9 @@
 {
 	"name": "Everforest-Light-Medium",
-	"vscode": "Everforest Light",
-	"wallpaper": "",
+	"extras": {
+		"vscode": ["Everforest Light"],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "fdf6e3",
 		"foreground": "323d43",

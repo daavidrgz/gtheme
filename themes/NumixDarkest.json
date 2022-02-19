@@ -1,7 +1,9 @@
 {
 	"name": "NumixDarkest",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "282828",
 		"foreground": "a2a2a2",

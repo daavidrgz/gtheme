@@ -1,7 +1,9 @@
 {
 	"name": "Treehouse",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "191919",
 		"foreground": "776b53",

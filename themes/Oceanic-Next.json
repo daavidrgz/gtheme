@@ -1,7 +1,9 @@
 {
 	"name": "Oceanic-Next",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1b2b34",
 		"foreground": "d8dee9",

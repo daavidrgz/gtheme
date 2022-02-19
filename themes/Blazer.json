@@ -1,7 +1,9 @@
 {
 	"name": "Blazer",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "0d1925",
 		"foreground": "d9e5f1",

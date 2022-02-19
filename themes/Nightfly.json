@@ -1,7 +1,9 @@
 {
 	"name": "Nightfly",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "011627",
 		"foreground": "acb4c2",

@@ -1,7 +1,9 @@
 {
 	"name": "Euphrasia",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "cfcfd9",
 		"foreground": "1c2027",

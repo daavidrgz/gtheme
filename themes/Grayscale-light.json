@@ -1,7 +1,9 @@
 {
 	"name": "Grayscale-light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "f7f7f7",
 		"foreground": "464646",

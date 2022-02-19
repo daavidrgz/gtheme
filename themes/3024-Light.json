@@ -1,7 +1,9 @@
 {
 	"name": "3024-Light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "f7f7f7",
 		"foreground": "4a4543",

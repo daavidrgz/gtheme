@@ -1,7 +1,9 @@
 {
 	"name": "Spiderman",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1b1d1e",
 		"foreground": "e2e2e2",

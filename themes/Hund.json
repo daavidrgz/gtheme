@@ -1,7 +1,9 @@
 {
 	"name": "Hund",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "161616",
 		"foreground": "FFFFFF",

@@ -1,7 +1,9 @@
 {
 	"name": "Seoul256",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "3a3a3a",
 		"foreground": "d0d0d0",

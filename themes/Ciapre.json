@@ -1,7 +1,9 @@
 {
 	"name": "Ciapre",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "181c27",
 		"foreground": "ada37a",

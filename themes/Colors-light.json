@@ -1,7 +1,9 @@
 {
 	"name": "Colors-light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "ffffff",
 		"foreground": "555555",

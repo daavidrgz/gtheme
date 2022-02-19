@@ -1,7 +1,9 @@
 {
 	"name": "AdventureTime",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1e1c44",
 		"foreground": "f8dbc0",

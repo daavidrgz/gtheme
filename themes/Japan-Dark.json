@@ -1,7 +1,9 @@
 {
 	"name": "Japan-Dark",
-	"vscode": "Rosé Pine",
-	"wallpaper": "~/.config/gtheme/wallpapers/Japan/8bit-city.png",
+	"extras": {
+		"vscode": ["Rosé Pine"],
+		"wallpaper": ["~/.config/gtheme/wallpapers/Japan/8bit-city.png"]
+	},
 	"colors": {
 		"background": "3D495B",
 		"foreground": "faf4ed",

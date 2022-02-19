@@ -1,7 +1,9 @@
 {
 	"name": "MonaLisa",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "110b0d",
 		"foreground": "f6d56a",

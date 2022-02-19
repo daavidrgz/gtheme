@@ -1,7 +1,9 @@
 {
 	"name": "Marrakesh-light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "faf0a5",
 		"foreground": "5f5b17",

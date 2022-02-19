@@ -1,7 +1,9 @@
 {
 	"name": "Espresso",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "323232",
 		"foreground": "ffffff",

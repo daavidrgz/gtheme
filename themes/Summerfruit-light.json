@@ -1,7 +1,9 @@
 {
 	"name": "Summerfruit-light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "FFFFFF",
 		"foreground": "303030",

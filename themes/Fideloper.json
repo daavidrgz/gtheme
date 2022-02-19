@@ -1,7 +1,9 @@
 {
 	"name": "Fideloper",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "282f32",
 		"foreground": "dad9df",

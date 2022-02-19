@@ -1,7 +1,9 @@
 {
 	"name": "Jackie-Brown",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "2c1c15",
 		"foreground": "ffcc2f",

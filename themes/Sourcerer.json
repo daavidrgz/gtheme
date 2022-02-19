@@ -1,7 +1,9 @@
 {
 	"name": "Sourcerer",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "222222",
 		"foreground": "c2c2b0",

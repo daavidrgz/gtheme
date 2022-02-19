@@ -1,7 +1,9 @@
 {
 	"name": "Man-Page",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "fef49c",
 		"foreground": "000000",

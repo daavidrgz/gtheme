@@ -1,7 +1,9 @@
 {
 	"name": "Glacier",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "0c1115",
 		"foreground": "ffffff",

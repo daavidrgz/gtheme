@@ -1,7 +1,9 @@
 {
 	"name": "Monokai-Pro-(Filter-Ristretto)",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "403838",
 		"foreground": "fff1f3",

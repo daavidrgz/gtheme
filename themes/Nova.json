@@ -1,7 +1,9 @@
 {
 	"name": "Nova",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "3c4c54",
 		"foreground": "8798a3",

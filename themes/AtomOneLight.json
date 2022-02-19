@@ -1,7 +1,9 @@
 {
 	"name": "AtomOneLight",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "f8f8f8",
 		"foreground": "2a2b33",

@@ -1,7 +1,9 @@
 {
 	"name": "AlienBlood",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "0f160f",
 		"foreground": "637d75",

@@ -1,7 +1,9 @@
 {
 	"name": "Papaver",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "343a3f",
 		"foreground": "caa16e",

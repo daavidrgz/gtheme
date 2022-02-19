@@ -1,7 +1,9 @@
 {
 	"name": "Medallion",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1d1808",
 		"foreground": "cac296",

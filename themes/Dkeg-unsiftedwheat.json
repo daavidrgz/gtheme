@@ -1,7 +1,9 @@
 {
 	"name": "Dkeg-unsiftedwheat",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "111111",
 		"foreground": "d3d3d3",

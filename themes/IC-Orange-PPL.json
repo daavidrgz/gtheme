@@ -1,7 +1,9 @@
 {
 	"name": "IC-Orange-PPL",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "262626",
 		"foreground": "ffcb83",

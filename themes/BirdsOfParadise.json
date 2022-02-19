@@ -1,7 +1,9 @@
 {
 	"name": "BirdsOfParadise",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "2a1e1d",
 		"foreground": "dfdab7",

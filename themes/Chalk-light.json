@@ -1,7 +1,9 @@
 {
 	"name": "Chalk-light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "f5f5f5",
 		"foreground": "303030",

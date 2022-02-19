@@ -1,7 +1,9 @@
 {
 	"name": "Brogrammer",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "131313",
 		"foreground": "d6dae4",

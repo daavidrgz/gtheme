@@ -1,7 +1,9 @@
 {
 	"name": "Duotone-Dark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "1f1c27",
 		"foreground": "b6a0ff",

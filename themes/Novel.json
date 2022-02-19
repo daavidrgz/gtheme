@@ -1,7 +1,9 @@
 {
 	"name": "Novel",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "dfdbc3",
 		"foreground": "3b2322",

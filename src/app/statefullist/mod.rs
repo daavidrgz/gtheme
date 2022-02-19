@@ -13,7 +13,10 @@ pub struct StatefulList<T> {
 	color: Color,
 	title: String,
 	active_text: String,
-	inactive_text: String
+	inactive_text: String,
+	active_text_color: Option<Color>,
+	inactive_text_color: Option<Color>,
+	alignment: bool
 }
 impl<T> StatefulList<T> {
 	pub fn with_items(items: Vec<T>) -> StatefulList<T> {
@@ -26,7 +29,10 @@ impl<T> StatefulList<T> {
 			color: Color::White,
 			title: "LIST".to_string(),
 			active_text: "• Active ".to_string(),
+			active_text_color: None,
+			inactive_text_color: None,
 			inactive_text: "".to_string(),
+			alignment: false,
 		}
 	}
 
@@ -54,6 +60,18 @@ impl<T> StatefulList<T> {
 		self.inactive_text = inactive_text.to_string();
 		self
 	}
+	pub fn active_text_color(mut self, active_text_color: Color) -> Self {
+		self.active_text_color = Some(active_text_color);
+		self
+	}
+	pub fn inactive_text_color(mut self, inactive_text_color: Color) -> Self {
+		self.inactive_text_color = Some(inactive_text_color);
+		self
+	}
+	pub fn alignment(mut self, alignment: bool) -> Self {
+		self.alignment = alignment;
+		self
+	}
 
 	pub fn get_state(&self) -> &ListState {
 		&self.state
@@ -79,8 +97,17 @@ impl<T> StatefulList<T> {
 	pub fn get_inactive_text(&self) -> &String {
 		&self.inactive_text
 	}
+	pub fn get_active_text_color(&self) -> &Option<Color> {
+		&self.active_text_color
+	}
+	pub fn get_inactive_text_color(&self) -> &Option<Color> {
+		&self.inactive_text_color
+	}
 	pub fn get_infinite(&self) -> &bool {
 		&self.infinite
+	}
+	pub fn get_alignment(&self) -> &bool {
+		&self.alignment
 	}
 	pub fn get_length(&self) -> usize {
 		self.items.len()

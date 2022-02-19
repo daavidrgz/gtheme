@@ -1,7 +1,9 @@
 {
 	"name": "Atelierlakeside-dark",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "161b1d",
 		"foreground": "7ea2b4",

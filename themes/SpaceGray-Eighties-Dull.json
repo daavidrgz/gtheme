@@ -1,7 +1,9 @@
 {
 	"name": "SpaceGray-Eighties-Dull",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "212121",
 		"foreground": "c8c5bc",

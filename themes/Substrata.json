@@ -1,7 +1,9 @@
 {
 	"name": "Substrata",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "191c25",
 		"foreground": "b5b4c9",

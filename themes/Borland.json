@@ -1,7 +1,9 @@
 {
 	"name": "Borland",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "0000a3",
 		"foreground": "ffff4d",

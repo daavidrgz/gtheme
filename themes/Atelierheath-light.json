@@ -1,7 +1,9 @@
 {
 	"name": "Atelierheath-light",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "f7f3f7",
 		"foreground": "695d69",

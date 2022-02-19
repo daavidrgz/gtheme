@@ -1,7 +1,9 @@
 {
 	"name": "Belafonte-Day",
-	"vscode": "",
-	"wallpaper": "",
+	"extras": {
+		"vscode": [""],
+		"wallpaper": [""]
+	},
 	"colors": {
 		"background": "d4ccb9",
 		"foreground": "45363b",
