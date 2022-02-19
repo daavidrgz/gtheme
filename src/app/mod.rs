@@ -80,10 +80,15 @@ impl Ui {
 			match key.code {
 				KeyCode::Char('q') | KeyCode::Char('Q') => return false,
 				KeyCode::Char('h') | KeyCode::Char('H') => {
-					lists[0].unselect();
-					lists[1].unselect();
+					if *show_popup {
+						lists[0].next();
+						help_list.unselect();
+					} else {
+						lists[0].unselect();
+						lists[1].unselect();
+						help_list.next()
+					}
 					*show_popup = !*show_popup;
-					help_list.next()
 				},
 				KeyCode::Down => if !*show_popup { lists[current_list].next() } else { help_list.next() },
 				KeyCode::Up => if !*show_popup { lists[current_list].previous() } else { help_list.previous() },
