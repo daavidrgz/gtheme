@@ -1,6 +1,6 @@
 #!/bin/bash
 THEMES_PATH=$HOME"/.config/gtheme/themes"
-DEST_PATH=$HOME"/.config/gtheme-rust"
+DEST_PATH=$HOME"/github/gtheme/themes"
 
 ATTR_NAMES=("background" "foreground" "cursor" "selection-background" "selection-foreground" \
 "black" "black-hg" "red" "red-hg" "green" "green-hg" "yellow" "yellow-hg" "blue" "blue-hg" "magenta" "magenta-hg" "cyan" "cyan-hg" "white" "white-hg" "vscode" "wallpaper")

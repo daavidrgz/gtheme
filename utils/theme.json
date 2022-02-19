@@ -1,7 +1,9 @@
 {
 	"name": "%name%",
-	"vscode": "%vscode%",
-	"wallpaper": "%wallpaper%",
+	"extras": {
+		"vscode": ["%vscode%"],
+		"wallpaper": ["%wallpaper%"]
+	},
 	"colors": {
 		"background": "%background%",
 		"foreground": "%foreground%",
