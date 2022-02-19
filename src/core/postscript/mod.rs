@@ -19,6 +19,8 @@ impl PostScript{
 
 	//TODO: use DesktopFile or str?
 	pub fn get_postscripts(desktop: &str) -> HashMap<String,PostScript> {
+		if desktop == "" { return HashMap::new(); }
+
 		let gtheme_home:String = core::expand_path(core::GTHEME_HOME);
 		let postscripts_dir = gtheme_home + &format!("/desktops/{}/gtheme/post-scripts", desktop);
 		let entries = fs::read_dir(&postscripts_dir).expect(&format!("Could not read directory:{}", &postscripts_dir));
@@ -40,6 +42,8 @@ impl PostScript{
 	}
 
 	pub fn get_extras(desktop: &str) -> Vec<PostScript> {
+		if desktop == "" { return vec![] }
+		
 		let gtheme_home:String = core::expand_path(core::GTHEME_HOME);
 		let extras_dir = gtheme_home + &format!("/desktops/{}/gtheme/extras", desktop);
 		let entries = fs::read_dir(&extras_dir).expect(&format!("Could not read directory:{}", &extras_dir));

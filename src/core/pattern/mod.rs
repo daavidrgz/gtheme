@@ -49,6 +49,8 @@ impl Pattern {
 
 	//TODO: use DesktopFile or str?
 	pub fn get_patterns(desktop: &str) -> Vec<PatternFile> {
+		if desktop == "" { return vec![] }
+		
 		let gtheme_home: String = core::expand_path(core::GTHEME_HOME);
 		let patterns_dir = gtheme_home + &format!("/desktops/{}/gtheme/patterns", desktop);
 		let entries = fs::read_dir(&patterns_dir).expect(&format!("Could not read directory:{}", &patterns_dir));

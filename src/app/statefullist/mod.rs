@@ -103,7 +103,7 @@ impl<T> StatefulList<T> {
 	pub fn next(&mut self) {
 		let i = match self.state.selected() {
 			Some(i) => {
-				if i >= self.items.len() - 1 {
+				if i + 1 >= self.items.len() {
 					if !self.get_infinite() {i} else {0}
 				} else {
 					i + 1
