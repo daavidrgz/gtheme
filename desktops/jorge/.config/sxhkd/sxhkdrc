@@ -11,11 +11,11 @@
 
 # Terminal emulator
 super + Return
-    kitty
+    alacritty
 
 # Terminal emulator (nvidia_gpu)
-super + shift + Return
-    prime-run kitty
+#super + shift + Return
+#    prime-run kitty
 
 # Launcher
 super + d
