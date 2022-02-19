@@ -20,7 +20,7 @@ use crossterm::{
 
 use crate::core::config::GlobalConfig;
 
-use crate::app::widgets::{ListWidget, LogoWidget, OptionsWidget, HelpWidget, ExtrasWidget};
+use crate::app::widgets::{ListWidget, LogoWidget, OptionsWidget, HelpWidget};
 use crate::app::appstate::{AppState, Screen, Popup};
 
 pub struct Ui {
@@ -241,7 +241,7 @@ impl Ui {
 		// Extras popup
 		if *current_popup == Some(Popup::Extras) {
 			let extras_list = popups.get_mut(&Popup::Extras).unwrap();
-			let extras_widget = ExtrasWidget::new(extras_list, global_config);
+			let extras_widget = ListWidget::new(extras_list, global_config);
 			let area = Self::centered_rect(60, 70, f.size());
 			f.render_widget(Clear, area); //this clears out the background
 			f.render_stateful_widget(extras_widget.get_widget(), area, extras_list.get_mut_state());
