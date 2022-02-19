@@ -22,7 +22,7 @@ impl<'a> ListWidget<'a> {
 				let (name, active_text, arrows) = Self::get_item_text(it, screen_item, stateful_list, global_config);
 				ListItem::new(Spans::from(vec![
 					Span::from(name),
-					Span::styled(active_text, Style::default().fg(color).add_modifier(Modifier::ITALIC).add_modifier(Modifier::BOLD).remove_modifier(Modifier::DIM)), 
+					Span::styled(active_text, Style::default().fg(color).add_modifier(Modifier::ITALIC).add_modifier(Modifier::BOLD)), 
 					Span::from(arrows)
 				])).style(Style::default().add_modifier(Modifier::DIM))
 			}).collect();

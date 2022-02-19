@@ -74,7 +74,7 @@ impl AppState {
 		let patterns_list = StatefulList::with_items(patterns)
 			.color(Color::Magenta)
 			.title("PATTERNS ")
-			.inactive_text(" • Inactive ");
+			.inactive_text("• Inactive ");
 
 		let fav_themes = global_config.get_fav_themes().into_iter().map(|f|ScreenItem::Theme(f.clone())).collect();
 		let fav_themes_list = StatefulList::with_items(fav_themes)
@@ -123,7 +123,7 @@ impl AppState {
 		StatefulList::with_items(extras)
 			.color(Color::Red)
 			.title("EXTRAS ")
-			.active_text(" • ON ")
-			.inactive_text(" • OFF ")
+			.active_text("• ON ")
+			.inactive_text("• OFF ")
 	}
 }

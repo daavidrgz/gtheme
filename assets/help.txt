@@ -14,7 +14,7 @@
 
 'Enter'  #activate/desactivate patter
 'i'      #toggle invert pattern's colors
-'p'      #edit pattern's post-script
+'p'      #edit pattern's post-script in $VISUAL env var
 'e'      #edit pattern's file in $VISUAL env var
 
 •• DESKTOPS
@@ -26,3 +26,7 @@
 'Enter'  #apply theme
 'f'      #flag/unflag as favourite
 'e'      #edit pattern's file in $VISUAL env var
+
+•• EXTRAS
+
+'Enter'  #activate/desactivate extra

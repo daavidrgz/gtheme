@@ -21,10 +21,11 @@ impl<T> StatefulList<T> {
 			items,
 			state: ListState::default(),
 			index: 0,
+
 			infinite: false,
 			color: Color::White,
-			title: "".to_string(),
-			active_text: " • Active ".to_string(),
+			title: "LIST".to_string(),
+			active_text: "• Active ".to_string(),
 			inactive_text: "".to_string(),
 		}
 	}
