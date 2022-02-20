@@ -167,6 +167,13 @@ impl Ui {
 					} else {
 						lists.get_mut(0).unwrap().add_fav(&item,global_config)
 					}
+				},
+				KeyCode::Char('i') | KeyCode::Char('I') => {
+					let item = match lists[current_list].get_selected() {
+						Some(item) => item.clone(),
+						None => return true
+					};
+					item.invert(desktop_config);
 				}
 				_ => {}
 			}

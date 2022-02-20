@@ -16,21 +16,37 @@ impl<'a> ListWidget<'a> {
 		let color = *stateful_list.get_color();
 		let title = stateful_list.get_title();
 
+		let default_name_style = Style::default().add_modifier(Modifier::DIM);
+		let highlight_name_stlye = Style::default().fg(color).add_modifier(Modifier::BOLD);
+
+		let default_active_style = Style::default().add_modifier(Modifier::ITALIC).add_modifier(Modifier::BOLD).add_modifier(Modifier::DIM);
+		let highlight_active_style = Style::default().add_modifier(Modifier::ITALIC).add_modifier(Modifier::BOLD);
+
 		let items: Vec<ListItem> = stateful_list
 			.get_items().iter().enumerate()
 			.map(|(it, screen_item)| {
-				let (name, active_text, arrows) = Self::get_item_text(it, screen_item, stateful_list, global_config, desktop_config);
 
 				let state_color = match (stateful_list.get_active_text_color(), stateful_list.get_inactive_text_color()) {
 					(Some(active), Some(inactive)) => if screen_item.is_active(global_config, desktop_config) { *active } else { *inactive },
 					_ => color 
 				};
 
+				let (name_style, active_style) = match stateful_list.get_state().selected() {
+					Some(idx) => if idx == it {
+						(highlight_name_stlye, highlight_active_style.fg(state_color))
+					} else {
+						(default_name_style, default_active_style.fg(state_color))
+					},
+					None => (default_name_style, default_active_style.fg(state_color))
+				};
+
+				let (name, active_text, arrows) = Self::get_item_text(it, screen_item, stateful_list, global_config, desktop_config);
+
 				ListItem::new(Spans::from(vec![
-					Span::from(name),
-					Span::styled(active_text, Style::default().fg(state_color).add_modifier(Modifier::ITALIC).add_modifier(Modifier::BOLD)), 
-					Span::from(arrows)
-				])).style(Style::default().add_modifier(Modifier::DIM))
+					Span::styled(name, name_style),
+					Span::styled(active_text, active_style), 
+					Span::styled(arrows, name_style),
+				]))
 			}).collect();
 		
 		let mut border_style = Style::default().fg(color);
@@ -52,9 +68,7 @@ impl<'a> ListWidget<'a> {
 				.borders(Borders::ALL)
 				.title(Span::styled(String::from(format!(" {} ", title)), title_style))
 				.border_style(border_style))
-			.highlight_symbol("")
-			.highlight_style(Style::default().fg(color).add_modifier(Modifier::BOLD).remove_modifier(Modifier::DIM),
-			);
+			.highlight_symbol("");
 			
 		ListWidget { widget }
 	}	
@@ -85,7 +99,7 @@ impl<'a> ListWidget<'a> {
 		};
 
 		if screen_item.is_inverted(desktop_config) { 
-			active_text = format!("{} Inverted ", active_text.trim());
+			active_text = format!("{} (Inverted) ", active_text.trim());
 		}
 
 		(name, active_text, arrows)

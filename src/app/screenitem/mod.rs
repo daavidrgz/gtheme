@@ -61,9 +61,22 @@ impl ScreenItem {
 		match self {
 			ScreenItem::Desktop(d) => Self::install_desktop(d.clone(), global_config, desktop_config),
 			ScreenItem::Theme(t) => Self::apply_theme(t.clone(), global_config, desktop_config),
-			ScreenItem::Pattern(p) => Self::toggle_pattern(p.clone(), desktop_config),
-			ScreenItem::Extra(_) => {},
+			ScreenItem::Pattern(_) => Self::toggle_active(self.clone(), desktop_config, true),
+			ScreenItem::Extra(_) => Self::toggle_active(self.clone(), desktop_config, false),
 			ScreenItem::Help(_) => {}
+		}
+	}
+
+	pub fn invert(&self, desktop_config: &mut DesktopConfig) {
+		match self {
+			ScreenItem::Pattern(p) => {
+				let inverted = desktop_config.get_mut_inverted();
+				let current_status = *inverted.get(p.get_name()).unwrap_or(&false);
+		
+				inverted.insert(String::from(p.get_name()), !current_status);
+				desktop_config.save()
+			},
+			_ => {}
 		}
 	}
 	
@@ -89,16 +102,16 @@ impl ScreenItem {
 				}
 			},
 			ScreenItem::Pattern(p) => *desktop_config.get_actived().get(p.get_name()).unwrap_or(&true),
-			ScreenItem::Extra(_) => true,
+			ScreenItem::Extra(e) => *desktop_config.get_actived().get(e.get_name()).unwrap_or(&false),
 			ScreenItem::Help(_) => false
 		}
 	}
 
-	fn toggle_pattern(pattern: PatternFile, desktop_config: &mut DesktopConfig) {
-		let active_patterns = desktop_config.get_mut_actived();
-		let current_status = *active_patterns.get(pattern.get_name()).unwrap_or(&true);
+	fn toggle_active(item: ScreenItem, desktop_config: &mut DesktopConfig, default: bool) {
+		let actived = desktop_config.get_mut_actived();
+		let current_status = *actived.get(item.get_name()).unwrap_or(&default);
 
-		active_patterns.insert(String::from(pattern.get_name()), !current_status);
+		actived.insert(String::from(item.get_name()), !current_status);
 		desktop_config.save()
 	}
 
