@@ -135,7 +135,8 @@ impl ScreenItem {
 		let themes = Theme::get_themes();
 		let aux_theme = themes.into_iter().find(|theme | theme.get_name() == "Nord").unwrap(); 
 
-		let theme = desktop_config.get_default_theme().as_ref().unwrap_or(&aux_theme);
+		let next_desktop_config = DesktopConfig::new(next_desktop.get_name());
+		let theme = next_desktop_config.get_default_theme().as_ref().unwrap_or(&aux_theme);
 
 		*global_config.get_mut_current_desktop() = Some(next_desktop.clone());
 		*global_config.get_mut_current_theme() = Some(theme.clone());
