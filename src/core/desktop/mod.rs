@@ -68,7 +68,11 @@ impl Desktop {
 		let args_map = theme.get_extras();
 		for extra_ps in PostScript::get_extras(self.get_name()){
 			if !*actived.get(extra_ps.get_name()).unwrap_or(&false){continue}
-			extra_ps.execute(args_map.get(extra_ps.get_name()).unwrap_or(&vec![]));
+
+			let args = args_map.get(extra_ps.get_name()).unwrap_or(&vec![]).iter()
+				.map(|arg|core::expand_path(arg)).collect();
+			
+			extra_ps.execute(&args);
 		}
 	}
 
@@ -194,5 +198,6 @@ mod tests{
 		let desktop = desktops[4].to_desktop();
 		println!("Patterns in {}: {:?}",desktop.get_name(),desktop.get_patterns())
 	}
+
 
 }

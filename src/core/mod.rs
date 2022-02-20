@@ -54,7 +54,7 @@ mod tests{
 		let desktop = desktops.into_iter().find(|desktop |desktop.get_name()=="jorge" ).unwrap();
 
 		let themes = Theme::get_themes();
-		let theme = themes.into_iter().find(|theme |theme.get_name()=="Dracula" ).unwrap().to_theme();
+		let theme = themes.into_iter().find(|theme |theme.get_name()=="Nord" ).unwrap().to_theme();
 
 
 		let desktop = desktop.to_desktop();
@@ -71,4 +71,6 @@ mod tests{
 
 		desktop.apply(&theme,&active,&inverted);
 	}
+
 }
+
