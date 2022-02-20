@@ -4,14 +4,14 @@ use tui::{
 	text::{Span, Spans},
 };
 
-use crate::core::config::GlobalConfig;
+use crate::core::config::{GlobalConfig, DesktopConfig,};
 use crate::app::{screenitem::ScreenItem, statefullist::StatefulList};
 
 pub struct ListWidget<'a> {
 	widget: List<'a>
 }
 impl<'a> ListWidget<'a> {
-	pub fn new(stateful_list: &StatefulList<ScreenItem>, global_config: &GlobalConfig) -> ListWidget<'a> {
+	pub fn new(stateful_list: &StatefulList<ScreenItem>, global_config: &GlobalConfig, desktop_config: &DesktopConfig) -> ListWidget<'a> {
 
 		let color = *stateful_list.get_color();
 		let title = stateful_list.get_title();
@@ -19,10 +19,10 @@ impl<'a> ListWidget<'a> {
 		let items: Vec<ListItem> = stateful_list
 			.get_items().iter().enumerate()
 			.map(|(it, screen_item)| {
-				let (name, active_text, arrows) = Self::get_item_text(it, screen_item, stateful_list, global_config);
+				let (name, active_text, arrows) = Self::get_item_text(it, screen_item, stateful_list, global_config, desktop_config);
 
 				let state_color = match (stateful_list.get_active_text_color(), stateful_list.get_inactive_text_color()) {
-					(Some(active), Some(inactive)) => if screen_item.is_active(global_config) { *active } else { *inactive },
+					(Some(active), Some(inactive)) => if screen_item.is_active(global_config, desktop_config) { *active } else { *inactive },
 					_ => color 
 				};
 
@@ -59,7 +59,7 @@ impl<'a> ListWidget<'a> {
 		ListWidget { widget }
 	}	
 
-	fn get_item_text(it: usize, screen_item: &ScreenItem, stateful_list: &StatefulList<ScreenItem>, global_config: &GlobalConfig ) -> (String, String, String) {
+	fn get_item_text(it: usize, screen_item: &ScreenItem, stateful_list: &StatefulList<ScreenItem>, global_config: &GlobalConfig, desktop_config: &DesktopConfig) -> (String, String, String) {
 		let mut name = screen_item.get_name().to_string();
 		let mut arrows = String::new();
 
@@ -78,13 +78,13 @@ impl<'a> ListWidget<'a> {
 			None => if *stateful_list.get_alignment() { format!("   {:<20} ", name) } else { format!("   {} ", name) }
 		};
 	
-		let mut active_text = if screen_item.is_active(global_config) {
+		let mut active_text = if screen_item.is_active(global_config, desktop_config) {
 			stateful_list.get_active_text().clone()
 		} else {
 			stateful_list.get_inactive_text().clone()
 		};
 
-		if screen_item.is_inverted() { 
+		if screen_item.is_inverted(desktop_config) { 
 			active_text = format!("{} Inverted ", active_text.trim());
 		}
 

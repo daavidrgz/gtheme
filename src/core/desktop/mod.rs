@@ -87,7 +87,7 @@ impl Desktop {
 		}
 	}
 
-	pub fn install(&self, previous: &Desktop, theme: &Theme, actived: HashMap<String,bool>, inverted: HashMap<String,bool>) {
+	pub fn install(&self, previous: &Desktop, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>) {
 		let config_home = core::expand_path(core::CONFIG_HOME);
 
 		previous.uninstall();
@@ -174,7 +174,7 @@ mod tests{
 		let mut inverted = HashMap::new();
 		inverted.insert(String::from("polybar"), true);
 
-		desktop.install(&previous,&theme,actived,inverted);
+		desktop.install(&previous,&theme,&actived,&inverted);
 	}
 
 	#[test]

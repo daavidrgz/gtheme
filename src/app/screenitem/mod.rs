@@ -3,7 +3,7 @@ use crate::core::{
 	theme::{ThemeFile, Theme},
 	pattern::{PatternFile, Pattern},
 	postscript::PostScript,
-	config::GlobalConfig
+	config::{GlobalConfig, DesktopConfig}
 };
 
 use std::collections::HashMap;
@@ -58,24 +58,24 @@ impl ScreenItem {
 		}
 	}
 
-	pub fn apply(&self, global_config: &mut GlobalConfig) {
+	pub fn apply(&self, global_config: &mut GlobalConfig, desktop_config: &mut DesktopConfig) {
 		match self {
-			ScreenItem::Desktop(d) => ScreenItem::install_desktop(d.clone(), global_config),
-			ScreenItem::Theme(t) => ScreenItem::apply_theme(t.clone(), global_config),
-			ScreenItem::Pattern(_) => {},
+			ScreenItem::Desktop(d) => Self::install_desktop(d.clone(), global_config, desktop_config),
+			ScreenItem::Theme(t) => Self::apply_theme(t.clone(), global_config, desktop_config),
+			ScreenItem::Pattern(p) => Self::toggle_pattern(p.clone(), desktop_config),
 			ScreenItem::Extra(_) => {},
 			ScreenItem::Help(_) => {}
 		}
 	}
 	
-	pub fn is_inverted(&self) -> bool {
+	pub fn is_inverted(&self, desktop_config: &DesktopConfig) -> bool {
 		match self {
-			ScreenItem::Pattern(p) => true,
+			ScreenItem::Pattern(p) => *desktop_config.get_inverted().get(p.get_name()).unwrap_or(&false),
 			_ => false
 		}
 	}
 
-	pub fn is_active(&self, global_config: &GlobalConfig) -> bool {
+	pub fn is_active(&self, global_config: &GlobalConfig, desktop_config: &DesktopConfig) -> bool {
 		match self {
 			ScreenItem::Desktop(d) => {
 				match global_config.get_current_desktop() {
@@ -89,33 +89,33 @@ impl ScreenItem {
 					None => false
 				}
 			},
-			ScreenItem::Pattern(_) => false,
+			ScreenItem::Pattern(p) => *desktop_config.get_actived().get(p.get_name()).unwrap_or(&false),
 			ScreenItem::Extra(_) => true,
 			ScreenItem::Help(_) => false
 		}
 	}
 
-	fn apply_theme(theme: ThemeFile, global_config: &mut GlobalConfig) {
+	fn toggle_pattern(pattern: PatternFile, desktop_config: &mut DesktopConfig) {
+		let active_patterns = desktop_config.get_mut_actived();
+		let current_status = *active_patterns.get(pattern.get_name()).unwrap_or(&false);
+
+		active_patterns.insert(String::from(pattern.get_name()), !current_status);
+		desktop_config.save()
+	}
+
+	fn apply_theme(theme: ThemeFile, global_config: &mut GlobalConfig, desktop_config: &mut DesktopConfig) {
 		let current_desktop = global_config.get_current_desktop().as_ref()
 			.expect("Can not apply a theme, there is no desktop installed").to_desktop();
 
-		let patterns = Pattern::get_patterns(current_desktop.get_name());
-		let mut actived = HashMap::new();
-		for pattern in patterns{
-			actived.insert(String::from(pattern.get_name()),true);
-		}
-		actived.insert(String::from("wallpaper"),true);
-		actived.insert(String::from("vscode"),true);
-
-		current_desktop.apply(&theme.to_theme(), actived, HashMap::new());
+		current_desktop.apply(&theme.to_theme(), desktop_config.get_actived(), desktop_config.get_inverted());
 
 		*global_config.get_mut_current_theme() = Some(theme);
 		global_config.save()
 	}
 
-	fn install_desktop(next_desktop: DesktopFile, global_config: &mut GlobalConfig) {
-		let previous_desktop_opt = global_config.get_current_desktop().as_ref();
-		let current_desktop = match previous_desktop_opt {
+	fn install_desktop(next_desktop: DesktopFile, global_config: &mut GlobalConfig, desktop_config: &mut DesktopConfig) {
+		let current_desktop_opt = global_config.get_current_desktop().as_ref();
+		let current_desktop = match current_desktop_opt {
 			Some(d) => d.to_desktop(),
 			None => next_desktop.to_desktop().clone()
 		};
@@ -123,18 +123,10 @@ impl ScreenItem {
 		let themes = Theme::get_themes();
 		let theme = themes.into_iter().find(|theme |theme.get_name() == "Japan-Dark").unwrap(); 
 
-		let patterns = Pattern::get_patterns(next_desktop.get_name());
-		let mut actived = HashMap::new();
-		for pattern in patterns{
-			actived.insert(String::from(pattern.get_name()),true);
-		}
-		actived.insert(String::from("wallpaper"),true);
-		actived.insert(String::from("vscode"),true);
-
 		*global_config.get_mut_current_desktop() = Some(next_desktop.clone());
 		*global_config.get_mut_current_theme() = Some(theme.clone());
 		global_config.save();
 
-		next_desktop.to_desktop().install(&current_desktop, &theme.to_theme(), actived, HashMap::new())
+		next_desktop.to_desktop().install(&current_desktop, &theme.to_theme(), desktop_config.get_actived(), desktop_config.get_inverted())
 	}
 }

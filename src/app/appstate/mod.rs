@@ -9,7 +9,7 @@ use crate::core::{
 	theme::Theme,
 	pattern::Pattern,
 	postscript::PostScript,
-	config::GlobalConfig
+	config::{GlobalConfig, DesktopConfig},
 };
 use crate::app::statefullist::StatefulList;
 use crate::app::screenitem::ScreenItem;
@@ -28,23 +28,30 @@ pub enum Popup {
 pub struct AppState {
 	current_screen: Screen,
 	screens: HashMap<Screen, [StatefulList<ScreenItem>; 2]>,
-	global_config: GlobalConfig, 
 	current_popup: Option<Popup>,
 	popups: HashMap<Popup, StatefulList<ScreenItem>>,
+	global_config: GlobalConfig,
+	desktop_config: DesktopConfig,
 }
 impl AppState {
 	pub fn default(global_config: GlobalConfig) -> AppState {
+		let current_desktop_str = match global_config.get_current_desktop() {
+			Some(d) => d.get_name().clone(),
+			None => "".to_string(),
+		};
+
 		AppState {
 			current_screen: Screen::Desktop,
 			screens: Self::create_screens(&global_config),
 			current_popup: None,
 			popups: Self::create_popups(&global_config),
 			global_config,
+			desktop_config: DesktopConfig::new(&current_desktop_str),
 		}
 	}
 	
-	pub fn get_mut_state(&mut self) -> (&mut Screen, &mut HashMap<Screen, [StatefulList<ScreenItem>; 2]>, &mut Option<Popup>, &mut HashMap<Popup, StatefulList<ScreenItem>>, &mut GlobalConfig) {
-		(&mut self.current_screen, &mut self.screens, &mut self.current_popup, &mut self.popups, &mut self.global_config)
+	pub fn get_mut_state(&mut self) -> (&mut Screen, &mut HashMap<Screen, [StatefulList<ScreenItem>; 2]>, &mut Option<Popup>, &mut HashMap<Popup, StatefulList<ScreenItem>>, &mut GlobalConfig, &mut DesktopConfig) {
+		(&mut self.current_screen, &mut self.screens, &mut self.current_popup, &mut self.popups, &mut self.global_config, &mut self.desktop_config)
 	}
 	pub fn get_mut_screen(&mut self) -> &mut Screen {
 		&mut self.current_screen
@@ -55,6 +62,13 @@ impl AppState {
 	}
 	pub fn get_mut_global_config(&mut self) ->&mut GlobalConfig {
 		&mut self.global_config
+	}
+
+	pub fn get_desktop_config(&self) -> &DesktopConfig {
+		&self.desktop_config
+	}
+	pub fn get_mut_desktop_config(&mut self) ->&mut DesktopConfig {
+		&mut self.desktop_config
 	}
 
 	fn create_screens(global_config: &GlobalConfig) -> HashMap<Screen, [StatefulList<ScreenItem>; 2]> {

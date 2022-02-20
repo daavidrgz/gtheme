@@ -63,11 +63,13 @@ impl Ui {
 		}
 
 		app_state.get_global_config().save();
+		app_state.get_desktop_config().save();
+		
 		Ok(())
 	}
 
 	fn manage_input(app_state: &mut AppState) -> bool {
-		let (current_screen, screens, current_popup, popups, global_config) = app_state.get_mut_state();
+		let (current_screen, screens, current_popup, popups, global_config, desktop_config) = app_state.get_mut_state();
 		let lists = screens.get_mut(&current_screen).unwrap();
 
 		let current_list = if lists[0].is_selected() {0} else {1};
@@ -151,8 +153,8 @@ impl Ui {
 				},
 				KeyCode::Enter => {
 					match current_popup {
-						Some(p) => popups.get_mut(p).unwrap().get_selected().unwrap().apply(global_config),
-						None => lists[current_list].get_selected().unwrap().apply(global_config)
+						Some(p) => popups.get_mut(p).unwrap().get_selected().unwrap().apply(global_config, desktop_config),
+						None => lists[current_list].get_selected().unwrap().apply(global_config, desktop_config),
 					}
 				},
 				KeyCode::Char('f') | KeyCode::Char('F') => {
@@ -173,7 +175,7 @@ impl Ui {
 	}
 
 	fn draw_ui(f: &mut Frame<CrosstermBackend<io::Stdout>>, app_state: &mut AppState) {
-		let (current_screen, screens, current_popup, popups, global_config) = app_state.get_mut_state();
+		let (current_screen, screens, current_popup, popups, global_config, desktop_config) = app_state.get_mut_state();
 		let lists = screens.get_mut(&current_screen).unwrap();
 
 		let theme = if *current_screen == Screen::Theme {
@@ -224,8 +226,8 @@ impl Ui {
 		f.render_widget(options_widget.get_widget(), options_container);
 
 		// Lists
-		let widget_list_1 = ListWidget::new(&lists[0], global_config);
-		let widget_list_2 = ListWidget::new(&lists[1], global_config);
+		let widget_list_1 = ListWidget::new(&lists[0], global_config, desktop_config);
+		let widget_list_2 = ListWidget::new(&lists[1], global_config, desktop_config);
 		f.render_stateful_widget(widget_list_1.get_widget(), h_box[0], lists[0].get_mut_state());
 		f.render_stateful_widget(widget_list_2.get_widget(), h_box[1], lists[1].get_mut_state());
 
@@ -241,7 +243,7 @@ impl Ui {
 		// Extras popup
 		if *current_popup == Some(Popup::Extras) {
 			let extras_list = popups.get_mut(&Popup::Extras).unwrap();
-			let extras_widget = ListWidget::new(extras_list, global_config);
+			let extras_widget = ListWidget::new(extras_list, global_config, desktop_config);
 			let area = Self::centered_rect(60, 70, f.size());
 			f.render_widget(Clear, area); //this clears out the background
 			f.render_stateful_widget(extras_widget.get_widget(), area, extras_list.get_mut_state());
