@@ -59,7 +59,7 @@ impl Desktop {
 			//If not activated,skip pattern
 			if !*actived.get(pattern.get_name()).unwrap_or(&false) { continue }
 
-			pattern.fill(theme, *inverted.get(pattern.get_name()).unwrap_or(&false));
+			pattern.fill(theme, *inverted.get(pattern.get_name()).unwrap_or(&true));
 			if let Some(postscript) = postscripts.get(pattern_file.get_name()) {
 				postscript.execute(&vec![String::from(pattern.get_output())])
 			}

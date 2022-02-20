@@ -64,7 +64,6 @@ impl PostScript{
 	}
 
 	pub fn execute(&self, args: &Vec<String>) {
-		println!("Executing {}, args:{:?}",self.get_name(),args);
 		Command::new(self.get_path())
 			.stdout(Stdio::null())
 			.stdin(Stdio::null())
