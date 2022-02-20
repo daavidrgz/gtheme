@@ -115,7 +115,18 @@ impl Ui {
 						},
 					}
 				},
-				KeyCode::Down => {
+				KeyCode::Esc => {
+					match current_popup {
+						Some(p) => {
+							let popup_list = popups.get_mut(p).unwrap();
+							popup_list.unselect();
+							lists[0].next();
+							*current_popup = None
+						},
+						None => {}
+					}
+				}
+				KeyCode::Down | KeyCode::Char('s') | KeyCode::Char('S') => {
 					match current_popup {
 						Some(p) => {
 							let popup_list = popups.get_mut(p).unwrap();
@@ -124,7 +135,7 @@ impl Ui {
 						None => lists[current_list].next()
 					}
 				},
-				KeyCode::Up => {
+				KeyCode::Up | KeyCode::Char('w') | KeyCode::Char('W') => {
 					match current_popup {
 						Some(p) => {
 							let popup_list = popups.get_mut(p).unwrap();
@@ -133,13 +144,13 @@ impl Ui {
 						None => lists[current_list].previous()
 					}
 				},
-				KeyCode::Left => {
+				KeyCode::Left | KeyCode::Char('a') | KeyCode::Char('A') => {
 					if current_list != 0 && *current_popup == None {
 						lists[current_list].unselect();
 						lists[current_list - 1].next();
 					}
 				},
-				KeyCode::Right => {
+				KeyCode::Right | KeyCode::Char('d') | KeyCode::Char('D') => {
 					if current_list != 1 && *current_popup == None {
 						lists[current_list].unselect();
 						lists[current_list + 1].next();
@@ -170,7 +181,7 @@ impl Ui {
 				},
 				KeyCode::Char('i') | KeyCode::Char('I') => {
 					let item = match lists[current_list].get_selected() {
-						Some(item) => item.clone(),
+						Some(item) => item,
 						None => return true
 					};
 					item.invert(desktop_config);
