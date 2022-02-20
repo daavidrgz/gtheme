@@ -1,12 +1,11 @@
 use crate::core::{
 	desktop::DesktopFile,
 	theme::{ThemeFile, Theme},
-	pattern::{PatternFile, Pattern},
+	pattern::{PatternFile},
 	postscript::PostScript,
 	config::{GlobalConfig, DesktopConfig}
 };
 
-use std::collections::HashMap;
 
 #[derive(Clone)]
 pub enum ScreenItem {
