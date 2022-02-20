@@ -97,7 +97,7 @@ impl ScreenItem {
 
 	fn toggle_pattern(pattern: PatternFile, desktop_config: &mut DesktopConfig) {
 		let active_patterns = desktop_config.get_mut_actived();
-		let current_status = *active_patterns.get(pattern.get_name()).unwrap_or(&false);
+		let current_status = *active_patterns.get(pattern.get_name()).unwrap_or(&true);
 
 		active_patterns.insert(String::from(pattern.get_name()), !current_status);
 		desktop_config.save()
