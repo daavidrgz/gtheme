@@ -18,7 +18,8 @@ local function format_progress_bar(bar, markup)
     text.forced_height = 30
     text.forced_width = 60
     text.resize = true
-    text.font = "RobotoMono Nerd Font Medium 15"
+    
+    text.font = "RobotoMono Nerd Font Medium 10"
     bar.forced_width = 250
 
     local w = wibox.widget {
@@ -45,7 +46,7 @@ local me = wibox.widget {
 local time = wibox.widget.textclock("%H:%M:%S")
 time.align = "center"
 time.valign = "center"
-time.font = "RobotoMono Nerd Font Medium 30"
+time.font = "RobotoMono Nerd Font Medium 20"
 
 local volume_bar = require("widgets.volumebar")
 

@@ -24,14 +24,14 @@ local desktop_textbox = wibox.widget {
       align  = 'center',
       valign = 'center',
       widget = wibox.widget.textbox,
-      font = "RobotoMono Nerd Font Bold 11"
+      font = "RobotoMono Nerd Font Bold 9"
   }
 
 local download_textbox = wibox.widget {
    markup = "Downloads",
    align  = 'center',
    valign = 'center',
-   font = "RobotoMono Nerd Font Bold 11",
+   font = "RobotoMono Nerd Font Bold 9",
    widget = wibox.widget.textbox
 }
 
@@ -40,7 +40,7 @@ local internet_textbox = wibox.widget {
     align  = 'center',
     valign = 'center',
     widget = wibox.widget.textbox,
-    font = "RobotoMono Nerd Font Bold 11",
+    font = "RobotoMono Nerd Font Bold 9",
  }
 
 local trashbin_textbox = wibox.widget {
@@ -49,7 +49,7 @@ local trashbin_textbox = wibox.widget {
     align  = 'center',
     valign = 'center',
     widget = wibox.widget.textbox,
-    font = "RobotoMono Nerd Font Bold 11",
+    font = "RobotoMono Nerd Font Bold 9",
    }
 
    local function create_img_widget(image, apps)

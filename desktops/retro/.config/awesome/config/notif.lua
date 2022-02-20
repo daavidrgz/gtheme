@@ -14,5 +14,5 @@ naughty.config.defaults.margin = 20
 naughty.config.defaults.position = "bottom_left"
 naughty.config.defaults.border_width = 3
 naughty.config.defaults.border_color = "#272727"
-naughty.config.defaults.font = "RobotoMono Nerd Font Medium 11"
+naughty.config.defaults.font = "RobotoMono Nerd Font Medium 9"
 naughty.config.defaults.width = 300

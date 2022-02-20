@@ -11,7 +11,7 @@ local theme = {}
 
 -- themes
 
-theme.font          = "RobotoMono Nerd Font Bold 12"
+theme.font          = "RobotoMono Nerd Font Bold 9"
 
 theme.dir = string.format('%s/.config/awesome/theme', os.getenv('HOME'))
 
