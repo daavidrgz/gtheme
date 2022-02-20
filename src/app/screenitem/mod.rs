@@ -89,7 +89,7 @@ impl ScreenItem {
 					None => false
 				}
 			},
-			ScreenItem::Pattern(p) => *desktop_config.get_actived().get(p.get_name()).unwrap_or(&false),
+			ScreenItem::Pattern(p) => *desktop_config.get_actived().get(p.get_name()).unwrap_or(&true),
 			ScreenItem::Extra(_) => true,
 			ScreenItem::Help(_) => false
 		}
@@ -120,8 +120,10 @@ impl ScreenItem {
 			None => next_desktop.to_desktop().clone()
 		};
 
-		let theme = desktop_config.get_default_theme().as_ref()
-			.expect("Can not install desktop, there is no default theme");
+		let themes = Theme::get_themes();
+		let aux_theme = themes.into_iter().find(|theme | theme.get_name() == "Nord").unwrap(); 
+
+		let theme = desktop_config.get_default_theme().as_ref().unwrap_or(&aux_theme);
 
 		*global_config.get_mut_current_desktop() = Some(next_desktop.clone());
 		*global_config.get_mut_current_theme() = Some(theme.clone());
