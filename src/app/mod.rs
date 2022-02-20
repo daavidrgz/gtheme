@@ -5,6 +5,7 @@ pub mod statefullist;
 
 use std::io;
 use std::{time::Duration, error::Error};
+use log::*;
 use tui::{
 	backend::CrosstermBackend,
 	widgets::Clear,
@@ -20,7 +21,7 @@ use crossterm::{
 
 use crate::core::config::GlobalConfig;
 
-use crate::app::widgets::{ListWidget, LogoWidget, OptionsWidget, HelpWidget};
+use crate::app::widgets::{ListWidget, LogoWidget, OptionsWidget, HelpWidget, LoggerWidget};
 use crate::app::appstate::{AppState, Screen, Popup};
 
 pub struct Ui {
@@ -39,6 +40,9 @@ impl Ui {
 		enable_raw_mode()?;
 		let mut stdout = io::stdout();
 		execute!(stdout, EnterAlternateScreen)?;
+
+		tui_logger::init_logger(LevelFilter::Debug).unwrap();
+    tui_logger::set_default_level(log::LevelFilter::Debug);
 
 		self.run_app()?;
 		self.exit_ui()?;
@@ -69,7 +73,7 @@ impl Ui {
 	}
 
 	fn manage_input(app_state: &mut AppState) -> bool {
-		let (current_screen, screens, current_popup, popups, global_config, desktop_config) = app_state.get_mut_state();
+		let (current_screen, screens, current_popup, popups, show_logs, global_config, desktop_config) = app_state.get_mut_state();
 		let lists = screens.get_mut(&current_screen).unwrap();
 
 		let current_list = if lists[0].is_selected() {0} else {1};
@@ -82,6 +86,7 @@ impl Ui {
 			match key.code {
 				KeyCode::Char('q') | KeyCode::Char('Q') => return false,
 				KeyCode::Char('h') | KeyCode::Char('H') => {
+					info!("Testing...");
 					let help_list = popups.get_mut(&Popup::Help).unwrap();
 					match current_popup {
 						Some(Popup::Help) => {
@@ -99,6 +104,7 @@ impl Ui {
 					}
 				},
 				KeyCode::Char('o') | KeyCode::Char('O') => {
+					warn!("Alert");
 					let extras_list = popups.get_mut(&Popup::Extras).unwrap();
 					match current_popup {
 						Some(Popup::Extras) => {
@@ -185,7 +191,15 @@ impl Ui {
 						None => return true
 					};
 					item.invert(desktop_config);
-				}
+				},
+				KeyCode::Char('e') | KeyCode::Char('E') => {
+					match current_popup {
+						Some(Popup::Extras) => popups.get_mut(&Popup::Extras).unwrap().get_selected().unwrap().edit(),
+						Some(_) => {},
+						None => lists[current_list].get_selected().unwrap().edit()
+					}
+				},
+				KeyCode::Char('l') | KeyCode::Char('L') => *show_logs = !*show_logs,
 				_ => {}
 			}
 		}
@@ -193,7 +207,7 @@ impl Ui {
 	}
 
 	fn draw_ui(f: &mut Frame<CrosstermBackend<io::Stdout>>, app_state: &mut AppState) {
-		let (current_screen, screens, current_popup, popups, global_config, desktop_config) = app_state.get_mut_state();
+		let (current_screen, screens, current_popup, popups, show_logs, global_config, desktop_config) = app_state.get_mut_state();
 		let lists = screens.get_mut(&current_screen).unwrap();
 
 		let theme = if *current_screen == Screen::Theme {
@@ -215,6 +229,8 @@ impl Ui {
 		let v_padding = 2;
 		let h_padding = 4;
 
+		let logs_height = if *show_logs {10} else {0};
+
 		let mut logo_container = f.size();
 			logo_container.height = 6;
 			logo_container.width = logo_container.width / 2;
@@ -225,11 +241,15 @@ impl Ui {
 			options_container.x = logo_container.width + h_padding;
 
 		let mut main_container = f.size();
-			main_container.height = main_container.height + logo_container.height + v_padding;
+			main_container.y = logo_container.height + v_padding;
+			main_container.height = main_container.height - (logo_container.height + logs_height + v_padding);
+
+		let mut logs_container = f.size();
+			logs_container.height = logs_height;
+			logs_container.y = logo_container.height + main_container.height + v_padding;
 	
 		let h_box = Layout::default()
 			.direction(Direction::Horizontal)
-			.vertical_margin(logo_container.height + v_padding)
 			.constraints([Constraint::Percentage(50),Constraint::Percentage(50)].as_ref())
 			.split(main_container);
 		
@@ -266,6 +286,10 @@ impl Ui {
 			f.render_widget(Clear, area); //this clears out the background
 			f.render_stateful_widget(extras_widget.get_widget(), area, extras_list.get_mut_state());
 		}
+
+		// Logger
+		let logger_widget = LoggerWidget::new();
+		f.render_widget(logger_widget.get_widget(),logs_container)
 	}
 
 	fn centered_rect(percent_x: u16, percent_y: u16, r: Rect) -> Rect {

@@ -1,3 +1,5 @@
+use std::process::{Command,Stdio};
+
 use crate::core::{
 	desktop::DesktopFile,
 	theme::{ThemeFile, Theme},
@@ -5,7 +7,6 @@ use crate::core::{
 	postscript::PostScript,
 	config::{GlobalConfig, DesktopConfig}
 };
-
 
 #[derive(Clone)]
 pub enum ScreenItem {
@@ -54,6 +55,16 @@ impl ScreenItem {
 		match self {
 			ScreenItem::Help(s) => Some(s),
 			_ => None
+		}
+	}
+
+	pub fn edit(&self) {
+		match self {
+			ScreenItem::Pattern(p) => {Command::new("nano").arg(p.get_path()).output()
+				.expect(&format!("Could not edit file:{}", p.get_path()));},
+			ScreenItem::Extra(e) => {Command::new("nano").arg(e.get_path()).output()
+				.expect(&format!("Could not edit file:{}", e.get_path()));},
+			_ => {}
 		}
 	}
 

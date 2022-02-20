@@ -6,6 +6,7 @@
 'Left'   #focus left panel
 'Right'  #focus right panel
 'o'      #show/hide extras popup
+'l'      #show/hide logs
 'c'      #toggle colors preview
 'q'      #quit
 'h'      #show/hide this popup
