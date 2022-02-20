@@ -49,6 +49,7 @@ impl DesktopConfigDto {
 		}
 	}
 	fn save(&self,desktop:&str){
+		if desktop=="" {return}
 		let content = serde_json::to_string(self).unwrap();
 		let path = format!("{}/desktops/{}/desktop_config.json",core::expand_path(core::GTHEME_HOME),desktop);
         let mut file = OpenOptions::new().create(true).write(true).truncate(true).open(path).expect("Could not open desktop config file with write permissions");
