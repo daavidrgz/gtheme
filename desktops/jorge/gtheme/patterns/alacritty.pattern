@@ -9,12 +9,15 @@ window:
   
 font:
   normal:
-    family: DejaVuSansMono Nerd Font
+    #family: DejaVuSansMono Nerd Font
+    family: MesLoLGS NF
   bold:
-    family: DejaVuSansMono Nerd Font 
+    #family: DejaVuSansMono Nerd Font
+    family: MesLoLGS NF 
   italic:
-    family: DejaVuSansMono Nerd Font
-  size: 8
+    #family: DejaVuSansMono Nerd Font
+    family: MesLoLGS NF
+  size: 11
   offset:
     x: 0
     y: 1
