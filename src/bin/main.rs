@@ -1,4 +1,5 @@
 use clap::{Command, Arg};
+use gtheme::app;
 
 fn main() {
 // 	let mut app = Command::new("gtheme")
