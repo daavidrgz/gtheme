@@ -24,6 +24,9 @@ use crate::core::config::GlobalConfig;
 use crate::app::widgets::{ListWidget, LogoWidget, OptionsWidget, HelpWidget, LoggerWidget};
 use crate::app::appstate::{AppState, Screen, Popup};
 
+const LEFT_LIST: usize = 0;
+const RIGHT_LIST: usize = 1;
+
 pub struct Ui {
 	terminal: Terminal<CrosstermBackend<io::Stdout>>
 }
@@ -36,47 +39,41 @@ impl Ui {
 		}
 	}
 
-	pub fn start_ui(&mut self) -> Result<(), Box<dyn Error>> {
-		enable_raw_mode()?;
+	pub fn start_ui(&mut self) {
+		enable_raw_mode().unwrap();
 		let mut stdout = io::stdout();
-		execute!(stdout, EnterAlternateScreen)?;
+		execute!(stdout, EnterAlternateScreen).unwrap();
 
 		tui_logger::init_logger(LevelFilter::Debug).unwrap();
     tui_logger::set_default_level(log::LevelFilter::Debug);
 
-		self.run_app()?;
-		self.exit_ui()?;
-
-		Ok(())
+		self.run_app();
+		self.exit_ui();
 	}
 
-	fn exit_ui(&mut self) -> Result<(), Box<dyn Error>> {
-		disable_raw_mode()?;
-		execute!(self.terminal.backend_mut(), LeaveAlternateScreen,)?;
-		self.terminal.show_cursor()?;
-
-		Ok(())
+	fn exit_ui(&mut self) {
+		disable_raw_mode().unwrap();
+		execute!(self.terminal.backend_mut(), LeaveAlternateScreen,).unwrap();
+		self.terminal.show_cursor().unwrap();
 	}
 
-	fn run_app(&mut self) -> Result<(), Box<dyn Error>> {
+	fn run_app(&mut self) {
 		let mut app_state = AppState::default(GlobalConfig::new());
 
 		loop {
-			self.terminal.draw(|f| Ui::draw_ui(f, &mut app_state))?;
+			self.terminal.draw(|f| Ui::draw_ui(f, &mut app_state)).unwrap();
 			if !Ui::manage_input(&mut app_state) {break}
 		}
 
 		app_state.get_global_config().save();
 		app_state.get_desktop_config().save();
-		
-		Ok(())
 	}
 
 	fn manage_input(app_state: &mut AppState) -> bool {
 		let (current_screen, screens, current_popup, popups, show_logs, global_config, desktop_config) = app_state.get_mut_state();
 		let lists = screens.get_mut(&current_screen).unwrap();
 
-		let current_list = if lists[0].is_selected() {0} else {1};
+		let current_list = if lists[LEFT_LIST].is_selected() {LEFT_LIST} else {RIGHT_LIST};
 
 		if !crossterm::event::poll(Duration::from_millis(250)).unwrap() {
 			return true
@@ -86,36 +83,34 @@ impl Ui {
 			match key.code {
 				KeyCode::Char('q') | KeyCode::Char('Q') => return false,
 				KeyCode::Char('h') | KeyCode::Char('H') => {
-					info!("Testing...");
 					let help_list = popups.get_mut(&Popup::Help).unwrap();
 					match current_popup {
 						Some(Popup::Help) => {
-							lists[0].next();
+							lists[LEFT_LIST].next();
 							help_list.unselect();
 							*current_popup = None
 						},
 						Some(_) => {}
 						None => {
-							lists[0].unselect();
-							lists[1].unselect();
+							lists[LEFT_LIST].unselect();
+							lists[RIGHT_LIST].unselect();
 							help_list.next();
 							*current_popup = Some(Popup::Help)
 						}
 					}
 				},
 				KeyCode::Char('o') | KeyCode::Char('O') => {
-					warn!("Alert");
 					let extras_list = popups.get_mut(&Popup::Extras).unwrap();
 					match current_popup {
 						Some(Popup::Extras) => {
-							lists[0].next();
+							lists[LEFT_LIST].next();
 							extras_list.unselect();
 							*current_popup = None
 						},
 						Some(_) => {},
 						None => {
-							lists[0].unselect();
-							lists[1].unselect();
+							lists[LEFT_LIST].unselect();
+							lists[RIGHT_LIST].unselect();
 							extras_list.next();
 							*current_popup = Some(Popup::Extras)
 						},
@@ -126,7 +121,7 @@ impl Ui {
 						Some(p) => {
 							let popup_list = popups.get_mut(p).unwrap();
 							popup_list.unselect();
-							lists[0].next();
+							lists[LEFT_LIST].next();
 							*current_popup = None
 						},
 						None => {}
@@ -151,15 +146,15 @@ impl Ui {
 					}
 				},
 				KeyCode::Left | KeyCode::Char('a') | KeyCode::Char('A') => {
-					if current_list != 0 && *current_popup == None {
-						lists[current_list].unselect();
-						lists[current_list - 1].next();
+					if current_list != LEFT_LIST && *current_popup == None {
+						lists[RIGHT_LIST].unselect();
+						lists[LEFT_LIST].next();
 					}
 				},
 				KeyCode::Right | KeyCode::Char('d') | KeyCode::Char('D') => {
-					if current_list != 1 && *current_popup == None {
-						lists[current_list].unselect();
-						lists[current_list + 1].next();
+					if current_list != RIGHT_LIST && *current_popup == None {
+						lists[LEFT_LIST].unselect();
+						lists[RIGHT_LIST].next();
 					}
 				},
 				KeyCode::Tab => {
@@ -179,15 +174,15 @@ impl Ui {
 						Some(item) => item.clone(),
 						None => return true
 					};
-					if current_list == 0 { 
-						lists.get_mut(0).unwrap().remove_fav(&item,global_config)
+					if current_list == LEFT_LIST { 
+						lists.get_mut(LEFT_LIST).unwrap().remove_fav(&item, global_config)
 					} else {
-						lists.get_mut(0).unwrap().add_fav(&item,global_config)
+						lists.get_mut(LEFT_LIST).unwrap().add_fav(&item, global_config)
 					}
 				},
 				KeyCode::Char('i') | KeyCode::Char('I') => {
 					let item = match lists[current_list].get_selected() {
-						Some(item) => item,
+						Some(i) => i,
 						None => return true
 					};
 					item.invert(desktop_config);
@@ -210,6 +205,7 @@ impl Ui {
 		let (current_screen, screens, current_popup, popups, show_logs, global_config, desktop_config) = app_state.get_mut_state();
 		let lists = screens.get_mut(&current_screen).unwrap();
 
+		// Colors preview
 		let theme = if *current_screen == Screen::Theme {
 			let selected_theme = match lists.get(0).unwrap().get_selected() {
 				None => None,
@@ -269,6 +265,10 @@ impl Ui {
 		f.render_stateful_widget(widget_list_1.get_widget(), h_box[0], lists[0].get_mut_state());
 		f.render_stateful_widget(widget_list_2.get_widget(), h_box[1], lists[1].get_mut_state());
 
+		// Logger
+		let logger_widget = LoggerWidget::new();
+		f.render_widget(logger_widget.get_widget(),logs_container);
+
 		// Help popup
 		if *current_popup == Some(Popup::Help) {
 			let help_list = popups.get_mut(&Popup::Help).unwrap();
@@ -286,10 +286,6 @@ impl Ui {
 			f.render_widget(Clear, area); //this clears out the background
 			f.render_stateful_widget(extras_widget.get_widget(), area, extras_list.get_mut_state());
 		}
-
-		// Logger
-		let logger_widget = LoggerWidget::new();
-		f.render_widget(logger_widget.get_widget(),logs_container)
 	}
 
 	fn centered_rect(percent_x: u16, percent_y: u16, r: Rect) -> Rect {

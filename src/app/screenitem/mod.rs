@@ -1,4 +1,5 @@
-use std::process::{Command,Stdio};
+use std::process::Command;
+use log::{warn};
 
 use crate::core::{
 	desktop::DesktopFile,
@@ -127,8 +128,13 @@ impl ScreenItem {
 	}
 
 	fn apply_theme(theme: ThemeFile, global_config: &mut GlobalConfig, desktop_config: &mut DesktopConfig) {
-		let current_desktop = global_config.get_current_desktop().as_ref()
-			.expect("Can not apply a theme, there is no desktop installed").to_desktop();
+		let current_desktop = match global_config.get_current_desktop() {
+			Some(d) => d.to_desktop(),
+			None => {
+				warn!("• Can not apply a theme, there is no desktop installed!");
+				return
+			}
+		};
 
 		current_desktop.apply(&theme.to_theme(), desktop_config.get_actived(), desktop_config.get_inverted());
 
@@ -137,10 +143,9 @@ impl ScreenItem {
 	}
 
 	fn install_desktop(next_desktop: DesktopFile, global_config: &mut GlobalConfig, desktop_config: &mut DesktopConfig) {
-		let current_desktop_opt = global_config.get_current_desktop().as_ref();
-		let current_desktop = match current_desktop_opt {
+		let current_desktop = match global_config.get_current_desktop() {
 			Some(d) => d.to_desktop(),
-			None => next_desktop.to_desktop().clone()
+			None => next_desktop.to_desktop()
 		};
 
 		let themes = Theme::get_themes();

@@ -1,6 +1,8 @@
 use std::fs::File;
 use std::io::{self, BufRead};
 
+use log::error;
+
 use tui::{
 	widgets::Paragraph,
 	layout::Alignment,
@@ -44,12 +46,24 @@ impl<'a> LogoWidget<'a> {
 	}
 
 	fn create_logo(logo_path: String, colors: Vec<Color>) -> Vec<Spans<'a>> {
-		let logo_file = File::open(&logo_path).expect(&format!("Error while opening logo file in {}", &logo_path));
+		let logo_file = match File::open(&logo_path) {
+			Ok(f) => f,
+			Err(e) => {
+				error!("Error while opening logo file in {}: {}", &logo_path, e);
+				return vec![];
+			}
+		};
 		let file_lines = io::BufReader::new(logo_file).lines();
 
 		let mut spans: Vec<Spans> = vec![];
 		for l in file_lines {
-			let line = l.expect("Error while reading logo file");
+			let line = match l {
+				Ok(s) => s,
+				Err(e) => {
+					error!("Error while reading logo file in {}: {}", &logo_path, e);
+					return vec![]
+				}
+			};
 			let words: Vec<&str> = line.split('$').collect();
 
 			let mut line_spans: Vec<Span> = vec![];

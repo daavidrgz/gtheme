@@ -1,8 +1,7 @@
 use tui_logger::*;
 use tui::{
-	widgets::{Block, Borders, List, ListItem},
-	style::{Color, Modifier, Style},
-	text::{Span, Spans},
+	widgets::{Block, Borders},
+	style::{Color, Style},
 };
 
 pub struct LoggerWidget<'a> {
@@ -18,12 +17,16 @@ impl<'a> LoggerWidget<'a> {
 			.style_trace(Style::default().fg(Color::Gray))
 			.style_info(Style::default().fg(Color::Blue))
 			.output_separator('|')
-			.output_timestamp(Some("%F %H:%M:%S".to_string()))
+			.output_timestamp(None)
+			.output_level(None)
+			.output_target(false)
+			.output_file(false)
+			.output_line(false)
 			.block(Block::default()
 				.title(" LOGS  ")
 				.border_style(Style::default().fg(Color::White))
 				.borders(Borders::ALL))
-			.style(Style::default().fg(Color::White).bg(Color::Black));
+			.style(Style::default().fg(Color::White));
 
 		LoggerWidget {
 			widget: tui_lg

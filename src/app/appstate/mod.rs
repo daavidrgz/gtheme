@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use tui::style::Color;
 use std::fs::File;
 use std::io::{self, BufRead};
+use log::error;
 
 use crate::core::{
 	self,
@@ -46,7 +47,7 @@ impl AppState {
 			screens: Self::create_screens(&global_config),
 			current_popup: None,
 			popups: Self::create_popups(&global_config),
-			show_logs: true,
+			show_logs: false,
 			global_config,
 			desktop_config: DesktopConfig::new(&current_desktop_str),
 		}
@@ -123,10 +124,24 @@ impl AppState {
 
 	fn create_help_list() -> StatefulList<ScreenItem> {
 		let help_path = core::expand_path(&format!("{}/assets/help.txt", core::GTHEME_HOME));
-		let help_file = File::open(&help_path).expect(&format!("Error while opening logo file in {}", &help_path));
+		let help_file = match File::open(&help_path) {
+			Ok(f) => f,
+			Err(e) => {
+				error!("[!] Error while opening help file in {}: {}", &help_path, e);
+				return StatefulList::with_items(vec![])
+			}
+		};
 		let file_lines = io::BufReader::new(help_file).lines();
 
-		let lines = file_lines.into_iter().map(|line| ScreenItem::Help(line.unwrap())).collect();
+		let lines = file_lines.into_iter().map(|line| {
+			match line {
+				Ok(l) => ScreenItem::Help(l),
+				Err(e) => {
+					error!("[!] Error while reading help file in {}: {}", &help_path, e);
+					return ScreenItem::Help("".to_string())
+				}
+			}
+		}).collect();
 		StatefulList::with_items(lines)
 			.color(Color::Yellow)
 			.title("HELP ")
