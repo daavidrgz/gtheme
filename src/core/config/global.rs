@@ -70,8 +70,19 @@ impl GlobalConfigDto {
 	fn save(&self) {
 		let content = serde_json::to_string(self).unwrap();
 		let path = format!("{}/global_config.json",core::expand_path(core::GTHEME_HOME));
-		let mut file = OpenOptions::new().create(true).write(true).truncate(true).open(path).expect("Could not open global config file with write permissions");
-		file.write_all(&content.as_bytes()).expect("Error while saving config file");
+		let mut file = match OpenOptions::new().create(true).write(true).truncate(true).open(&path) {
+			Ok(f) => f,
+			Err(e) => {
+				error!("Could not open {} with write permissions: {}",&path,e);
+				return;
+			}
+		};
+		match file.write_all(&content.as_bytes()){
+			Err(e)=>{
+				error!("Could not write global config in {}: {}",&path,e);	
+			},
+			_=>info!("Saving global config...")
+		}	
 	}
 
 	fn get_current_desktop(&self) -> &Option<String> {

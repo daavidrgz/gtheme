@@ -100,7 +100,7 @@ impl DesktopConfig{
 		let themes = Theme::get_themes();
 		let default_theme = match dto.default_theme{
 			None=>None,
-			Some(theme_name)=> themes.into_iter().find(|theme| *theme.get_name() ==theme_name)
+			Some(theme_name)=> themes.into_iter().find(|theme| *theme.get_name().to_lowercase() ==theme_name.to_lowercase())
 		};
 		DesktopConfig{
 			desktop:String::from(desktop),

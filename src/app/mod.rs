@@ -179,6 +179,7 @@ impl Ui {
 					} else {
 						lists.get_mut(LEFT_LIST).unwrap().add_fav(&item, global_config)
 					}
+					global_config.save();
 				},
 				KeyCode::Char('i') | KeyCode::Char('I') => {
 					let item = match lists[current_list].get_selected() {

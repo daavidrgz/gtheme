@@ -17,7 +17,7 @@ font:
   italic:
     #family: DejaVuSansMono Nerd Font
     family: MesLoLGS NF
-  size: 11
+  size: 9
   offset:
     x: 0
     y: 1
