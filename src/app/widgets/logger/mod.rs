@@ -17,7 +17,7 @@ impl<'a> LoggerWidget<'a> {
 			.style_trace(Style::default().fg(Color::Gray))
 			.style_info(Style::default().fg(Color::Blue))
 			.output_separator('|')
-			.output_timestamp(None)
+			.output_timestamp(Some(String::from("%H:%M:%S")))
 			.output_level(None)
 			.output_target(false)
 			.output_file(false)

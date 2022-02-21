@@ -2,6 +2,7 @@ use std::fs::{File, OpenOptions};
 use std::io::prelude::*;
 use serde::{Serialize,Deserialize};
 use crate::core::{self,desktop::{Desktop,DesktopFile},theme::{Theme,ThemeFile}};
+use log::{info,warn,error};
 
 #[derive(Debug, Serialize, Deserialize)]
 struct GlobalConfigDto {
@@ -20,18 +21,30 @@ pub struct GlobalConfig {
 impl GlobalConfigDto {
 	fn new() -> Self {
 		let path = format!("{}/global_config.json",core::expand_path(core::GTHEME_HOME));
-		let mut file = match File::open(path){
+		let mut file = match File::open(&path){
 			Ok(file)=>file,
-			_ => return Self::default()
+			Err(e) => {
+				warn!("Could not open global config, using default config: {}",e);
+				return Self::default()
+			}
 		};
 		let mut content = String::new();
 		match  file.read_to_string(&mut content){
 			Ok(_)=>(),
-			_ => return Self::default()
+			Err(e) => {
+				error!("Could not read global config, using default config: {}",e);
+				return Self::default()
+			}
 		};
 		match serde_json::from_str(&content){
-			Ok(config) => config,
-			_ => Self::default()
+			Ok(config) => {
+				info!("Using global config {}",&path);
+				config
+			},
+			_ => {
+				error!("Could not parse global config, using default config...");
+				return Self::default()
+			}
 		}
 	}
 

@@ -3,6 +3,7 @@ use std::fs::{File, OpenOptions};
 use std::io::prelude::*;
 use serde::{Serialize,Deserialize};
 use crate::core::{self,theme::{Theme,ThemeFile}};
+use log::{info,warn,error};
 
 #[derive(Debug, Serialize, Deserialize)]
 struct DesktopConfigDto {
@@ -22,18 +23,30 @@ pub struct DesktopConfig {
 impl DesktopConfigDto {
 	fn new(desktop:&str) -> DesktopConfigDto {
 		let path = format!("{}/desktops/{}/desktop_config.json",core::expand_path(core::GTHEME_HOME),desktop);
-		let mut file = match File::open(path){
+		let mut file = match File::open(&path){
 			Ok(file)=>file,
-			_ => return Self::default()
+			Err(e) => {
+				warn!("Could not open desktop config, using default config: {}",e);
+				return Self::default()
+			}
 		};
 		let mut content = String::new();
 		match  file.read_to_string(&mut content){
 			Ok(_)=>(),
-			_ => return Self::default()
+			Err(e)=> {
+				error!("Could not read desktop config, using default config: {}",e);
+				return Self::default()
+			}
 		};
 		match serde_json::from_str(&content){
-			Ok(config) => config,
-			_ => Self::default()
+			Ok(config) => {
+				info!("Using desktop config {}",&path);
+				config
+			},
+			_ => {
+				error!("Could not parse desktop config, using default config...");
+				return Self::default()
+			}
 		}
 	}
 	fn from(config:&DesktopConfig)->Self{
@@ -49,11 +62,25 @@ impl DesktopConfigDto {
 		}
 	}
 	fn save(&self,desktop:&str){
-		if desktop=="" {return}
+		if desktop=="" {
+			warn!("No desktop specified");
+			return
+		}
 		let content = serde_json::to_string(self).unwrap();
 		let path = format!("{}/desktops/{}/desktop_config.json",core::expand_path(core::GTHEME_HOME),desktop);
-        let mut file = OpenOptions::new().create(true).write(true).truncate(true).open(path).expect("Could not open desktop config file with write permissions");
-        file.write_all(&content.as_bytes()).expect("Error while saving config file");
+        let mut file = match OpenOptions::new().create(true).write(true).truncate(true).open(&path) {
+			Ok(f) => f,
+			Err(e) => {
+				error!("Could not open {} with write permissions: {}",&path,e);
+				return;
+			}
+		};
+        match file.write_all(&content.as_bytes()){
+			Err(e)=>{
+				error!("Could not write desktop config in {}: {}",&path,e);	
+			},
+			_=>info!("Saving desktop config...")
+		}
 	}
 }
 
