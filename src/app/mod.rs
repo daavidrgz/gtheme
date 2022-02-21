@@ -31,7 +31,7 @@ pub struct Ui {
 	terminal: Terminal<CrosstermBackend<io::Stdout>>
 }
 impl Ui {
-	pub fn default() -> Ui {
+	pub fn new() -> Self {
 		let stdout = io::stdout();
 		let backend = CrosstermBackend::new(stdout);
 		Ui {
@@ -39,7 +39,7 @@ impl Ui {
 		}
 	}
 
-	pub fn start_ui(&mut self) {
+	pub fn start_ui(mut self) {
 		enable_raw_mode().unwrap();
 		let mut stdout = io::stdout();
 		execute!(stdout, EnterAlternateScreen).unwrap();
