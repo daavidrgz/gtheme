@@ -1,5 +1,5 @@
 use tui::{
-	widgets::{Block, Borders},
+	widgets::{Block, Borders, BorderType},
 	style::{Color, Modifier, Style},
 	text::Span,
 };
@@ -14,6 +14,7 @@ impl<'a> OptionsWidget<'a> {
 
 		let widget =  Block::default()
 			.borders(Borders::ALL)
+			.border_type(BorderType::Thick)
 			.title(Span::styled(String::from(" OPTIONS 襁"), title_style))
 			.border_style(border_style);
 

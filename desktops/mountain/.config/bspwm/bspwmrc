@@ -1,0 +1,28 @@
+#! /bin/sh
+
+# settings
+bspc monitor -d 1 2 3 4 5
+
+bspc config border_width         0
+bspc config window_gap           15
+
+bspc config split_ratio          0.50
+bspc config borderless_monocle   true
+bspc config gapless_monocle      true
+
+# borders
+bspc config normal_border_color  "#eeedeb"
+bspc config active_border_color  "#eeedeb"
+bspc config focused_border_color "#eeedeb"
+
+bspc rule -a Zathura state=tiled
+
+setxkbmap -layout us -variant altgr-intl
+xset r rate 200 40
+
+# autostart
+pgrep -x sxhkd > /dev/null || sxhkd &
+~/.config/polybar/launch.sh
+picom  &
+~/.fehbg
+#~/.config/bspwm/dborder

@@ -1,4 +1,4 @@
-%output-file%=/home/david/.config/BetterDiscord/themes/zelk.theme.css
+%output-file%=~/.config/BetterDiscord/themes/zelk.theme.css
 /**
  * @name Zelk
  * @version 1.2

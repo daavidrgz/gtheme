@@ -1,0 +1,54 @@
+%output-file%=~/.config/alacritty/alacritty.yml
+# %theme-name%
+
+window:
+  padding:
+    x: 10
+    y: 10
+  dyanmic_padding: true
+  
+font:
+  normal:
+    family: Iosevka Nerd Font Mono
+  bold:
+    family: Iosevka Nerd Font Mono
+  italic:
+    family: Iosevka Nerd Font Mono
+  size: 8.5
+  offset:
+    x: 0
+    y: 1
+  draw_bold_text_with_bright_colors: true
+
+cursor:
+  style:
+    shape: Beam
+
+colors:
+  cursor:
+    text: '0x%foreground%'
+    cursor: '0x%cursor%'
+  #selection:
+  #  text: '0x%selection-foreground%'
+  #  background: '0x%selection-background%'
+  primary:
+    background: '0x%background%'
+    foreground: '0x%foreground%'
+  normal:
+    black: '0x%black%'
+    red: '0x%red%'
+    green: '0x%green%'
+    yellow: '0x%yellow%'
+    blue: '0x%blue%'
+    magenta: '0x%magenta%'
+    cyan: '0x%cyan%'
+    white: '0x%white%'
+  bright:
+    black: '0x%black-hg%'
+    red: '0x%red-hg%'
+    green: '0x%green-hg%'
+    yellow: '0x%yellow-hg%'
+    blue: '0x%blue-hg%'
+    magenta: '0x%magenta-hg%'
+    cyan: '0x%cyan-hg%'
+    white: '0x%white-hg%'

@@ -1,5 +1,5 @@
 use tui::{
-	widgets::{Block, Borders, List, ListItem},
+	widgets::{Block, Borders, BorderType, List, ListItem},
 	style::{Modifier, Style},
 	text::{Span, Spans},
 };
@@ -19,8 +19,8 @@ impl<'a> ListWidget<'a> {
 		let default_name_style = Style::default().add_modifier(Modifier::DIM);
 		let highlight_name_stlye = Style::default().fg(color).add_modifier(Modifier::BOLD);
 
-		let default_active_style = Style::default().add_modifier(Modifier::ITALIC).add_modifier(Modifier::BOLD).add_modifier(Modifier::DIM);
-		let highlight_active_style = Style::default().add_modifier(Modifier::ITALIC).add_modifier(Modifier::BOLD);
+		let default_active_style = Style::default().add_modifier(Modifier::BOLD).add_modifier(Modifier::DIM);
+		let highlight_active_style = Style::default().add_modifier(Modifier::BOLD);
 
 		let items: Vec<ListItem> = stateful_list
 			.get_items().iter().enumerate()
@@ -67,7 +67,8 @@ impl<'a> ListWidget<'a> {
 			.block(Block::default()
 				.borders(Borders::ALL)
 				.title(Span::styled(String::from(format!(" {} ", title)), title_style))
-				.border_style(border_style))
+				.border_style(border_style)
+				.border_type(BorderType::Thick))
 			.highlight_symbol("");
 			
 		ListWidget { widget }

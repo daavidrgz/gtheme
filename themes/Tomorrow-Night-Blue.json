@@ -9,29 +9,29 @@
 		"foreground": "fffefe",
 		"cursor": "fffefe",
 		"selection-background": "003e8e",
-		"selection-foreground": "002450", 
-		
+		"selection-foreground": "002450",
+
 		"black": "000000",
 		"black-hg": "000000",
-		
+
 		"red": "ff9ca3",
 		"red-hg": "ff9ca3",
-		
+
 		"green": "d0f0a8",
 		"green-hg": "d0f0a8",
-		
+
 		"yellow": "ffedac",
 		"yellow-hg": "ffedac",
-		
+
 		"blue": "badaff",
 		"blue-hg": "badaff",
-		
+
 		"magenta": "ebbaff",
 		"magenta-hg": "ebbaff",
-		
+
 		"cyan": "99ffff",
 		"cyan-hg": "99ffff",
-		
+
 		"white": "fffefe",
 		"white-hg": "fffefe"
 	}

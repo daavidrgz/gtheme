@@ -1,4 +1,4 @@
-%output-file%=/home/david/.config/tint2/tint2rc
+%output-file%=~/.config/tint2/tint2rc
 # %theme-name%
 
 #-------------------------------------

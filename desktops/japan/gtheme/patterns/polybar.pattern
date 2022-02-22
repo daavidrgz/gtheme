@@ -1,4 +1,4 @@
-%output-file%=/home/david/.config/polybar/colors.ini
+%output-file%=~/.config/polybar/colors.ini
 ;; %theme-name%
 
 [color]

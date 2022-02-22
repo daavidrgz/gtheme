@@ -1,4 +1,4 @@
-%output-file%=/home/david/.config/spicetify/Themes/Sleek/color.ini
+%output-file%=~/.config/spicetify/Themes/Sleek/color.ini
 ; %theme-name%
 
 [Custom]

@@ -9,29 +9,29 @@
 		"foreground": "d9d7ce",
 		"cursor": "ffcc66",
 		"selection-background": "343f4c",
-		"selection-foreground": "212733", 
-		
+		"selection-foreground": "212733",
+
 		"black": "191e2a",
 		"black-hg": "686868",
-		
+
 		"red": "ed8274",
 		"red-hg": "f28779",
-		
+
 		"green": "a6cc70",
 		"green-hg": "bae67e",
-		
+
 		"yellow": "fad07b",
 		"yellow-hg": "ffd580",
-		
+
 		"blue": "6dcbfa",
 		"blue-hg": "73d0ff",
-		
+
 		"magenta": "cfbafa",
 		"magenta-hg": "d4bfff",
-		
+
 		"cyan": "90e1c6",
 		"cyan-hg": "95e6cb",
-		
+
 		"white": "c7c7c7",
 		"white-hg": "ffffff"
 	}

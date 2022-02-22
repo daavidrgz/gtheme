@@ -1,5 +1,5 @@
 use tui::{
-	widgets::{Block, Borders, List, ListItem},
+	widgets::{Block, Borders, BorderType, List, ListItem},
 	style::{Color, Modifier, Style},
 	text::{Span, Spans},
 };
@@ -18,6 +18,7 @@ impl<'a> HelpWidget<'a> {
 		let block = Block::default()
 			.title(Span::styled(format!(" {} ", stateful_list.get_title()), title_style))
 			.borders(Borders::ALL)
+			.border_type(BorderType::Thick)
 			.border_style(Style::default().fg(*stateful_list.get_color()));
 
 		let list = List::new(items)
@@ -40,7 +41,7 @@ impl<'a> HelpWidget<'a> {
 			let line = item.get_name();
 			
 			let bar = match stateful_list.get_state().selected() {
-				Some(idx) => if idx == it {" │ "} else {"   "},
+				Some(idx) => if idx == it {" ┃ "} else {"   "},
 				None => "   "
 			};
 			let bar_span = Span::styled(bar, Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD));

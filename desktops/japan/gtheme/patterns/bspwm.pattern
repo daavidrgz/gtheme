@@ -1,4 +1,4 @@
-%output-file%=/home/david/.config/bspwm/bspwmrc
+%output-file%=~/.config/bspwm/bspwmrc
 #!/bin/sh
 
 # •• Wallpaper

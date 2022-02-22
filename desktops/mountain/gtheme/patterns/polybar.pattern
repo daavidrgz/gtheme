@@ -1,0 +1,10 @@
+%output-file%=~/.config/polybar/colors.ini
+;; %theme-name%
+
+[color]
+background = #%background%
+foreground = #%foreground%
+black = #%black-hg%
+green = #%green%
+red = #%red%
+magenta = #%magenta%

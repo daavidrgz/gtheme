@@ -1,4 +1,4 @@
-%output-file%=/home/david/.config/xob/styles.cfg
+%output-file%=~/.config/xob/styles.cfg
 # %theme-name%
 
 vol = {

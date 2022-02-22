@@ -9,29 +9,29 @@
 		"foreground": "3D495B",
 		"cursor": "3D495B",
 		"selection-background": "3D495B",
-		"selection-foreground": "faf4ed ", 
-		
+		"selection-foreground": "faf4ed",
+
 		"black": "3D495B",
 		"black-hg": "3D495B",
-		
+
 		"red": "F7AA9D",
 		"red-hg": "F7AA9D",
-		
+
 		"green": "80c28f",
 		"green-hg": "80c28f",
-		
+
 		"yellow": "e6db87",
 		"yellow-hg": "e6db87",
-		
+
 		"blue": "7479a6",
 		"blue-hg": "7479a6",
-		
+
 		"magenta": "EBBDCB",
 		"magenta-hg": "EBBDCB",
-		
+
 		"cyan": "a3b1cc",
 		"cyan-hg": "a3b1cc",
-		
+
 		"white": "3D495B",
 		"white-hg": "3D495B"
 	}
