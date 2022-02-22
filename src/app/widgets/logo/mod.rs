@@ -49,7 +49,7 @@ impl<'a> LogoWidget<'a> {
 		let logo_file = match File::open(&logo_path) {
 			Ok(f) => f,
 			Err(e) => {
-				error!("Error while opening logo file in {}: {}", &logo_path, e);
+				error!("Error while opening logo file |{}|: |{}|", &logo_path, e);
 				return vec![];
 			}
 		};
@@ -60,7 +60,7 @@ impl<'a> LogoWidget<'a> {
 			let line = match l {
 				Ok(s) => s,
 				Err(e) => {
-					error!("Error while reading logo file in {}: {}", &logo_path, e);
+					error!("Error while reading logo file |{}|: |{}|", &logo_path, e);
 					return vec![]
 				}
 			};

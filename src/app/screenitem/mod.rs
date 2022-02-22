@@ -1,5 +1,5 @@
 use std::process::Command;
-use log::{warn};
+use log::warn;
 
 use crate::core::{
 	desktop::DesktopFile,
@@ -131,7 +131,7 @@ impl ScreenItem {
 		let current_desktop = match global_config.get_current_desktop() {
 			Some(d) => d.to_desktop(),
 			None => {
-				warn!("• Can not apply a theme, there is no desktop installed!");
+				warn!("Can not apply a theme, |there is no desktop installed!|");
 				return
 			}
 		};

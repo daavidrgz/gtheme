@@ -4,8 +4,8 @@ pub mod appstate;
 pub mod statefullist;
 
 use std::io;
-use std::{time::Duration, error::Error};
-use log::*;
+use std::time::Duration;
+use log::LevelFilter;
 use tui::{
 	backend::CrosstermBackend,
 	widgets::Clear,
@@ -44,8 +44,9 @@ impl Ui {
 		let mut stdout = io::stdout();
 		execute!(stdout, EnterAlternateScreen).unwrap();
 
-		tui_logger::init_logger(LevelFilter::Debug).unwrap();
-    tui_logger::set_default_level(log::LevelFilter::Debug);
+		// Logger init
+		tui_logger::init_logger(LevelFilter::Info).unwrap();
+    tui_logger::set_default_level(log::LevelFilter::Info);
 
 		self.run_app();
 		self.exit_ui();

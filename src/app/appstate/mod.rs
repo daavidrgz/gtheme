@@ -127,7 +127,7 @@ impl AppState {
 		let help_file = match File::open(&help_path) {
 			Ok(f) => f,
 			Err(e) => {
-				error!("[!] Error while opening help file in {}: {}", &help_path, e);
+				error!("Error while opening help file |{}|: |{}|", &help_path, e);
 				return StatefulList::with_items(vec![])
 			}
 		};
@@ -137,7 +137,7 @@ impl AppState {
 			match line {
 				Ok(l) => ScreenItem::Help(l),
 				Err(e) => {
-					error!("[!] Error while reading help file in {}: {}", &help_path, e);
+					error!("[!] Error while reading help file |{}|: |{}|", &help_path, e);
 					return ScreenItem::Help("".to_string())
 				}
 			}

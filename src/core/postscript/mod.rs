@@ -21,42 +21,42 @@ impl PostScript{
 	//TODO: use DesktopFile or str?
 	pub fn get_postscripts(desktop: &str) -> HashMap<String,PostScript> {
 		if desktop == "" { 
-			warn!("No desktop specified");
+			warn!("|No desktop specified|");
 			return HashMap::new(); 
 		}
 
 		let gtheme_home:String = core::expand_path(core::GTHEME_HOME);
 		let postscripts_dir = gtheme_home + &format!("/desktops/{}/gtheme/post-scripts", desktop);
 
-		let entries = match fs::read_dir(&postscripts_dir){
-			Ok(dir)=>dir,
-			Err(e)=>{
-				error!("Could not read directory {}: {}",&postscripts_dir,e);
+		let entries = match fs::read_dir(&postscripts_dir) {
+			Ok(dir) => dir,
+			Err(e) => {
+				error!("Could not read directory |{}|: |{}|", &postscripts_dir, e);
 				return HashMap::new()
 			}
 		};
 
 		let mut map = HashMap::new();
 		for entry in entries {
-			let entry = match entry{
-				Ok(entry)=>entry,
-				Err(e)=>{
-					error!("Error while reading entry from dir {}: {}",&postscripts_dir,e);
+			let entry = match entry {
+				Ok(entry) => entry,
+				Err(e) => {
+					error!("Error while reading entry from dir |{}|: |{}|", &postscripts_dir, e);
 					continue;
 				}
 			};
 			
-			let file_name = match entry.file_name().into_string(){
+			let file_name = match entry.file_name().into_string() {
 				Ok(file_name) => file_name,
-				Err(_)=>{
-					error!("Error while converting OsString to String: invalid unicode data");
+				Err(_) => {
+					error!("Error while converting OsString to String: |Invalid unicode data|");
 					continue;
 				}
 			};
-			let path = match entry.path().to_str(){
+			let path = match entry.path().to_str() {
 				Some(path) => String::from(path),
-				None =>{
-					error!("Error while converting path to String: invalid UTF-8 data");
+				None => {
+					error!("Error while converting path to String: |Invalid UTF-8 data|");
 					continue;
 				}
 			};
@@ -67,7 +67,6 @@ impl PostScript{
 			};
 			map.insert(name.clone(), PostScript { name, path });
 		}
-		//TODO: decide to sort or not
 		map
 	}
 
@@ -77,36 +76,36 @@ impl PostScript{
 		let gtheme_home:String = core::expand_path(core::GTHEME_HOME);
 		let extras_dir = gtheme_home + &format!("/desktops/{}/gtheme/extras", desktop);
 
-		let entries = match fs::read_dir(&extras_dir){
-			Ok(dir)=>dir,
-			Err(e)=>{
-				error!("Could not read directory {}: {}",&extras_dir,e);
+		let entries = match fs::read_dir(&extras_dir) {
+			Ok(dir) => dir,
+			Err(e) => {
+				error!("Could not read directory |{}|: |{}|", &extras_dir, e);
 				return vec![]
 			}
 		};
 
 		let mut extras_vec: Vec<PostScript> = Vec::new();
 		for entry in entries {
-			let entry = match entry{
-				Ok(entry)=>entry,
-				Err(e)=>{
-					error!("Error while reading entry from dir {}: {}",&extras_dir,e);
+			let entry = match entry {
+				Ok(entry) => entry,
+				Err(e) => {
+					error!("Error while reading entry from dir |{}|: |{}|", &extras_dir, e);
 					continue;
 				}
 			};
 
-			let file_name = match entry.file_name().into_string(){
+			let file_name = match entry.file_name().into_string() {
 				Ok(file_name) => file_name,
-				Err(_)=>{
-					error!("Error while converting OsString to String: invalid unicode data");
+				Err(_) => {
+					error!("Error while converting OsString to String: |Invalid unicode data|");
 					continue;
 				}
 			};
 
-			let path = match entry.path().to_str(){
+			let path = match entry.path().to_str() {
 				Some(path) => String::from(path),
-				None =>{
-					error!("Error while converting path to String: invalid UTF-8 data");
+				None => {
+					error!("Error while converting path to String: |Invalid UTF-8 data|");
 					continue;
 				}
 			};
@@ -126,11 +125,9 @@ impl PostScript{
 			.stdin(Stdio::null())
 			.stderr(Stdio::null())
 			.args(args)
-			.spawn(){
-				Ok(_)=>(),
-				Err(e)=>{
-					error!("Could not execute file {}: {}",self.get_path(),e);
-				}
+			.spawn() {
+				Ok(_) => (),
+				Err(e) => error!("Could not execute file |{}|: |{}|",self.get_path(), e)	
 			}
 	}
 }

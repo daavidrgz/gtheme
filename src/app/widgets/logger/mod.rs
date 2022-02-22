@@ -1,4 +1,4 @@
-use tui_logger::*;
+use tui_logger::TuiLoggerWidget;
 use tui::{
 	widgets::{Block, Borders},
 	style::{Color, Style},

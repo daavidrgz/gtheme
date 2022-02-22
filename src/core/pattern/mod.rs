@@ -57,36 +57,36 @@ impl Pattern {
 		
 		let gtheme_home: String = core::expand_path(core::GTHEME_HOME);
 		let patterns_dir = gtheme_home + &format!("/desktops/{}/gtheme/patterns", desktop);
-		let entries = match fs::read_dir(&patterns_dir){
-			Ok(dir)=>dir,
-			Err(e)=>{
-				error!("Could not read directory {}: {}",&patterns_dir,e);
+		let entries = match fs::read_dir(&patterns_dir) {
+			Ok(dir) => dir,
+			Err(e) => {
+				error!("Could not read directory |{}|: |{}|", &patterns_dir, e);
 				return vec![]
 			}
 		};
 
 		let mut vec = Vec::new();
 		for entry in entries {
-			let entry = match entry{
-				Ok(entry)=>entry,
-				Err(e)=>{
-					error!("Error while reading entry from dir {}: {}",&patterns_dir,e);
+			let entry = match entry {
+				Ok(entry) => entry,
+				Err(e) => {
+					error!("Error while reading entry from dir |{}|: |{}|", &patterns_dir, e);
 					continue;
 				}
 			};
 
-			let file_name = match entry.file_name().into_string(){
+			let file_name = match entry.file_name().into_string() {
 				Ok(file_name) => file_name,
-				Err(_)=>{
-					error!("Error while converting OsString to String: invalid unicode data");
+				Err(_) => {
+					error!("Error while converting OsString to String: |Invalid unicode data|");
 					continue;
 				}
 			};
 
-			let path = match entry.path().to_str(){
+			let path = match entry.path().to_str() {
 				Some(path) => String::from(path),
 				None =>{
-					error!("Error while converting path to String: invalid UTF-8 data");
+					error!("Error while converting path to String: |Invalid UTF-8 data|");
 					continue;
 				}
 			};
@@ -103,21 +103,22 @@ impl Pattern {
 	}
 
 	pub fn fill(&self, theme: &Theme, is_inverted: bool) {
-		info!("Filling {} pattern with {} theme...",self.get_name(),theme.get_name());
+		info!("Filling |{}| pattern with |{}| theme...", self.get_name(), theme.get_name());
+
 		let filled_content = self.fill_values(theme, is_inverted);
 	
 		//If cant create output file, returns
 		let mut output_file = match File::create(self.get_output()) {
 			Ok(file) => file,
 			Err(e) => {
-				error!("Could not create {}: {}", self.get_output(),e);
+				error!("Could not create |{}|: |{}|", self.get_output(), e);
 				return;
 			}
 		};
-		match output_file.write_all(filled_content.as_bytes()){
-			Ok(_) =>(),
-			Err(e)=>{
-				error!("Could not write to {}: {}", self.get_output(),e);
+		match output_file.write_all(filled_content.as_bytes()) {
+			Ok(_) => (),
+			Err(e) => {
+				error!("Could not write to |{}|: |{}|", self.get_output(), e);
 				return;
 			}
 		}
@@ -126,9 +127,8 @@ impl Pattern {
 	fn fill_values(&self, theme: &Theme, is_inverted: bool) -> String {
 		let mut result = String::from(&self.content);
 		for (key,value) in theme.get_colors().iter() {
-
 			let real_key = if is_inverted {
-				match key.as_str(){
+				match key.as_str() {
 					"foreground" => "background",
 					"background" => "foreground",
 					"selection-foreground" => "selection-background",

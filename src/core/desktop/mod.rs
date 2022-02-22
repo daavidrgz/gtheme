@@ -37,10 +37,10 @@ impl Desktop {
 	pub fn get_desktops() -> Vec<DesktopFile> {
 		let gtheme_home:String = core::expand_path(core::GTHEME_HOME);
 		let desktops_dir = gtheme_home + &format!("/desktops");
-		let entries = match fs::read_dir(&desktops_dir){
-			Ok(dir)=>dir,
-			Err(e)=>{
-				error!("Could not read directory {}: {}",&desktops_dir,e);
+		let entries = match fs::read_dir(&desktops_dir) {
+			Ok(dir) => dir,
+			Err(e) => {
+				error!("Could not read directory |{}|: |{}|", &desktops_dir, e);
 				return vec![]
 			}
 		};
@@ -48,27 +48,27 @@ impl Desktop {
 
 		let mut vec = Vec::new();
 		for entry in entries {
-			let entry = match entry{
-				Ok(entry)=>entry,
-				Err(e)=>{
-					error!("Error while reading entry from dir {}: {}",&desktops_dir,e);
+			let entry = match entry {
+				Ok(entry) => entry,
+				Err(e) => {
+					error!("Error while reading entry from dir |{}|: |{}|", &desktops_dir, e);
 					continue;
 				}
 			};
 			
-			let file_name = match entry.file_name().into_string(){
+			let file_name = match entry.file_name().into_string() {
 				Ok(file_name) => file_name,
-				Err(_)=>{
-					error!("Error while converting OsString to String: invalid unicode data");
+				Err(_) => {
+					error!("Error while converting OsString to String: |Invalid unicode data|");
 					continue;
 				}
 			};
 			
 
-			let path = match entry.path().to_str(){
+			let path = match entry.path().to_str() {
 				Some(path) => String::from(path),
-				None =>{
-					error!("Error while converting path to String: invalid UTF-8 data");
+				None => {
+					error!("Error while converting path to String: |Invalid UTF-8 data|");
 					continue;
 				}
 			};
@@ -83,7 +83,7 @@ impl Desktop {
 		//parameter HashMap(pattern_name,bool) in order to implement inverted themes
 		let postscripts = PostScript::get_postscripts(self.get_name());
 
-		info!("Applying {} theme to {} desktop...",theme.get_name(),self.get_name());
+		info!("Applying |{}| theme to |{}| desktop...", theme.get_name(), self.get_name());
 		for pattern_file in self.get_patterns(){
 			let pattern = pattern_file.to_pattern();
 			
@@ -92,37 +92,34 @@ impl Desktop {
 
 			pattern.fill(theme, *inverted.get(pattern.get_name()).unwrap_or(&false));
 			if let Some(postscript) = postscripts.get(pattern_file.get_name()) {
-				info!("Executing {} post-script...",postscript.get_name());
+				info!("Executing |{}| post-script...", postscript.get_name());
 				postscript.execute(&vec![String::from(pattern.get_output())])
 			}
 		}
 
 		let args_map = theme.get_extras();
-		for extra_ps in PostScript::get_extras(self.get_name()){
+		for extra_ps in PostScript::get_extras(self.get_name()) {
 			if !*actived.get(extra_ps.get_name()).unwrap_or(&false){continue}
 
 			let args = args_map.get(extra_ps.get_name()).unwrap_or(&vec![]).iter()
 				.map(|arg|core::expand_path(arg)).collect();
 			
-			info!("Executing {} extra...",extra_ps.get_name());
+			info!("Executing |{}| extra...",extra_ps.get_name());
 			extra_ps.execute(&args);
 		}
 	}
 
 	pub fn uninstall(&self) {
-		
 		let config_home = core::expand_path(core::CONFIG_HOME);
 		
 		let files_to_uninstall:Vec<String> = self.get_config_files().iter()
 			.map(|file| String::from(file.file_name().to_str().unwrap())).collect();
 
 		for entry_name in files_to_uninstall {
-			let path = format!("{}/{}",config_home,entry_name);
+			let path = format!("{}/{}", config_home,entry_name);
 			match fs_extra::dir::remove(&path) {
-				Ok(_)=>(),
-				Err(e)=>{
-					error!("Could not remove directory {}: {}",&path,e);
-				}
+				Ok(_) => (),
+				Err(e) => error!("Could not remove directory |{}|: |{}|",&path,e)
 			}
 		}
 	}
@@ -130,20 +127,20 @@ impl Desktop {
 	pub fn install(&self, previous: &Desktop, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>) {
 		let config_home = core::expand_path(core::CONFIG_HOME);
 
-		info!("Uninstalling desktop {}...",previous.get_name());
+		info!("Uninstalling desktop |{}|...", previous.get_name());
 		previous.uninstall();
 		self.uninstall();
 
 		let files_to_install = self.get_config_files();
 
-		info!("Installing desktop {}...",self.get_name());
+		info!("Installing desktop |{}|...", self.get_name());
 		for entry in files_to_install {
 			let from = entry.path();
 
-			let file_name = match entry.file_name().into_string(){
+			let file_name = match entry.file_name().into_string() {
 				Ok(file_name) => file_name,
-				Err(_)=>{
-					error!("Error while converting OsString to String: invalid unicode data");
+				Err(_) => {
+					error!("Error while converting OsString to String: |Invalid unicode data|");
 					continue;
 				}
 			};
@@ -153,10 +150,8 @@ impl Desktop {
 			options.overwrite = true;
 			options.copy_inside = true;
 			match fs_extra::dir::copy(from, &to, &options) {
-				Ok(_)=>(),
-				Err(e)=>{
-					error!("Error while copying to {}: {}",&to,e);
-				}
+				Ok(_) => (),
+				Err(e) => error!("Error while copying to |{}|: |{}|", &to, e),
 			}
 		}
 
@@ -164,7 +159,7 @@ impl Desktop {
 
 		let postscripts = PostScript::get_postscripts(previous.get_name());
 		if let Some(ps) = postscripts.get("desktop-exit") {
-			info!("Executing desktop-exit post-script");
+			info!("Executing |desktop-exit| post-script");
 			ps.execute(&vec![]);
 		}
 	}
@@ -173,20 +168,20 @@ impl Desktop {
 		let gtheme_home:String = core::expand_path(core::GTHEME_HOME);
 		let config_dir = gtheme_home + &format!("/desktops/{}/.config", self.get_name());
 
-		let entries = match fs::read_dir(&config_dir){
-			Ok(dir)=>dir,
-			Err(e)=>{
-				error!("Could not read directory {}: {}",&config_dir,e);
+		let entries = match fs::read_dir(&config_dir) {
+			Ok(dir) => dir,
+			Err(e) => {
+				error!("Could not read directory |{}|: |{}|", &config_dir, e);
 				return vec![]
 			}
 		};
 
 		let mut vec = Vec::new();
 		for entry in entries {
-			let entry = match entry{
-				Ok(entry)=>entry,
-				Err(e)=>{
-					error!("Error while reading entry from dir {}: {}",&config_dir,e);
+			let entry = match entry {
+				Ok(entry) => entry,
+				Err(e) => {
+					error!("Error while reading entry from dir |{}|: |{}|", &config_dir, e);
 					continue;
 				}
 			};
@@ -203,13 +198,12 @@ pub struct DesktopFile {
 	path: String,
 }
 impl DesktopFile{
-	pub fn to_desktop(&self) -> Desktop{
+	pub fn to_desktop(&self) -> Desktop {
 		Desktop::from(self)
 	}
 	pub fn get_name(&self) -> &String {
 		&self.name
 	}
-
 	pub fn get_path(&self) -> &String {
 		&self.path
 	}
@@ -260,6 +254,4 @@ mod tests{
 		let desktop = desktops[4].to_desktop();
 		println!("Patterns in {}: {:?}",desktop.get_name(),desktop.get_patterns())
 	}
-
-
 }

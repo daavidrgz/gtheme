@@ -21,46 +21,46 @@ pub struct GlobalConfig {
 impl GlobalConfigDto {
 	fn new() -> Self {
 		let path = format!("{}/global_config.json",core::expand_path(core::GTHEME_HOME));
-		let mut file = match File::open(&path){
-			Ok(file)=>file,
+		let mut file = match File::open(&path) {
+			Ok(file) => file,
 			Err(e) => {
-				warn!("Could not open global config, using default config: {}",e);
+				warn!("Could not open global config, using default config: |{}|", e);
 				return Self::default()
 			}
 		};
 		let mut content = String::new();
-		match  file.read_to_string(&mut content){
-			Ok(_)=>(),
+		match  file.read_to_string(&mut content) {
+			Ok(_) => (),
 			Err(e) => {
-				error!("Could not read global config, using default config: {}",e);
+				error!("Could not read global config, using default config: |{}|", e);
 				return Self::default()
 			}
 		};
 		match serde_json::from_str(&content){
 			Ok(config) => {
-				info!("Using global config {}",&path);
+				info!("Using global config |{}|",&path);
 				config
 			},
-			_ => {
-				error!("Could not parse global config, using default config...");
+			Err(e) => {
+				error!("Could not parse global config, using default config: |{}|", e);
 				return Self::default()
 			}
 		}
 	}
 
 	fn from(config:&GlobalConfig) -> Self {
-		let current_desktop = match config.get_current_desktop(){
+		let current_desktop = match config.get_current_desktop() {
 			None => None,
 			Some(desktop) => Some(String::from(desktop.get_name())),
 		};
-		let current_theme = match config.get_current_theme(){
+		let current_theme = match config.get_current_theme() {
 			None => None,
 			Some(theme) => Some(String::from(theme.get_name())),
 		};
 
 		let fav_themes = config.get_fav_themes().iter().map(|theme| String::from(theme.get_name())).collect();
 
-		GlobalConfigDto{
+		GlobalConfigDto {
 			current_desktop,
 			current_theme,
 			fav_themes
@@ -73,15 +73,13 @@ impl GlobalConfigDto {
 		let mut file = match OpenOptions::new().create(true).write(true).truncate(true).open(&path) {
 			Ok(f) => f,
 			Err(e) => {
-				error!("Could not open {} with write permissions: {}",&path,e);
+				error!("Could not open |{}| with write permissions: |{}|", &path, e);
 				return;
 			}
 		};
 		match file.write_all(&content.as_bytes()){
-			Err(e)=>{
-				error!("Could not write global config in {}: {}",&path,e);	
-			},
-			_=>info!("Saving global config...")
+			Err(e) => error!("Could not write global config in |{}|: |{}|", &path, e),
+			_=> info!("Saving global config...")
 		}	
 	}
 

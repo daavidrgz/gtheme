@@ -1,12 +1,14 @@
-use clap::{Command, Arg, ArgMatches};
-use std::collections::HashMap;
+pub mod clilogger;
 
+use std::collections::HashMap;
+use clap::{Command, Arg, ArgMatches};
+use log::{LevelFilter, error};
+
+use crate::cli::clilogger::CliLogger;
 use crate::app;
 use crate::core::{
-	desktop::DesktopFile,
-	theme::{ThemeFile, Theme},
-	pattern::{PatternFile, Pattern},
-	postscript::PostScript,
+	theme::Theme,
+	pattern::Pattern,
 	config::{GlobalConfig, DesktopConfig}
 };
 
@@ -126,14 +128,26 @@ impl<'a> Cli<'a> {
 		Cli { app }
 	}
 
-	pub fn start_cli(mut self) {
+	pub fn start_cli(self) {
 		let matches = self.app.get_matches();
+
+		if matches.subcommand() == None {
+			app::Ui::new().start_ui();
+			return
+		}
+
+		// Logger init
+		static CLI_LOGGER: CliLogger = CliLogger;
+		
+		// TODO: Set maximum level to warn if no verbose flag
+		log::set_max_level(LevelFilter::Info);
+    log::set_logger(&CLI_LOGGER).unwrap();
 
 		match matches.subcommand() {
 			Some(("apply", sub_matches)) => Self::apply_theme(sub_matches),
 			Some(("install", sub_matches)) => Self::install_desktop(sub_matches),
 			Some(_) => (),
-			None => {app::Ui::new().start_ui()}
+			None => ()
 		}
 	}
 
@@ -144,7 +158,7 @@ impl<'a> Cli<'a> {
 		let theme = match themes.into_iter().find(|t| t.get_name().to_lowercase() == theme_name.to_lowercase()) {
 			Some(t) => t.to_theme(),
 			None => {
-				println!("[!] Error, the theme {} does not exist!", theme_name);
+				error!("The theme |{}| does not exist!", theme_name);
 				return
 			}
 		};
@@ -153,7 +167,7 @@ impl<'a> Cli<'a> {
 		let current_desktop = match global_config.get_current_desktop() {
 			Some(d) => d.to_desktop(),
 			None => {
-				println!("[!] Error, there is no desktop installed!");
+				error!("|There is no desktop installed!|");
 				return
 			}
 		};
@@ -165,7 +179,7 @@ impl<'a> Cli<'a> {
 				let size = all_patterns.len();
 				all_patterns = all_patterns.into_iter().filter(|e| e.get_name() != p).collect();
 				if size == all_patterns.len() {
-					println!("[!] Error, the pattern {} does not exist!", p);
+					error!("The pattern |{}| does not exist!", p);
 					return
 				}
 			}
@@ -186,15 +200,13 @@ impl<'a> Cli<'a> {
 				match all_patterns.iter().find(|e| e.get_name() == p) {
 					Some(_) => map.insert(p.to_string(), true),
 					None => {
-						println!("[!] Error, the pattern {} does not exist!", p);
+						error!("The pattern |{}| does not exist!", p);
 						return
 					}
 				};
 			}
 			map
 		} else {
-			// let desktop_config = DesktopConfig::new(current_desktop.get_name());
-			// desktop_config.get_inverted().clone()
 			HashMap::new()
 		};
 
@@ -202,6 +214,6 @@ impl<'a> Cli<'a> {
 	}
 
 	fn install_desktop(matches: &ArgMatches) {
-
+		matches.value_of("destkop");
 	}
 }

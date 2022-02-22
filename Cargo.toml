@@ -5,8 +5,6 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-
-
 [[bin]]
 name = "gtheme"
 path = "src/bin/main.rs"
@@ -29,4 +27,4 @@ tint = "1.0.1"
 tui-logger = "0.7.1"
 log = "0.4.14"
 clap = "3.1.1"
-#colored = "2.0.0"
+colored = "2.0.0"
