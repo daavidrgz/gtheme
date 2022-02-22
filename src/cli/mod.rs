@@ -7,7 +7,8 @@ use log::{LevelFilter, error};
 use crate::cli::clilogger::CliLogger;
 use crate::app;
 use crate::core::{
-	theme::Theme,
+	desktop::{Desktop, DesktopFile},
+	theme::{Theme, ThemeFile},
 	pattern::Pattern,
 	config::{GlobalConfig, DesktopConfig}
 };
@@ -154,16 +155,15 @@ impl<'a> Cli<'a> {
 	fn apply_theme(matches: &ArgMatches) {
 		let theme_name = matches.value_of("theme").unwrap();
 
-		let themes = Theme::get_themes();
-		let theme = match themes.into_iter().find(|t| t.get_name().to_lowercase() == theme_name.to_lowercase()) {
-			Some(t) => t.to_theme(),
+		let theme = match Self::is_valid_theme(theme_name) {
+			Some(t) => t,
 			None => {
 				error!("The theme |{}| does not exist!", theme_name);
 				return
 			}
 		};
 
-		let global_config = GlobalConfig::new();
+		let mut global_config = GlobalConfig::new();
 		let current_desktop = match global_config.get_current_desktop() {
 			Some(d) => d.to_desktop(),
 			None => {
@@ -210,10 +210,63 @@ impl<'a> Cli<'a> {
 			HashMap::new()
 		};
 
-		current_desktop.apply(&theme, &actived, &inverted)
+		current_desktop.apply(&theme.to_theme(), &actived, &inverted);
+
+		*global_config.get_mut_current_theme() = Some(theme);
+		global_config.save()
 	}
 
 	fn install_desktop(matches: &ArgMatches) {
-		matches.value_of("destkop");
+		let desktop_name = matches.value_of("desktop").unwrap();
+		
+		let all_desktops = Desktop::get_desktops();
+		let desktop = match all_desktops.into_iter().find(|d| d.get_name().to_lowercase() == desktop_name.to_lowercase()) {
+			Some(d) => d,
+			None => {
+				error!("The desktop |{}| does not exist!", desktop_name);
+				return
+			}
+		};
+
+		let mut global_config = GlobalConfig::new();
+		let previous = match global_config.get_current_desktop() {
+			Some(d) => d.to_desktop(),
+			None => desktop.clone().to_desktop()
+		};
+
+		let desktop_config = DesktopConfig::new(desktop.get_name());
+
+		let default_theme: ThemeFile = match matches.value_of("theme") {
+			Some(theme_name) => {
+				match Self::is_valid_theme(theme_name) {
+					Some(t) => t,
+					None => {
+						error!("The theme |{}| does not exist!", theme_name);
+						return
+					}
+				}
+			},
+			None => {
+				match desktop_config.get_default_theme() {
+					Some(t) => t.clone(),
+					None => Theme::get_themes().into_iter().find(|t| t.get_name() == "Nord" ).unwrap()
+				}
+			}
+		};
+
+		*global_config.get_mut_current_desktop() = Some(desktop.clone());
+		*global_config.get_mut_current_theme() = Some(default_theme.clone());
+		global_config.save();
+
+		desktop.to_desktop().install(&previous, &default_theme.to_theme(), desktop_config.get_actived(), desktop_config.get_inverted())
+	}
+
+
+	fn is_valid_theme(theme_name: &str) -> Option<ThemeFile> {
+		let themes = Theme::get_themes();
+		match themes.into_iter().find(|t| t.get_name().to_lowercase() == theme_name.to_lowercase()) {
+			Some(t) => Some(t),
+			None => None
+		}
 	}
 }
