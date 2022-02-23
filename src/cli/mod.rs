@@ -2,7 +2,7 @@ pub mod clilogger;
 
 use std::collections::HashMap;
 use clap::{Command, Arg, ArgMatches};
-use log::{LevelFilter, error};
+use log::{LevelFilter, error, info, warn};
 
 use crate::cli::clilogger::CliLogger;
 use crate::app;
@@ -10,6 +10,7 @@ use crate::core::{
 	desktop::{Desktop, DesktopFile},
 	theme::{Theme, ThemeFile},
 	pattern::Pattern,
+	postscript::PostScript,
 	config::{GlobalConfig, DesktopConfig}
 };
 
@@ -68,37 +69,62 @@ impl<'a> Cli<'a> {
 
 		app = app.subcommand(Command::new("list")
 			.about("List all installed themes, patterns, favourite themes or desktops")
-			.args([
-				Arg::new("element")
+			.arg(Arg::new("element")
 				.required(true)
 				.takes_value(true)
 				.exclusive(true)
 				.possible_values(["themes","desktops","patterns","favs"])
-			])
+			)
 		);
 
-		app = app.subcommand(Command::new("enable")
-			.about("Enable specified patterns in the current desktop")
-			.args([
-				Arg::new("pattern")
-				.required(true)
-				.takes_value(true)
-				.multiple_values(true)
-				.exclusive(true)
-				.help("Patterns to enable")
-			])
+		app = app.subcommand(Command::new("pattern")
+			.about("Enable or disable patterns in the current desktop")
+			.subcommand_required(true)
+			.subcommand(Command::new("enable")
+				.about("Enable specified patterns in the current desktop")
+				.arg(Arg::new("pattern")
+					.required(true)
+					.takes_value(true)
+					.multiple_values(true)
+					.exclusive(true)
+					.help("Patterns to enable")
+				)
+			)
+			.subcommand(Command::new("disable")
+				.about("Disable specified patterns in the current desktop")
+				.arg(Arg::new("pattern")
+					.required(true)
+					.takes_value(true)
+					.multiple_values(true)
+					.exclusive(true)
+					.help("Patterns to disable")
+				)
+			)
 		);
 
-		app = app.subcommand(Command::new("disable")
-			.about("Disable specified patterns in the current desktop")
-			.args([
-				Arg::new("pattern")
-				.required(true)
-				.takes_value(true)
-				.multiple_values(true)
-				.exclusive(true)
-				.help("Patterns to disable")
-			])
+		app = app.subcommand(Command::new("extra")
+			.about("Enable or disable extras in the current desktop")
+			.subcommand_required(true)
+			.subcommand(Command::new("enable")
+				.about("Enable specified extras in the current desktop")
+				.arg(Arg::new("extra")
+					.required(true)
+					.takes_value(true)
+					.multiple_values(true)
+					.exclusive(true)
+					.help("Extras to enable")
+				)
+			)
+			.subcommand(Command::new("disable")
+				.about("Disable specified extras in the current desktop")
+				.arg(Arg::new("extra")
+					.required(true)
+					.takes_value(true)
+					.multiple_values(true)
+					.exclusive(true)
+					.help("Extras to disable")
+				)
+			)
 		);
 
 		app = app.subcommand(Command::new("fav")
@@ -146,9 +172,38 @@ impl<'a> Cli<'a> {
 
 		match matches.subcommand() {
 			Some(("apply", sub_matches)) => Self::apply_theme(sub_matches),
+
 			Some(("install", sub_matches)) => Self::install_desktop(sub_matches),
-			Some(_) => (),
-			None => ()
+
+			Some(("pattern", sub_matches)) => match sub_matches.subcommand() {
+				Some(("enable", sub_sub_matches)) => Self::toggle_patterns(sub_sub_matches, true),
+				Some(("disable", sub_sub_matches)) => Self::toggle_patterns(sub_sub_matches, false),
+				_ => ()
+			}
+
+			Some(("extra", sub_matches)) => match sub_matches.subcommand() {
+				Some(("enable", sub_sub_matches)) => Self::toggle_extras(sub_sub_matches, true),
+				Some(("disable", sub_sub_matches)) => Self::toggle_extras(sub_sub_matches, false),
+				_ => ()
+			}
+
+			Some(("fav", sub_matches)) => match sub_matches.subcommand() {
+				Some(("add", sub_sub_matches)) => Self::toggle_fav(sub_sub_matches, true),
+				Some(("remove", sub_sub_matches)) => Self::toggle_fav(sub_sub_matches, false),
+				_ => ()
+			}
+
+			Some(("list", sub_matches)) => Self::list_elements(sub_matches),
+
+			_ => ()
+		}
+	}
+
+	fn is_valid_theme(theme_name: &str) -> Option<ThemeFile> {
+		let themes = Theme::get_themes();
+		match themes.into_iter().find(|t| t.get_name().to_lowercase() == theme_name.to_lowercase()) {
+			Some(t) => Some(t),
+			None => None
 		}
 	}
 
@@ -261,12 +316,169 @@ impl<'a> Cli<'a> {
 		desktop.to_desktop().install(&previous, &default_theme.to_theme(), desktop_config.get_actived(), desktop_config.get_inverted())
 	}
 
+	fn toggle_patterns(matches: &ArgMatches, state: bool) {
+		let state_word = if state {"enabled"} else {"disabled"};
 
-	fn is_valid_theme(theme_name: &str) -> Option<ThemeFile> {
-		let themes = Theme::get_themes();
-		match themes.into_iter().find(|t| t.get_name().to_lowercase() == theme_name.to_lowercase()) {
-			Some(t) => Some(t),
-			None => None
+		let global_config = GlobalConfig::new();
+		let current_desktop = match global_config.get_current_desktop() {
+			Some(d) => d.to_desktop(),
+			None => {
+				error!("|There is no desktop installed!|");
+				return
+			}
+		};
+
+		let mut desktop_config = DesktopConfig::new(current_desktop.get_name());
+		let actived = desktop_config.get_mut_actived();
+
+		let patterns = matches.values_of("pattern").unwrap();
+		let all_patterns = Pattern::get_patterns(current_desktop.get_name());
+		for pattern_str in patterns {
+			let pattern = match all_patterns.iter().find(|p| p.get_name().to_lowercase() == pattern_str.to_lowercase()) {
+				Some(p) => p,
+				None => {
+					error!("The pattern |{}| does not exist!", pattern_str);
+					return
+				}
+			};
+
+			match actived.get_mut(pattern.get_name()) {
+				Some(s) => *s = {
+					if *s != state {
+						info!("Pattern |{}| succesfully {}!", pattern_str, state_word);
+					} else {
+						warn!("Pattern |{}| was already {}!", pattern_str, state_word);
+					};
+					state
+				},
+				None => {
+					if state {
+						warn!("Pattern |{}| was already enabled!", pattern_str);
+					} else {
+						info!("Pattern |{}| succesfully disabled!", pattern_str);
+					}
+					actived.insert(pattern.get_name().to_string(), state);
+				}
+			}
+		}
+
+		desktop_config.save();
+	}
+
+	fn toggle_extras(matches: &ArgMatches, state: bool) {
+		let state_word = if state {"enabled"} else {"disabled"};
+
+		let global_config = GlobalConfig::new();
+		let current_desktop = match global_config.get_current_desktop() {
+			Some(d) => d.to_desktop(),
+			None => {
+				error!("|There is no desktop installed!|");
+				return
+			}
+		};
+
+		let mut desktop_config = DesktopConfig::new(current_desktop.get_name());
+		let actived = desktop_config.get_mut_actived();
+
+		let extras = matches.values_of("extra").unwrap();
+		let all_extras = PostScript::get_extras(current_desktop.get_name());
+		for extra_str in extras {
+			let extra = match all_extras.iter().find(|e| e.get_name().to_lowercase() == extra_str.to_lowercase()) {
+				Some(e) => e,
+				None => {
+					error!("The extra |{}| does not exist!", extra_str);
+					return
+				}
+			};
+
+			match actived.get_mut(extra.get_name()) {
+				Some(s) => {
+					if *s != state {
+						*s = state;
+						info!("Extra |{}| succesfully {}!", extra_str, state_word);
+					} else {
+						warn!("Extra |{}| was already {}!", extra_str, state_word);
+					};
+				},
+				None => {
+					if state {
+						actived.insert(extra.get_name().to_string(), state);
+						info!("Extra |{}| succesfully enabled!", extra_str);
+					} else {
+						warn!("Extra |{}| was already disabled!", extra_str);
+					}
+				}
+			}
+		}
+
+		desktop_config.save();
+	}
+
+	fn toggle_fav(matches: &ArgMatches, is_adding: bool) {
+		let mut global_config = GlobalConfig::new();
+		let fav_themes = global_config.get_mut_fav_themes();
+
+		let themes = matches.values_of("theme").unwrap();
+		let all_themes = Theme::get_themes();
+		for theme_name in themes {
+			let theme = match all_themes.iter().find(|t| t.get_name().to_lowercase() == theme_name.to_lowercase()) {
+				Some(t) => t,
+				None => {
+					error!("The theme |{}| does not exist!", theme_name);
+					return
+				}
+			};
+
+			let idx = fav_themes.iter().position(|item| item.get_name() == theme.get_name());
+			match idx {
+				Some(i) => {
+					if is_adding {
+						warn!("Theme |{}| was already in the fav themes list!", theme.get_name());
+					} else {
+						fav_themes.remove(i);
+						info!("Theme |{}| successfuly removed from the fav themes list!", theme.get_name());
+					}
+				},
+				None => {
+					if is_adding {
+						fav_themes.push(theme.clone());
+						info!("Theme |{}| successfuly added to the fav themes list!", theme.get_name());
+					} else {
+						warn!("Theme |{}| was not already in the fav themes list!", theme.get_name());
+					}
+				}
+			}
+		}
+		
+		global_config.save()
+	}
+
+	fn list_elements(matches: &ArgMatches) {
+		match matches.value_of("element") {
+			Some("desktops") =>  Self::list_desktops(),
+			Some("themes") => Self::list_themes(),
+			Some("patterns") => Self::list_patterns(),
+			Some("favs") => Self::list_fav_themes(),
+			_ => ()
 		}
 	}
-}
+
+	fn list_desktops() {
+		let all_desktops = Desktop::get_desktops();
+		for d in all_desktops {
+			// println("")
+		}
+	}
+
+	fn list_themes() {
+
+	}
+
+	fn list_patterns() {
+
+	}
+
+	fn list_fav_themes() {
+
+	}
+} 

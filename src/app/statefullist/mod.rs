@@ -18,6 +18,7 @@ pub struct StatefulList<T> {
 	inactive_text_color: Option<Color>,
 	alignment: bool
 }
+
 impl<T> StatefulList<T> {
 	pub fn with_items(items: Vec<T>) -> StatefulList<T> {
 		StatefulList {
@@ -30,8 +31,8 @@ impl<T> StatefulList<T> {
 			title: "LIST".to_string(),
 			active_text: "• Active ".to_string(),
 			active_text_color: None,
-			inactive_text_color: None,
 			inactive_text: "".to_string(),
+			inactive_text_color: None,
 			alignment: false,
 		}
 	}
@@ -56,12 +57,12 @@ impl<T> StatefulList<T> {
 		self.active_text = active_text.to_string();
 		self
 	}
-	pub fn inactive_text(mut self, inactive_text: &str) -> Self {
-		self.inactive_text = inactive_text.to_string();
-		self
-	}
 	pub fn active_text_color(mut self, active_text_color: Color) -> Self {
 		self.active_text_color = Some(active_text_color);
+		self
+	}
+	pub fn inactive_text(mut self, inactive_text: &str) -> Self {
+		self.inactive_text = inactive_text.to_string();
 		self
 	}
 	pub fn inactive_text_color(mut self, inactive_text_color: Color) -> Self {
@@ -94,11 +95,11 @@ impl<T> StatefulList<T> {
 	pub fn get_active_text(&self) -> &String {
 		&self.active_text
 	}
-	pub fn get_inactive_text(&self) -> &String {
-		&self.inactive_text
-	}
 	pub fn get_active_text_color(&self) -> &Option<Color> {
 		&self.active_text_color
+	}
+	pub fn get_inactive_text(&self) -> &String {
+		&self.inactive_text
 	}
 	pub fn get_inactive_text_color(&self) -> &Option<Color> {
 		&self.inactive_text_color
@@ -174,6 +175,7 @@ impl StatefulList<ScreenItem> {
 					None => {
 						fav_themes.push(t.clone());
 						self.items.push(ScreenItem::Theme(t.clone()));
+						global_config.save()
 					}
 				}
 			}
@@ -191,6 +193,7 @@ impl StatefulList<ScreenItem> {
 					Some(i) => {
 						fav_themes.remove(i);
 						self.items.remove(i);
+						global_config.save()
 					},
 					None => ()
 				}

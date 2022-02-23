@@ -1,15 +1,15 @@
 {
 	"name": "Mountain",
 	"extras": {
-		"vscode": [""],
+		"vscode": ["Rosé Pine Dawn"],
 		"wallpaper": ["~/.config/gtheme/wallpapers/Mountain/mountain.png"]
 	},
 	"colors": {
-		"background": "eeedeb",
+		"background": "faf4ed",
 		"foreground": "34383e",
 		"cursor": "34383e",
 		"selection-background": "34383e",
-		"selection-foreground": "eeedeb",
+		"selection-foreground": "faf4ed",
 
 		"black": "D5D3D3",
 		"black-hg": "D5D3D3",
