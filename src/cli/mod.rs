@@ -3,11 +3,12 @@ pub mod clilogger;
 use std::collections::HashMap;
 use clap::{Command, Arg, ArgMatches};
 use log::{LevelFilter, error, info, warn};
+use colored::*;
 
 use crate::cli::clilogger::CliLogger;
 use crate::app;
 use crate::core::{
-	desktop::{Desktop, DesktopFile},
+	desktop::Desktop,
 	theme::{Theme, ThemeFile},
 	pattern::Pattern,
 	postscript::PostScript,
@@ -73,7 +74,7 @@ impl<'a> Cli<'a> {
 				.required(true)
 				.takes_value(true)
 				.exclusive(true)
-				.possible_values(["themes","desktops","patterns","favs"])
+				.possible_values(["themes","desktops","patterns"])
 			)
 		);
 
@@ -458,24 +459,71 @@ impl<'a> Cli<'a> {
 			Some("desktops") =>  Self::list_desktops(),
 			Some("themes") => Self::list_themes(),
 			Some("patterns") => Self::list_patterns(),
-			Some("favs") => Self::list_fav_themes(),
 			_ => ()
 		}
 	}
 
 	fn list_desktops() {
 		let all_desktops = Desktop::get_desktops();
+		let global_config = GlobalConfig::new();
+		let current_desktop = match global_config.get_current_desktop() {
+			Some(d) => d.get_name(),
+			None => ""
+		};
+
+		println!("{}\n", "DESKTOPS".bold().underline().cyan());
+
 		for d in all_desktops {
-			// println("")
+			if d.get_name() == current_desktop {
+				println!("{}{}", "• ".green(), d.get_name().bold().green());
+			} else {
+				println!("{}{}", "• ".cyan(), d.get_name().bold());
+			};
 		}
+		println!("");
 	}
 
 	fn list_themes() {
+		let all_themes = Theme::get_themes();
+		let global_config = GlobalConfig::new();
+		let current_theme = match global_config.get_current_theme() {
+			Some(t) => t.get_name(),
+			None => ""
+		};
 
+		println!("{}\n", "THEMES".bold().underline().yellow());
+
+		for t in all_themes {
+			if t.get_name() == current_theme {
+				println!("{}{}", "• ".green(), t.get_name().bold().green());
+			} else {
+				println!("{}{}", "• ".yellow(), t.get_name().bold());
+			};
+		}
+		println!("");
 	}
 
 	fn list_patterns() {
+		let global_config = GlobalConfig::new();
 
+		let current_desktop = match global_config.get_current_desktop() {
+			Some(d) => d,
+			None => {
+				warn!("|There is no desktop installed!| Try with -d option instead");
+				return
+			}
+		};
+
+		println!("{}\n", "THEMES".bold().underline().yellow());
+
+		// for t in all_themes {
+		// 	if t.get_name() == current_theme {
+		// 		println!("{}{}", "• ".green(), t.get_name().bold().green());
+		// 	} else {
+		// 		println!("{}{}", "• ".yellow(), t.get_name().bold());
+		// 	};
+		// }
+		println!("");
 	}
 
 	fn list_fav_themes() {
