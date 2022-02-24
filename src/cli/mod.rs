@@ -24,7 +24,13 @@ impl<'a> Cli<'a> {
 		let mut app = Command::new("gtheme")
 		.version("1.0")
 		.about("A rust program that makes your theming life so much easier.")
-		.author("David Rodríguez & Jorge Hermo");
+		.author("David Rodríguez & Jorge Hermo")
+		.arg(Arg::new("verbose")
+			.short('v')
+			.long("verbose")
+			.global(true)
+			.help("Show more information")
+		);
 
 		app = app.subcommand(Command::new("apply")
 			.about("Apply specified theme")
@@ -69,12 +75,27 @@ impl<'a> Cli<'a> {
 		);
 
 		app = app.subcommand(Command::new("list")
-			.about("List all installed themes, patterns, favourite themes or desktops")
-			.arg(Arg::new("element")
-				.required(true)
-				.takes_value(true)
-				.exclusive(true)
-				.possible_values(["themes","desktops","patterns"])
+			.about("List all installed themes, patterns or desktops")
+			.subcommand_required(true)
+			.subcommand(Command::new("desktops")
+				.about("List all installed desktops")
+			)
+			.subcommand(Command::new("themes")
+				.about("List all themes")
+				.arg(Arg::new("favourite")
+					.short('f')
+					.long("favourite")
+					.help("List only favourite themes")
+				)
+			)
+			.subcommand(Command::new("patterns")
+			.about("List all patterns of the current desktop by default")
+				.arg(Arg::new("desktop")
+					.short('d')
+					.long("desktop")
+					.takes_value(true)
+					.help("List patterns of the specified desktop")
+				)
 			)
 		);
 
@@ -87,7 +108,6 @@ impl<'a> Cli<'a> {
 					.required(true)
 					.takes_value(true)
 					.multiple_values(true)
-					.exclusive(true)
 					.help("Patterns to enable")
 				)
 			)
@@ -97,8 +117,16 @@ impl<'a> Cli<'a> {
 					.required(true)
 					.takes_value(true)
 					.multiple_values(true)
-					.exclusive(true)
 					.help("Patterns to disable")
+				)
+			)
+			.subcommand(Command::new("invert")
+				.about("Invert specified patterns or return them to default if they are already inverted")
+				.arg(Arg::new("pattern")
+					.required(true)
+					.takes_value(true)
+					.multiple_values(true)
+					.help("Patterns to invert")
 				)
 			)
 		);
@@ -112,7 +140,6 @@ impl<'a> Cli<'a> {
 					.required(true)
 					.takes_value(true)
 					.multiple_values(true)
-					.exclusive(true)
 					.help("Extras to enable")
 				)
 			)
@@ -121,8 +148,6 @@ impl<'a> Cli<'a> {
 				.arg(Arg::new("extra")
 					.required(true)
 					.takes_value(true)
-					.multiple_values(true)
-					.exclusive(true)
 					.help("Extras to disable")
 				)
 			)
@@ -137,7 +162,6 @@ impl<'a> Cli<'a> {
 					.required(true)
 					.takes_value(true)
 					.multiple_values(true)
-					.exclusive(true)
 					.help("Themes to add")
 				)
 			)
@@ -147,7 +171,6 @@ impl<'a> Cli<'a> {
 					.required(true)
 					.takes_value(true)
 					.multiple_values(true)
-					.exclusive(true)
 					.help("Themes to remove")
 				)
 			)
@@ -167,10 +190,14 @@ impl<'a> Cli<'a> {
 		// Logger init
 		static CLI_LOGGER: CliLogger = CliLogger;
 		
-		// TODO: Set maximum level to warn if no verbose flag
-		log::set_max_level(LevelFilter::Info);
+		if matches.is_present("verbose") {
+			log::set_max_level(LevelFilter::Info);
+		} else {
+			log::set_max_level(LevelFilter::Warn);
+		}
     log::set_logger(&CLI_LOGGER).unwrap();
 
+		println!("");
 		match matches.subcommand() {
 			Some(("apply", sub_matches)) => Self::apply_theme(sub_matches),
 
@@ -179,6 +206,7 @@ impl<'a> Cli<'a> {
 			Some(("pattern", sub_matches)) => match sub_matches.subcommand() {
 				Some(("enable", sub_sub_matches)) => Self::toggle_patterns(sub_sub_matches, true),
 				Some(("disable", sub_sub_matches)) => Self::toggle_patterns(sub_sub_matches, false),
+				Some(("invert", sub_sub_matches)) => Self::toggle_invert(sub_sub_matches),
 				_ => ()
 			}
 
@@ -194,7 +222,12 @@ impl<'a> Cli<'a> {
 				_ => ()
 			}
 
-			Some(("list", sub_matches)) => Self::list_elements(sub_matches),
+			Some(("list", sub_matches)) => match sub_matches.subcommand() {
+				Some(("desktops", _)) => Self::list_desktops(),
+				Some(("themes", sub_sub_matches)) => Self::list_themes(sub_sub_matches),
+				Some(("patterns", sub_sub_matches)) => Self::list_patterns(sub_sub_matches),
+				_ => ()
+			}
 
 			_ => ()
 		}
@@ -338,7 +371,7 @@ impl<'a> Cli<'a> {
 			let pattern = match all_patterns.iter().find(|p| p.get_name().to_lowercase() == pattern_str.to_lowercase()) {
 				Some(p) => p,
 				None => {
-					error!("The pattern |{}| does not exist!", pattern_str);
+					error!("The pattern |{}| does not exist in the current desktop!", pattern_str);
 					return
 				}
 			};
@@ -365,6 +398,50 @@ impl<'a> Cli<'a> {
 
 		desktop_config.save();
 	}
+
+	fn toggle_invert(matches : &ArgMatches) {
+		let global_config = GlobalConfig::new();
+		let current_desktop = match global_config.get_current_desktop() {
+			Some(d) => d.to_desktop(),
+			None => {
+				error!("|There is no desktop installed!|");
+				return
+			}
+		};
+
+		let mut desktop_config = DesktopConfig::new(current_desktop.get_name());
+		let inverted = desktop_config.get_mut_inverted();
+
+		let patterns = matches.values_of("pattern").unwrap();
+		let all_patterns = Pattern::get_patterns(current_desktop.get_name());
+
+		for pattern_str in patterns {
+			let pattern = match all_patterns.iter().find(|p| p.get_name().to_lowercase() == pattern_str.to_lowercase()) {
+				Some(p) => p,
+				None => {
+					error!("The pattern |{}| does not exist in the current desktop!", pattern_str);
+					return
+				}
+			};
+
+			match inverted.get_mut(pattern.get_name()) {
+				Some(s) => *s = {
+					if *s {
+						info!("Pattern |{}| succesfully backed to default!", pattern_str);
+					} else {
+						info!("Pattern |{}| succesfully inverted!", pattern_str);
+					};
+					!*s
+				},
+				None => {
+					inverted.insert(pattern.get_name().to_string(), true);
+					info!("Pattern |{}| succesfully inverted!", pattern_str);
+				}
+			}
+		}
+
+		desktop_config.save();
+	} 
 
 	fn toggle_extras(matches: &ArgMatches, state: bool) {
 		let state_word = if state {"enabled"} else {"disabled"};
@@ -454,15 +531,6 @@ impl<'a> Cli<'a> {
 		global_config.save()
 	}
 
-	fn list_elements(matches: &ArgMatches) {
-		match matches.value_of("element") {
-			Some("desktops") =>  Self::list_desktops(),
-			Some("themes") => Self::list_themes(),
-			Some("patterns") => Self::list_patterns(),
-			_ => ()
-		}
-	}
-
 	fn list_desktops() {
 		let all_desktops = Desktop::get_desktops();
 		let global_config = GlobalConfig::new();
@@ -475,58 +543,114 @@ impl<'a> Cli<'a> {
 
 		for d in all_desktops {
 			if d.get_name() == current_desktop {
-				println!("{}{}", "• ".green(), d.get_name().bold().green());
+				println!("{} {}", "•".green(), d.get_name().bold().green());
 			} else {
-				println!("{}{}", "• ".cyan(), d.get_name().bold());
+				println!("{} {}", "•".cyan(), d.get_name());
 			};
 		}
 		println!("");
 	}
 
-	fn list_themes() {
+	fn list_themes(matches: &ArgMatches) {
+		if matches.is_present("favourite") {
+			Self::list_fav_themes();
+			return
+		}
+
 		let all_themes = Theme::get_themes();
 		let global_config = GlobalConfig::new();
 		let current_theme = match global_config.get_current_theme() {
 			Some(t) => t.get_name(),
 			None => ""
 		};
-
+		
 		println!("{}\n", "THEMES".bold().underline().yellow());
 
 		for t in all_themes {
 			if t.get_name() == current_theme {
-				println!("{}{}", "• ".green(), t.get_name().bold().green());
+				println!("{} {}", "•".green(), t.get_name().bold().green());
 			} else {
-				println!("{}{}", "• ".yellow(), t.get_name().bold());
+				println!("{} {}", "•".yellow(), t.get_name());
 			};
 		}
 		println!("");
 	}
 
-	fn list_patterns() {
+	fn list_fav_themes() {
 		let global_config = GlobalConfig::new();
-
-		let current_desktop = match global_config.get_current_desktop() {
-			Some(d) => d,
-			None => {
-				warn!("|There is no desktop installed!| Try with -d option instead");
-				return
-			}
+		let current_theme = match global_config.get_current_theme() {
+			Some(t) => t.get_name(),
+			None => ""
 		};
 
-		println!("{}\n", "THEMES".bold().underline().yellow());
+		let fav_themes = global_config.get_fav_themes();
+		
+		println!("{}\n", "FAV THEMES".bold().underline().blue());
 
-		// for t in all_themes {
-		// 	if t.get_name() == current_theme {
-		// 		println!("{}{}", "• ".green(), t.get_name().bold().green());
-		// 	} else {
-		// 		println!("{}{}", "• ".yellow(), t.get_name().bold());
-		// 	};
-		// }
+		for t in fav_themes {
+			if t.get_name() == current_theme {
+				println!("{} {}", "•".green(), t.get_name().bold().green());
+			} else {
+				println!("{} {}", "•".blue(), t.get_name());
+			};
+		}
 		println!("");
 	}
 
-	fn list_fav_themes() {
+	fn list_patterns(matches: &ArgMatches) {
+		let desktop = if matches.is_present("desktop") {
+			let desktop_str = matches.value_of("desktop").unwrap();
+			let all_desktops = Desktop::get_desktops();
+			match all_desktops.iter().find(|d| d.get_name().to_lowercase() == desktop_str.to_lowercase()) {
+				Some(d) => d.clone(),
+				None => {
+					error!("The desktop |{}| does not exist!", desktop_str);
+					return
+				}
+			}
+		} else {
+			let global_config = GlobalConfig::new();
+			match global_config.get_current_desktop() {
+				Some(d) => d.clone(),
+				None => {
+					warn!("|There is no desktop installed!| Try with -d option instead");
+					return
+				}
+			}
+		};
 
+		let all_patterns = Pattern::get_patterns(desktop.get_name());
+		let desktop_config = DesktopConfig::new(desktop.get_name());
+
+		let enabled = desktop_config.get_actived();
+		let inverted = desktop_config.get_inverted();
+
+		let desktop_title = format!("({})", desktop.get_name());
+
+		println!("{} {}\n", "PATTERNS".bold().underline().magenta(), desktop_title.bold().cyan());
+
+		for p in all_patterns {
+			print!("{} {:<20}", "•".magenta(), p.get_name());
+			let color = match enabled.get(p.get_name()) {
+				Some(e) => if *e {
+					print!(" {}", "ON".bold().green());
+					Color::Green
+				} else {
+					print!(" {}", "OFF".bold().red());
+					Color::Red
+				},
+				None => {
+					print!(" {}", "ON".bold().green()); 
+					Color::Green
+				}
+			};
+
+			match inverted.get(p.get_name()) {
+				Some(i) =>  if *i { print!(" {}", "(Inverted)".bold().color(color)) },
+				None => ()
+			}
+			println!("");
+		}
+		println!("");
 	}
 } 
