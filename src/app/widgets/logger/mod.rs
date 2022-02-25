@@ -1,6 +1,6 @@
 use tui_logger::TuiLoggerWidget;
 use tui::{
-	widgets::{Block, Borders},
+	widgets::{Block, Borders, BorderType},
 	style::{Color, Style},
 };
 
@@ -25,7 +25,8 @@ impl<'a> LoggerWidget<'a> {
 			.block(Block::default()
 				.title(" LOGS  ")
 				.border_style(Style::default().fg(Color::White))
-				.borders(Borders::ALL))
+				.borders(Borders::ALL)
+				.border_type(BorderType::Thick))
 			.style(Style::default().fg(Color::White));
 
 		LoggerWidget {

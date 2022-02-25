@@ -1,4 +1,5 @@
-•• GLOBAL
+pub const HELP_CONTENT: &str = 
+"•• GLOBAL
 
 'Tab'    #switch view Desktop/Patterns or Themes/Fav-Themes
 'Up'     #previous item
@@ -30,4 +31,4 @@
 •• EXTRAS
 
 'o'      #show/hide extras popup
-'Enter'  #enable/disable extra
+'Enter'  #enable/disable extra";

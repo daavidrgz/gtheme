@@ -1,3 +1,5 @@
+pub mod help_content;
+
 use tui::{
 	widgets::{Block, Borders, BorderType, List, ListItem},
 	style::{Color, Modifier, Style},

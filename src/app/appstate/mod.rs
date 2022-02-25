@@ -1,11 +1,7 @@
 use std::collections::HashMap;
 use tui::style::Color;
-use std::fs::File;
-use std::io::{self, BufRead};
-use log::error;
 
 use crate::core::{
-	self,
 	desktop::Desktop,
 	theme::Theme,
 	pattern::Pattern,
@@ -14,6 +10,7 @@ use crate::core::{
 };
 use crate::app::statefullist::StatefulList;
 use crate::app::screenitem::ScreenItem;
+use crate::app::widgets::HELP_CONTENT;
 
 #[derive(Eq, PartialEq, Hash)]
 pub enum Screen {
@@ -123,25 +120,10 @@ impl AppState {
 	}
 
 	fn create_help_list() -> StatefulList<ScreenItem> {
-		let help_path = core::expand_path(&format!("{}/assets/help.txt", core::GTHEME_HOME));
-		let help_file = match File::open(&help_path) {
-			Ok(f) => f,
-			Err(e) => {
-				error!("Error while opening help file |{}|: |{}|", &help_path, e);
-				return StatefulList::with_items(vec![])
-			}
-		};
-		let file_lines = io::BufReader::new(help_file).lines();
-
-		let lines = file_lines.into_iter().map(|line| {
-			match line {
-				Ok(l) => ScreenItem::Help(l),
-				Err(e) => {
-					error!("[!] Error while reading help file |{}|: |{}|", &help_path, e);
-					return ScreenItem::Help("".to_string())
-				}
-			}
-		}).collect();
+		let mut lines: Vec<ScreenItem> = vec![];
+		for l in HELP_CONTENT.lines() {
+			lines.push(ScreenItem::Help(l.to_string()));
+		}
 		StatefulList::with_items(lines)
 			.color(Color::Yellow)
 			.title("HELP ")
