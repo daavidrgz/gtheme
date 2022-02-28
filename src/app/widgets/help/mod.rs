@@ -1,4 +1,5 @@
-pub mod help_content;
+mod help_content;
+pub use help_content::HELP_CONTENT;
 
 use tui::{
 	widgets::{Block, Borders, BorderType, List, ListItem},
@@ -23,8 +24,7 @@ impl<'a> HelpWidget<'a> {
 			.border_type(BorderType::Thick)
 			.border_style(Style::default().fg(*stateful_list.get_color()));
 
-		let list = List::new(items)
-			.block(block);
+		let list = List::new(items).block(block);
 
 		HelpWidget {
 			widget: list

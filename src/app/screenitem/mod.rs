@@ -4,7 +4,7 @@ use log::warn;
 use crate::core::{
 	desktop::DesktopFile,
 	theme::{ThemeFile, Theme},
-	pattern::{PatternFile},
+	pattern::PatternFile,
 	postscript::PostScript,
 	config::{GlobalConfig, DesktopConfig}
 };
@@ -15,7 +15,7 @@ pub enum ScreenItem {
 	Theme(ThemeFile),
 	Pattern(PatternFile),
 	Extra(PostScript),
-	Help(String)
+	Help(String),
 }
 impl ScreenItem {
 	pub fn get_name(&self) -> &str {
@@ -24,7 +24,7 @@ impl ScreenItem {
 			ScreenItem::Theme(t) => t.get_name(),
 			ScreenItem::Pattern(p) => p.get_name(),
 			ScreenItem::Extra(e) => e.get_name(),
-			ScreenItem::Help(s) => &s
+			ScreenItem::Help(s) => &s,
 		}
 	}
 
@@ -75,7 +75,7 @@ impl ScreenItem {
 			ScreenItem::Theme(t) => Self::apply_theme(t.clone(), global_config, desktop_config),
 			ScreenItem::Pattern(_) => Self::toggle_active(self.clone(), desktop_config, true),
 			ScreenItem::Extra(_) => Self::toggle_active(self.clone(), desktop_config, false),
-			ScreenItem::Help(_) => {}
+			ScreenItem::Help(_) => ()
 		}
 	}
 

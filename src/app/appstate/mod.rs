@@ -28,7 +28,7 @@ pub struct AppState {
 	screens: HashMap<Screen, [StatefulList<ScreenItem>; 2]>,
 	current_popup: Option<Popup>,
 	popups: HashMap<Popup, StatefulList<ScreenItem>>,
-	show_logs: bool,
+	show_log: bool,
 	global_config: GlobalConfig,
 	desktop_config: DesktopConfig,
 }
@@ -44,14 +44,16 @@ impl AppState {
 			screens: Self::create_screens(&global_config),
 			current_popup: None,
 			popups: Self::create_popups(&global_config),
-			show_logs: false,
+			show_log: false,
 			global_config,
 			desktop_config: DesktopConfig::new(&current_desktop_str),
 		}
 	}
 	
-	pub fn get_mut_state(&mut self) -> (&mut Screen, &mut HashMap<Screen, [StatefulList<ScreenItem>; 2]>, &mut Option<Popup>, &mut HashMap<Popup, StatefulList<ScreenItem>>, &mut bool, &mut GlobalConfig, &mut DesktopConfig) {
-		(&mut self.current_screen, &mut self.screens, &mut self.current_popup, &mut self.popups, &mut self.show_logs, &mut self.global_config, &mut self.desktop_config)
+	pub fn get_mut_state(&mut self) -> (&mut Screen, &mut HashMap<Screen, [StatefulList<ScreenItem>; 2]>, &mut Option<Popup>,
+		&mut HashMap<Popup, StatefulList<ScreenItem>>, &mut bool, &mut GlobalConfig, &mut DesktopConfig) {
+
+		(&mut self.current_screen, &mut self.screens, &mut self.current_popup, &mut self.popups, &mut self.show_log, &mut self.global_config, &mut self.desktop_config)
 	}
 	pub fn get_mut_screen(&mut self) -> &mut Screen {
 		&mut self.current_screen

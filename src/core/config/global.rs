@@ -73,7 +73,7 @@ impl GlobalConfigDto {
 		let mut file = match OpenOptions::new().create(true).write(true).truncate(true).open(&path) {
 			Ok(f) => f,
 			Err(e) => {
-				error!("Could not open |{}| with write permissions: |{}|", &path, e);
+				error!("Could not open |{}|: |{}|", &path, e);
 				return;
 			}
 		};

@@ -183,7 +183,7 @@ impl StatefulList<ScreenItem> {
 		}
 	}
 
-	pub fn remove_fav(&mut self, item:&ScreenItem, global_config: &mut GlobalConfig) {
+	pub fn remove_fav(&mut self, item: &ScreenItem, global_config: &mut GlobalConfig) {
 		match item {
 			ScreenItem::Theme(t) => {
 				let fav_themes = global_config.get_mut_fav_themes();

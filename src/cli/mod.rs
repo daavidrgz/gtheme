@@ -5,7 +5,7 @@ use clap::{Command, Arg, ArgMatches};
 use log::{LevelFilter, error, info, warn};
 use colored::*;
 
-use crate::cli::clilogger::CliLogger;
+use clilogger::CliLogger;
 use crate::app;
 use crate::core::{
 	desktop::Desktop,

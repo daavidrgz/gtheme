@@ -20,9 +20,10 @@ use crossterm::{
 };
 
 use crate::core::config::GlobalConfig;
-
-use crate::app::widgets::{ListWidget, LogoWidget, OptionsWidget, HelpWidget, LoggerWidget};
-use crate::app::appstate::{AppState, Screen, Popup};
+use crate::app::{
+	widgets::{ListWidget, LogoWidget, OptionsWidget, HelpWidget, LoggerWidget},
+	appstate::{AppState, Screen, Popup}
+};
 
 const LEFT_LIST: usize = 0;
 const RIGHT_LIST: usize = 1;
@@ -71,12 +72,13 @@ impl Ui {
 	}
 
 	fn manage_input(app_state: &mut AppState) -> bool {
-		let (current_screen, screens, current_popup, popups, show_logs, global_config, desktop_config) = app_state.get_mut_state();
+		let (current_screen, screens, current_popup, popups,
+			show_log, global_config, desktop_config) = app_state.get_mut_state();
 		let lists = screens.get_mut(&current_screen).unwrap();
 
 		let current_list = if lists[LEFT_LIST].is_selected() {LEFT_LIST} else {RIGHT_LIST};
 
-		if !crossterm::event::poll(Duration::from_millis(250)).unwrap() {
+		if !crossterm::event::poll(Duration::from_millis(2000)).unwrap() {
 			return true
 		}
 			
@@ -195,7 +197,7 @@ impl Ui {
 						None => lists[current_list].get_selected().unwrap().edit()
 					}
 				},
-				KeyCode::Char('l') | KeyCode::Char('L') => *show_logs = !*show_logs,
+				KeyCode::Char('l') | KeyCode::Char('L') => *show_log = !*show_log,
 				_ => {}
 			}
 		}
@@ -203,7 +205,10 @@ impl Ui {
 	}
 
 	fn draw_ui(f: &mut Frame<CrosstermBackend<io::Stdout>>, app_state: &mut AppState) {
-		let (current_screen, screens, current_popup, popups, show_logs, global_config, desktop_config) = app_state.get_mut_state();
+		let (current_screen, screens,
+			current_popup, popups,
+			show_log, global_config, desktop_config) = app_state.get_mut_state();
+
 		let lists = screens.get_mut(&current_screen).unwrap();
 
 		// Colors preview
@@ -226,7 +231,7 @@ impl Ui {
 		let v_padding = 2;
 		let h_padding = 4;
 
-		let logs_height = if *show_logs {10} else {0};
+		let logs_height = if *show_log {10} else {0};
 
 		let mut logo_container = f.size();
 			logo_container.height = 6;

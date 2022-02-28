@@ -8,5 +8,5 @@ pub use list::ListWidget;
 pub use logo::LogoWidget;
 pub use options::OptionsWidget;
 pub use help::HelpWidget;
-pub use help::help_content::HELP_CONTENT as HELP_CONTENT;
+pub use help::HELP_CONTENT;
 pub use logger::LoggerWidget;
