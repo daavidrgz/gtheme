@@ -66,7 +66,7 @@ progress_bar_frame_width = 0
 #   FORMAT
 #----------------------
 
-font = DejaVuSansMono Nerd Font Medium 11
+font = CaskaydiaCove Nerd Font Mono 11
 markup = full
 format = "<b>%a</b> | %s\n%b\n"
 alignment = left

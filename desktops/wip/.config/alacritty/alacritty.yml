@@ -5,19 +5,19 @@ window:
 
 font:
   normal:
-    family: JetBrainsMono Nerd Font
+    family: CaskaydiaCove Nerd Font Mono
     style: Regular
 
   bold:
-    family: JetBrainsMono Nerd Font
+    family: CaskaydiaCove Nerd Font Mono
     style: Bold
 
   italic:
-    family: JetBrainsMono Nerd Font
+    family: CaskaydiaCove Nerd Font Mono
     style: Italic
 
   bold_italic:
-    family: JetBrainsMono Nerd Font
+    family: CaskaydiaCove Nerd Font Mono
     style: Regular Italic
 
   size: 8

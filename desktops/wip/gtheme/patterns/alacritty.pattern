@@ -9,11 +9,11 @@ window:
   
 font:
   normal:
-    family: DejaVuSansMono Nerd Font
+    family: CaskaydiaCove Nerd Font Mono
   bold:
-    family: DejaVuSansMono Nerd Font 
+    family: CaskaydiaCove Nerd Font Mono 
   italic:
-    family: DejaVuSansMono Nerd Font
+    family: CaskaydiaCove Nerd Font Mono
   size: 8
   offset:
     x: 0
