@@ -11,7 +11,7 @@
 
 # Terminal emulator
 super + Return
-    alacritty
+    kitty
 
 # Terminal emulator (nvidia_gpu)
 #super + shift + Return
