@@ -15,7 +15,7 @@ super + Return
 
 # Terminal emulator (nvidia_gpu)
 super + shift + Return
-    prime-run kitty
+    prime-run alacritty
 
 # Launcher
 super + @space

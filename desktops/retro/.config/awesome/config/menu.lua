@@ -6,7 +6,7 @@ require("awful.autofocus")
 
 beautiful.init(gfs.get_configuration_dir() .. "theme/theme.lua")
 
-terminal = "kitty"
+terminal = "alacritty"
 browser = "firefox"
 fm = "ranger"
 vscode = "code"

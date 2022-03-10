@@ -7,7 +7,7 @@
 	"colors": {
 		"background": "1b2b34",
 		"foreground": "d8dee9",
-		"cursor": "Colors",
+		"cursor": "d8dee9",
 		"selection-background": "d8dee9",
 		"selection-foreground": "1b2b34",
 

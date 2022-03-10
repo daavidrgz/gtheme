@@ -81,7 +81,7 @@ impl Ui {
 		if !crossterm::event::poll(Duration::from_millis(2000)).unwrap() {
 			return true
 		}
-			
+
 		if let Event::Key(key) = event::read().unwrap() {
 			match key.code {
 				KeyCode::Char('q') | KeyCode::Char('Q') => return false,

@@ -6,9 +6,9 @@
 	},
 	"colors": {
 		"background": "2C2833",
-		"foreground": "BD7BC7",
-		"cursor": "BD7BC7",
-		"selection-background": "BD7BC7",
+		"foreground": "C2ADF8",
+		"cursor": "C2ADF8",
+		"selection-background": "C2ADF8",
 		"selection-foreground": "2C2833",
 
 		"black": "502b3c",
@@ -23,8 +23,8 @@
 		"yellow": "FAC96F",
 		"yellow-hg": "FAC96F",
 
-		"blue": "4F9AC7",
-		"blue-hg": "4F9AC7",
+		"blue": "B7CDF2",
+		"blue-hg": "B7CDF2",
 
 		"magenta": "EC3B9A",
 		"magenta-hg": "EC3B9A",

@@ -6,9 +6,9 @@
 	},
 	"colors": {
 		"background": "010101",
-		"foreground": "fff",
+		"foreground": "ffffff",
 		"cursor": "e5e5e5",
-		"selection-background": "fff ",
+		"selection-background": "ffffff",
 		"selection-foreground": "010101",
 
 		"black": "1b1d1e",

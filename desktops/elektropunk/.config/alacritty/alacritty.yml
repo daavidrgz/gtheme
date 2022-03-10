@@ -1,0 +1,54 @@
+#  -------- Gtheme: Everforest-Dark-Hard --------
+
+window:
+  padding:
+    x: 10
+    y: 10
+  opacity: 0.5
+  dyanmic_padding: true
+  
+font:
+  normal:
+    family: DejaVuSansMono Nerd Font
+  bold:
+    family: DejaVuSansMono Nerd Font 
+  italic:
+    family: DejaVuSansMono Nerd Font
+  size: 8
+  offset:
+    x: 0
+    y: 1
+  draw_bold_text_with_bright_colors: true
+
+cursor:
+  style:
+    shape: Beam
+
+colors:
+  cursor:
+    text: "#d3c6aa"
+    cursor: "#d3c6aa"
+  selection:
+    text: "#2b3339"
+    background: "#d3c6aa"
+  primary:
+    background: "#2b3339"
+    foreground: "#d3c6aa"
+  normal:
+    black: "#4b565c"
+    red: "#e67e80"
+    green: "#a7c080"
+    yellow: "#dbbc7f"
+    blue: "#7fbbb3"
+    magenta: "#d699b6"
+    cyan: "#83c092"
+    white: "#d3c6aa"
+  bright:
+    black: "#4b565c"
+    red: "#e67e80"
+    green: "#a7c080"
+    yellow: "#dbbc7f"
+    blue: "#7fbbb3"
+    magenta: "#d699b6"
+    cyan: "#83c092"
+    white: "#d3c6aa"
