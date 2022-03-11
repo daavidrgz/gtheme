@@ -2,7 +2,7 @@
 	"name": "Catppuccin",
 	"extras": {
 		"vscode": ["Catppuccin"],
-		"wallpaper": ["~/.config/gtheme/wallpapers/Catppuccin/waves-dark-alt.jpg"]
+		"wallpaper": ["~/.config/gtheme/wallpapers/Catppuccin/wavy-lines-2.png"]
 	},
 	"colors": {
 		"background": "1E1E2E",

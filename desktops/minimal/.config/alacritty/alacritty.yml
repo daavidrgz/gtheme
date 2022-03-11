@@ -9,11 +9,11 @@ window:
   
 font:
   normal:
-    family: mononoki-Regular Nerd Font Complete Mono
+    family: Iosevka Nerd Font Mono
   bold:
-    family: mononoki-Regular Nerd Font Complete Mono
+    family: Iosevka Nerd Font Mono
   italic:
-    family: mononoki-Regular Nerd Font Complete Mono
+    family: Iosevka Nerd Font Mono
   size: 8
   offset:
     x: 0

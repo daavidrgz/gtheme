@@ -1,10 +1,11 @@
+
 #!/bin/sh
 #  double borders
 # needs chwb2 from wmutils/opt
 
-outer='0xeeedeb'   # outer
-inner1='0xd5d3d3'  # focused
-inner2='0xd5d3d3'  # normal
+outer='0x1E1E2E'   # outer
+inner1='0xD9E0EE'  # focused
+inner2='0x6E6C7E'  # normal
 
 trap 'bspc config border_width 0; kill -9 -$$' INT TERM
 
@@ -16,7 +17,7 @@ targets() {
 }
 bspc config border_width 13
 
-draw() { chwb2 -I "$inner" -O "$outer" -i "3" -o "12" $*; }
+draw() { chwb2 -I "$inner" -O "$outer" -i "1" -o "12" $*; }
 
 # initial draw, and then subscribe to events
 { echo; bspc subscribe node_geometry node_focus; } |

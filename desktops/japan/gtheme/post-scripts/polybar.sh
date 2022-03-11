@@ -5,6 +5,6 @@ while pgrep -u $UID -x polybar &>/dev/null; do
 	sleep 1
 done
 
-polybar main &
+polybar main & disown
 
 exit 0

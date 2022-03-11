@@ -1,4 +1,4 @@
 #!/bin/sh
 
-killall -q tint2
+killall -q -s KILL tint2
 tint2
