@@ -1,0 +1,38 @@
+{
+	"name": "Radical",
+	"extras": {
+		"vscode": ["Radical"],
+		"wallpaper": ["~/.config/gtheme/wallpapers/Radical/radpack-3.jpg"]
+	},
+	"colors": {
+		"background": "141322",
+		"foreground": "A8D0D2",
+		"cursor": "FC408D",
+		"selection-background": "A8D0D2",
+		"selection-foreground": "141322",
+
+		"black": "2F317B",
+		"black-hg": "391AB4",
+
+		"red": "FD417B",
+		"red-hg": "FD417B",
+
+		"green": "E3FAA5",
+		"green-hg": "E3FAA5",
+
+		"yellow": "FDFA7E",
+		"yellow-hg": "FDFA7E",
+
+		"blue": "339cff",
+		"blue-hg": "339cff",
+
+		"magenta": "F861B8",
+		"magenta-hg": "D3358E",
+
+		"cyan": "B9F5FA",
+		"cyan-hg": "A8FCF5",
+
+		"white": "CDEEE7",
+		"white-hg": "C9FDF0"
+	}
+}
