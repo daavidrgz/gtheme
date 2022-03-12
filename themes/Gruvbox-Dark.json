@@ -2,7 +2,7 @@
 	"name": "Gruvbox-Dark",
 	"extras": {
 		"vscode": ["Gruvbox Dark Medium"],
-		"wallpaper": ["~/.config/gtheme/wallpapers/Gruvbox/gruv-paint.png"]
+		"wallpaper": ["~/.config/gtheme/wallpapers/Gruvbox/light-archlinux.png"]
 	},
 	"colors": {
 		"background": "282828",
