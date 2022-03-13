@@ -17,7 +17,7 @@ pub struct Desktop{
 impl Desktop {
 	
 	pub fn from(desktop: &DesktopFile) -> Self {
-		let patterns = Pattern::get_patterns(desktop.get_name());
+		let patterns = Pattern::get_patterns(desktop);
 		Desktop {
 			name: String::from(desktop.get_name()),
 			path: String::from(desktop.get_path()),

@@ -5,6 +5,7 @@ use log::{info,error};
 
 use crate::core;
 use crate::core::theme::Theme;
+use crate::core::desktop::DesktopFile;
 
 #[derive(Debug)]
 pub struct Pattern {
@@ -47,16 +48,24 @@ impl Pattern {
 	pub fn get_path(&self) -> &String {
 		&self.path
 	}
-	pub fn get_output(&self) -> &String {
+	pub fn get_output(&self) -> &String 	{
 		&self.output
 	}
 
+	pub fn get_by_name(desktop:&DesktopFile,pattern:&str) -> Option<PatternFile>{
+		let all_patterns = Pattern::get_patterns(desktop);
+		match all_patterns.into_iter().find(|item|item.get_name().to_lowercase()==pattern.to_lowercase()){
+			Some(pattern)=>Some(pattern),
+			None=>{
+				error!("Pattern |{}| does not exist",pattern);
+				None
+			}
+		}
+	}
 	//TODO: use DesktopFile or str?
-	pub fn get_patterns(desktop: &str) -> Vec<PatternFile> {
-		if desktop == "" { return vec![] }
+	pub fn get_patterns(desktop: &DesktopFile) -> Vec<PatternFile> {
 		
-		let gtheme_home: String = core::expand_path(core::GTHEME_HOME);
-		let patterns_dir = gtheme_home + &format!("/desktops/{}/gtheme/patterns", desktop);
+		let patterns_dir = format!("{}/gtheme/patterns", desktop.get_path());
 		let entries = match fs::read_dir(&patterns_dir) {
 			Ok(dir) => dir,
 			Err(e) => {
@@ -164,14 +173,14 @@ impl PatternFile {
 	}
 }
 
-#[cfg(test)]
-mod tests{
-	use super::*;
-	#[test]
-	fn test_get_patterns() {
-		let patterns = Pattern::get_patterns("simple");
-		for pattern in &patterns {
-			println!("Pattern: {} in {}", pattern.get_name(), pattern.get_path())
-		}
-	}
-}
+// #[cfg(test)]
+// mod tests{
+// 	use super::*;
+// 	#[test]
+// 	fn test_get_patterns() {
+// 		let patterns = Pattern::get_patterns("simple");
+// 		for pattern in &patterns {
+// 			println!("Pattern: {} in {}", pattern.get_name(), pattern.get_path())
+// 		}
+// 	}
+// }

@@ -125,6 +125,15 @@ impl<'a> Cli<'a> {
 					.help("Patterns to disable")
 				)
 			)
+			.subcommand(Command::new("toggle")
+				.about("Toggle specified patterns in the current desktop")
+				.arg(Arg::new("pattern")
+					.required(true)
+					.takes_value(true)
+					.multiple_values(true)
+					.help("Patterns to toggle")
+				)
+			)
 			.subcommand(Command::new("invert")
 				.about("Invert specified patterns or return them to default if they are already inverted")
 				.arg(Arg::new("pattern")
@@ -217,8 +226,9 @@ impl<'a> Cli<'a> {
 			Some(("install", sub_matches)) => Self::install_desktop(sub_matches),
 
 			Some(("pattern", sub_matches)) => match sub_matches.subcommand() {
-				Some(("enable", sub_sub_matches)) => Self::toggle_patterns(sub_sub_matches, true),
-				Some(("disable", sub_sub_matches)) => Self::toggle_patterns(sub_sub_matches, false),
+				Some(("enable", sub_sub_matches)) => Self::manage_patterns(sub_sub_matches, Action::Enable),
+				Some(("disable", sub_sub_matches)) => Self::manage_patterns(sub_sub_matches, Action::Disable),
+				Some(("toggle", sub_sub_matches)) => Self::manage_patterns(sub_sub_matches, Action::Toggle),
 				Some(("invert", sub_sub_matches)) => Self::toggle_invert(sub_sub_matches),
 				_ => ()
 			}
@@ -278,7 +288,7 @@ impl<'a> Cli<'a> {
 		let current_desktop = current_desktop_file.to_desktop();
 		
 		let actived = if matches.is_present("pattern") {
-			let mut all_patterns = Pattern::get_patterns(current_desktop.get_name());
+			let mut all_patterns = Pattern::get_patterns(current_desktop_file);
 			let patterns = matches.values_of("pattern").unwrap();
 			for p in patterns {
 				let size = all_patterns.len();
@@ -299,7 +309,7 @@ impl<'a> Cli<'a> {
 
 		let inverted = if matches.is_present("invert") {
 			let mut map: HashMap<String,bool> = HashMap::new();
-			let all_patterns = Pattern::get_patterns(current_desktop.get_name());
+			let all_patterns = Pattern::get_patterns(current_desktop_file);
 			let patterns = matches.values_of("invert").unwrap();
 			for p in patterns {
 				match all_patterns.iter().find(|e| e.get_name() == p) {
@@ -366,53 +376,29 @@ impl<'a> Cli<'a> {
 		desktop.to_desktop().install(&previous, &default_theme.to_theme(), desktop_config.get_actived(), desktop_config.get_inverted())
 	}
 
-	fn toggle_patterns(matches: &ArgMatches, state: bool) {
-		let state_word = if state {"enabled"} else {"disabled"};
-
+	fn manage_patterns(matches: &ArgMatches, action:Action) {
 		let global_config = GlobalConfig::new();
 		let current_desktop_file = match global_config.get_current_desktop() {
 			Some(d) => d,
 			None => {
-				error!("|There is no desktop installed!|");
+				error!("|There is no desktop installed|, try using -d option");
 				return
 			}
 		};
-		let current_desktop = current_desktop_file.to_desktop();
 
 		let mut desktop_config = DesktopConfig::new(current_desktop_file);
-		let actived = desktop_config.get_mut_actived();
-
 		let patterns = matches.values_of("pattern").unwrap();
-		let all_patterns = Pattern::get_patterns(current_desktop.get_name());
 		for pattern_str in patterns {
-			let pattern = match all_patterns.iter().find(|p| p.get_name().to_lowercase() == pattern_str.to_lowercase()) {
-				Some(p) => p,
-				None => {
-					error!("The pattern |{}| does not exist in the current desktop!", pattern_str);
-					return
-				}
+			let pattern = match Pattern::get_by_name(current_desktop_file,pattern_str) {
+				Some(pattern) => pattern,
+				None => continue
 			};
-
-			match actived.get_mut(pattern.get_name()) {
-				Some(s) => *s = {
-					if *s != state {
-						info!("Pattern |{}| succesfully {}!", pattern_str, state_word);
-					} else {
-						warn!("Pattern |{}| was already {}!", pattern_str, state_word);
-					};
-					state
-				},
-				None => {
-					if state {
-						warn!("Pattern |{}| was already enabled!", pattern_str);
-					} else {
-						info!("Pattern |{}| succesfully disabled!", pattern_str);
-					}
-					actived.insert(pattern.get_name().to_string(), state);
-				}
+			match action {
+				Action::Enable => desktop_config.enable_pattern(&pattern),
+				Action::Disable => desktop_config.disable_pattern(&pattern),
+				Action::Toggle => desktop_config.toggle_pattern(&pattern)
 			}
 		}
-
 		desktop_config.save();
 	}
 
@@ -425,13 +411,11 @@ impl<'a> Cli<'a> {
 				return
 			}
 		};
-		let current_desktop = current_desktop_file.to_desktop();
-
 		let mut desktop_config = DesktopConfig::new(current_desktop_file);
 		let inverted = desktop_config.get_mut_inverted();
 
 		let patterns = matches.values_of("pattern").unwrap();
-		let all_patterns = Pattern::get_patterns(current_desktop.get_name());
+		let all_patterns = Pattern::get_patterns(current_desktop_file);
 
 		for pattern_str in patterns {
 			let pattern = match all_patterns.iter().find(|p| p.get_name().to_lowercase() == pattern_str.to_lowercase()) {
@@ -618,7 +602,7 @@ impl<'a> Cli<'a> {
 			}
 		};
 
-		let all_patterns = Pattern::get_patterns(desktop.get_name());
+		let all_patterns = Pattern::get_patterns(&desktop);
 		let desktop_config = DesktopConfig::new(&desktop);
 
 		let enabled = desktop_config.get_actived();

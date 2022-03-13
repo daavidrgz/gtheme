@@ -195,7 +195,8 @@ impl GlobalConfig {
 
 			}
 		}
-	} 
+	}
+
 }
 
 #[cfg(test)]

@@ -3,6 +3,7 @@ use std::fs::{File, OpenOptions};
 use std::io::prelude::*;
 use serde::{Serialize,Deserialize};
 use crate::core::desktop::DesktopFile;
+use crate::core::pattern::PatternFile;
 use crate::core::postscript::PostScript;
 use crate::core::{theme::{Theme,ThemeFile}};
 use log::{info,warn,error};
@@ -169,5 +170,34 @@ impl DesktopConfig{
 	}
 	pub fn save(&self) {
 		DesktopConfigDto::from(self).save(&self.desktop)
+	}
+	pub fn enable_pattern(&mut self,pattern:&PatternFile){
+		let state = self.actived.get(pattern.get_name()).unwrap_or(&false);
+
+		match state{
+			true => warn!("Pattern |{}| was already |enabled|",pattern.get_name()),
+			false=> {
+				self.actived.insert(String::from(pattern.get_name()),true);
+				info!("Pattern |{}| successfully |enabled|!",pattern.get_name());
+			}
+		}
+	}
+	pub fn disable_pattern(&mut self,pattern: &PatternFile) {
+		let state = self.actived.get(pattern.get_name()).unwrap_or(&true);
+
+		match state{
+			false => {
+				self.actived.insert(String::from(pattern.get_name()),false);
+				info!("Pattern |{}| successfully |disabled|!",pattern.get_name());
+			}
+			true=> warn!("Pattern |{}| was already |disabled|!",pattern.get_name())
+		}
+	}
+	pub fn toggle_pattern(&mut self, pattern: &PatternFile){
+		let state = self.actived.get(pattern.get_name()).unwrap_or(&true);
+		match state{
+			true=>self.disable_pattern(pattern),
+			false=>self.enable_pattern(pattern)
+		}
 	}
 }

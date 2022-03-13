@@ -76,10 +76,6 @@ impl AppState {
 
 	fn create_screens(global_config: &GlobalConfig) -> HashMap<Screen, [StatefulList<ScreenItem>; 2]> {
 		let current_desktop = global_config.get_current_desktop();
-		let desktop_str = match current_desktop {
-			Some(d) => d.get_name(),
-			None => ""
-		};
 
 		let desktops = Desktop::get_desktops().into_iter().map(|d|ScreenItem::Desktop(d)).collect();
 		let desktops_list = StatefulList::with_items(desktops)
@@ -87,7 +83,10 @@ impl AppState {
 			.title("DESKTOPS ")
 			.selected(true);
 
-		let patterns = Pattern::get_patterns(desktop_str).into_iter().map(|p|ScreenItem::Pattern(p)).collect();
+		let patterns = match current_desktop{
+			None=>vec![],
+			Some(desktop)=> Pattern::get_patterns(desktop).into_iter().map(|p|ScreenItem::Pattern(p)).collect()
+		};
 		let patterns_list = StatefulList::with_items(patterns)
 			.color(Color::Magenta)
 			.title("PATTERNS ")
