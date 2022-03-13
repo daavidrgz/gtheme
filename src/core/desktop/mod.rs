@@ -12,16 +12,22 @@ use log::{info,error};
 pub struct Desktop{
 	name: String,
 	path: String,
-	patterns: Vec<PatternFile>
+	patterns: Vec<PatternFile>,
+	post_scripts:HashMap<String,PostScript>,
+	extras:Vec<PostScript>
 }
 impl Desktop {
 	
 	pub fn from(desktop: &DesktopFile) -> Self {
 		let patterns = Pattern::get_patterns(desktop);
+		let post_scripts = PostScript::get_postscripts(desktop);
+		let extras = PostScript::get_extras(desktop);
 		Desktop {
 			name: String::from(desktop.get_name()),
 			path: String::from(desktop.get_path()),
-			patterns
+			patterns,
+			post_scripts,
+			extras
 		}
 	}
 	pub fn get_name(&self) -> &String {
@@ -32,6 +38,24 @@ impl Desktop {
 	}
 	pub fn get_patterns(&self) -> &Vec<PatternFile> {
 		&self.patterns
+	}
+	pub fn get_post_scripts(&self) -> &HashMap<String,PostScript> {
+		&self.post_scripts
+	}
+	pub fn get_extras(&self) -> &Vec<PostScript> {
+		&self.extras
+	}
+	
+
+	pub fn get_by_name(desktop:&str)->Option<DesktopFile>{
+		let all_desktops = Desktop::get_desktops();
+		match all_desktops.into_iter().find(|item|item.get_name().to_lowercase() == desktop.to_lowercase()){
+			Some(desktop) => Some(desktop),
+			None => {
+				error!("Desktop |{}| does not exist",desktop);
+				None
+			}
+		}
 	}
 
 	pub fn get_desktops() -> Vec<DesktopFile> {
@@ -81,8 +105,8 @@ impl Desktop {
 
 	pub fn apply(&self, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>) {
 		//parameter HashMap(pattern_name,bool) in order to implement inverted themes
-		let postscripts = PostScript::get_postscripts(self.get_name());
 
+		let post_scripts = self.get_post_scripts();
 		info!("Applying |{}| theme to |{}| desktop...", theme.get_name(), self.get_name());
 		for pattern_file in self.get_patterns(){
 			let pattern = pattern_file.to_pattern();
@@ -91,14 +115,14 @@ impl Desktop {
 			if !*actived.get(pattern.get_name()).unwrap_or(&true) { continue }
 
 			pattern.fill(theme, *inverted.get(pattern.get_name()).unwrap_or(&false));
-			if let Some(postscript) = postscripts.get(pattern_file.get_name()) {
+			if let Some(postscript) = post_scripts.get(pattern_file.get_name()) {
 				info!("Executing |{}| post-script...", postscript.get_name());
 				postscript.execute(&vec![String::from(pattern.get_output())])
 			}
 		}
 
 		let args_map = theme.get_extras();
-		for extra_ps in PostScript::get_extras(self.get_name()) {
+		for extra_ps in self.get_extras() {
 			if !*actived.get(extra_ps.get_name()).unwrap_or(&false){continue}
 
 			let args = args_map.get(extra_ps.get_name()).unwrap_or(&vec![]).iter()
@@ -128,7 +152,6 @@ impl Desktop {
 	pub fn install(&self, previous: &Option<Desktop>, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>) {
 		let config_home = core::expand_path(core::CONFIG_HOME);
 
-		
 		if let Some(previous_desktop) = previous{
 			info!("Uninstalling desktop |{}|...", previous_desktop.get_name());
 			previous_desktop.uninstall();
@@ -165,7 +188,7 @@ impl Desktop {
 		match previous {
 			Some(previous_desktop ) =>{
 				//Exit postcript from previous desktop
-				let previous_postscripts = PostScript::get_postscripts(previous_desktop.get_name());
+				let previous_postscripts = previous_desktop.get_post_scripts();
 				if let Some(ps) = previous_postscripts.get("desktop-exit") {
 					info!("Executing |desktop-exit| post-script");
 					ps.execute(&vec![]);
@@ -176,8 +199,7 @@ impl Desktop {
 	}
 
 	pub fn get_config_files(&self) -> Vec<DirEntry> {
-		let gtheme_home:String = core::expand_path(core::GTHEME_HOME);
-		let config_dir = gtheme_home + &format!("/desktops/{}/.config", self.get_name());
+		let config_dir = format!("{}/.config", self.get_path());
 
 		let entries = match fs::read_dir(&config_dir) {
 			Ok(dir) => dir,

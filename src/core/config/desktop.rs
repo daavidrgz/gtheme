@@ -68,7 +68,7 @@ impl DesktopConfigDto {
 				inverted.insert(String::from(pattern_name),false);
 			}
 		}
-		let extras = PostScript::get_extras(desktop.get_name());
+		let extras = PostScript::get_extras(desktop);
 		for extra in extras{
 			let extra_name = extra.get_name();
 			if let None = actived.get(extra_name) {
@@ -123,7 +123,7 @@ impl DesktopConfigDto {
 			actived.insert(String::from(pattern.get_name()),true);
 			inverted.insert(String::from(pattern.get_name()),false);
 		}
-		let extras = PostScript::get_extras(desktop.get_name());
+		let extras = PostScript::get_extras(desktop);
 		for extra in extras{
 			actived.insert(String::from(extra.get_name()),false);
 		}
@@ -200,4 +200,65 @@ impl DesktopConfig{
 			false=>self.enable_pattern(pattern)
 		}
 	}
+
+	pub fn enable_invert_pattern(&mut self,pattern:&PatternFile){
+		let state = self.inverted.get(pattern.get_name()).unwrap_or(&false);
+
+		match state{
+			true => warn!("Pattern |{}| was already |inverted|",pattern.get_name()),
+			false=> {
+				self.inverted.insert(String::from(pattern.get_name()),true);
+				info!("Pattern |{}| successfully |inverted|!",pattern.get_name());
+			}
+		}
+	}
+	pub fn disable_invert_pattern(&mut self,pattern: &PatternFile) {
+		let state = self.inverted.get(pattern.get_name()).unwrap_or(&true);
+
+		match state{
+			false => {
+				self.inverted.insert(String::from(pattern.get_name()),false);
+				info!("Pattern |{}| successfully |inverted|!",pattern.get_name());
+			}
+			true=> warn!("Pattern |{}| was already |inverted|!",pattern.get_name())
+		}
+	}
+	pub fn toggle_invert_pattern(&mut self, pattern: &PatternFile){
+		let state = self.inverted.get(pattern.get_name()).unwrap_or(&true);
+		match state{
+			true=>self.disable_pattern(pattern),
+			false=>self.enable_pattern(pattern)
+		}
+	}
+
+	pub fn enable_extra(&mut self,extra:&PostScript){
+		let state = self.actived.get(extra.get_name()).unwrap_or(&false);
+
+		match state{
+			true => warn!("Extra |{}| was already |enabled|",extra.get_name()),
+			false=> {
+				self.actived.insert(String::from(extra.get_name()),true);
+				info!("Extra |{}| successfully |enabled|!",extra.get_name());
+			}
+		}
+	}
+	pub fn disable_extra(&mut self,extra: &PostScript) {
+		let state = self.actived.get(extra.get_name()).unwrap_or(&true);
+
+		match state{
+			false => {
+				self.actived.insert(String::from(extra.get_name()),false);
+				info!("Extra |{}| successfully |disabled|!",extra.get_name());
+			}
+			true=> warn!("Extra |{}| was already |disabled|!",extra.get_name())
+		}
+	}
+	pub fn toggle_extra(&mut self, extra: &PostScript){
+		let state = self.actived.get(extra.get_name()).unwrap_or(&true);
+		match state{
+			true=>self.disable_extra(extra),
+			false=>self.enable_extra(extra)
+		}
+	}
+
 }

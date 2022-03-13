@@ -2,7 +2,7 @@ pub mod clilogger;
 
 use std::collections::HashMap;
 use clap::{Command, Arg, ArgMatches};
-use log::{LevelFilter, error, info, warn};
+use log::{LevelFilter, error, warn};
 use colored::*;
 
 use clilogger::CliLogger;
@@ -165,6 +165,14 @@ impl<'a> Cli<'a> {
 					.help("Extras to disable")
 				)
 			)
+			.subcommand(Command::new("toggle")
+			.about("Toggle specified extras in the current desktop")
+			.arg(Arg::new("extra")
+				.required(true)
+				.takes_value(true)
+				.help("Extras to toggle")
+			)
+		)
 		);
 
 		app = app.subcommand(Command::new("fav")
@@ -234,8 +242,9 @@ impl<'a> Cli<'a> {
 			}
 
 			Some(("extra", sub_matches)) => match sub_matches.subcommand() {
-				Some(("enable", sub_sub_matches)) => Self::toggle_extras(sub_sub_matches, true),
-				Some(("disable", sub_sub_matches)) => Self::toggle_extras(sub_sub_matches, false),
+				Some(("enable", sub_sub_matches)) => Self::manage_extras(sub_sub_matches, Action::Enable),
+				Some(("disable", sub_sub_matches)) => Self::manage_extras(sub_sub_matches, Action::Disable),
+				Some(("toggle", sub_sub_matches)) => Self::manage_extras(sub_sub_matches, Action::Toggle),
 				_ => ()
 			}
 
@@ -407,88 +416,46 @@ impl<'a> Cli<'a> {
 		let current_desktop_file = match global_config.get_current_desktop() {
 			Some(d) => d,
 			None => {
-				error!("|There is no desktop installed!|");
+				error!("|There is no desktop installed|, try using -d option");
 				return
 			}
 		};
 		let mut desktop_config = DesktopConfig::new(current_desktop_file);
-		let inverted = desktop_config.get_mut_inverted();
 
 		let patterns = matches.values_of("pattern").unwrap();
-		let all_patterns = Pattern::get_patterns(current_desktop_file);
-
 		for pattern_str in patterns {
-			let pattern = match all_patterns.iter().find(|p| p.get_name().to_lowercase() == pattern_str.to_lowercase()) {
-				Some(p) => p,
-				None => {
-					error!("The pattern |{}| does not exist in the current desktop!", pattern_str);
-					return
-				}
+			let pattern = match Pattern::get_by_name(current_desktop_file,pattern_str) {
+				Some(pattern) => pattern,
+				None => continue
 			};
-
-			match inverted.get_mut(pattern.get_name()) {
-				Some(s) => *s = {
-					if *s {
-						info!("Pattern |{}| succesfully backed to default!", pattern_str);
-					} else {
-						info!("Pattern |{}| succesfully inverted!", pattern_str);
-					};
-					!*s
-				},
-				None => {
-					inverted.insert(pattern.get_name().to_string(), true);
-					info!("Pattern |{}| succesfully inverted!", pattern_str);
-				}
-			}
+			desktop_config.toggle_invert_pattern(&pattern);
 		}
-
 		desktop_config.save();
 	} 
 
-	fn toggle_extras(matches: &ArgMatches, state: bool) {
-		let state_word = if state {"enabled"} else {"disabled"};
+	fn manage_extras(matches: &ArgMatches, action: Action) {
 
 		let global_config = GlobalConfig::new();
 		let current_desktop_file = match global_config.get_current_desktop() {
 			Some(d) => d,
 			None => {
-				error!("|There is no desktop installed!|");
+				error!("|There is no desktop installed|, try using -d option");
 				return
 			}
 		};
-		let current_desktop = current_desktop_file.to_desktop();
 
 		let mut desktop_config = DesktopConfig::new(current_desktop_file);
-		let actived = desktop_config.get_mut_actived();
 
 		let extras = matches.values_of("extra").unwrap();
-		let all_extras = PostScript::get_extras(current_desktop.get_name());
 		for extra_str in extras {
-			let extra = match all_extras.iter().find(|e| e.get_name().to_lowercase() == extra_str.to_lowercase()) {
-				Some(e) => e,
-				None => {
-					error!("The extra |{}| does not exist!", extra_str);
-					return
-				}
+			let extra = match PostScript::get_extra_by_name(current_desktop_file,extra_str) {
+				Some(pattern) => pattern,
+				None => continue
 			};
-
-			match actived.get_mut(extra.get_name()) {
-				Some(s) => {
-					if *s != state {
-						*s = state;
-						info!("Extra |{}| succesfully {}!", extra_str, state_word);
-					} else {
-						warn!("Extra |{}| was already {}!", extra_str, state_word);
-					};
-				},
-				None => {
-					if state {
-						actived.insert(extra.get_name().to_string(), state);
-						info!("Extra |{}| succesfully enabled!", extra_str);
-					} else {
-						warn!("Extra |{}| was already disabled!", extra_str);
-					}
-				}
+			match action{
+				Action::Enable => desktop_config.enable_extra(&extra),
+				Action::Disable => desktop_config.disable_extra(&extra),
+				Action::Toggle => desktop_config.toggle_extra(&extra),
 			}
 		}
 

@@ -132,13 +132,11 @@ impl AppState {
 	}
 
 	fn create_extras_list(global_config: &GlobalConfig) -> StatefulList<ScreenItem> {
-		let current_desktop = global_config.get_current_desktop();
-		let desktop_str = match current_desktop {
-			Some(d) => d.get_name(),
-			None => ""
+		let extras = match global_config.get_current_desktop(){
+			None => vec![],
+			Some(desktop) => PostScript::get_extras(desktop).into_iter().map(|e|ScreenItem::Extra(e)).collect()
 		};
 
-		let extras = PostScript::get_extras(desktop_str).into_iter().map(|e|ScreenItem::Extra(e)).collect();
 		StatefulList::with_items(extras)
 			.color(Color::Magenta)
 			.title("EXTRAS ")

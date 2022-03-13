@@ -1,9 +1,10 @@
 use std::fs::{self};
 use std::process::{Command,Stdio};
 use std::collections::HashMap;
-use log::{error,warn};
+use log::{error};
 
-use crate::core;
+
+use super::desktop::DesktopFile;
 
 #[derive(Debug,Clone)]
 pub struct PostScript {
@@ -17,16 +18,10 @@ impl PostScript{
 	pub fn get_path(&self) -> &String {
 		&self.path
 	}
+	
+	pub fn get_postscripts(desktop: &DesktopFile) -> HashMap<String,PostScript> {
 
-	//TODO: use DesktopFile or str?
-	pub fn get_postscripts(desktop: &str) -> HashMap<String,PostScript> {
-		if desktop == "" { 
-			warn!("|No desktop specified|");
-			return HashMap::new(); 
-		}
-
-		let gtheme_home:String = core::expand_path(core::GTHEME_HOME);
-		let postscripts_dir = gtheme_home + &format!("/desktops/{}/gtheme/post-scripts", desktop);
+		let postscripts_dir = format!("{}/gtheme/post-scripts", desktop.get_path());
 
 		let entries = match fs::read_dir(&postscripts_dir) {
 			Ok(dir) => dir,
@@ -70,11 +65,14 @@ impl PostScript{
 		map
 	}
 
-	pub fn get_extras(desktop: &str) -> Vec<PostScript> {
-		if desktop == "" { return vec![] }
+	pub fn get_extra_by_name(desktop:&DesktopFile, extra: &str)->Option<PostScript> {
+		let all_extras = PostScript::get_extras(desktop);
+		all_extras.into_iter().find(|item| item.get_name().to_lowercase()==extra.to_lowercase())
+	}
+
+	pub fn get_extras(desktop: &DesktopFile) -> Vec<PostScript> {
 		
-		let gtheme_home:String = core::expand_path(core::GTHEME_HOME);
-		let extras_dir = gtheme_home + &format!("/desktops/{}/gtheme/extras", desktop);
+		let extras_dir = format!("{}/gtheme/extras", desktop.get_path());
 
 		let entries = match fs::read_dir(&extras_dir) {
 			Ok(dir) => dir,
@@ -131,24 +129,24 @@ impl PostScript{
 			}
 	}
 }
-#[cfg(test)]
-mod tests{
-	use super::*;
-	use crate::core::desktop::Desktop;
-	#[test]
-	fn test_get_postscripts() {
-		let desktops = Desktop::get_desktops();
-		let desktop = desktops.into_iter().find(|desktop |desktop.get_name()=="jorge").unwrap().to_desktop();
+// #[cfg(test)]
+// mod tests{
+// 	use super::*;
+// 	use crate::core::desktop::Desktop;
+// 	#[test]
+// 	fn test_get_postscripts() {
+// 		let desktops = Desktop::get_desktops();
+// 		let desktop = desktops.into_iter().find(|desktop |desktop.get_name()=="jorge").unwrap().to_desktop();
 
-		let postscripts = PostScript::get_postscripts(desktop.get_name());
+// 		let postscripts = PostScript::get_postscripts(desktop.get_name());
 
-		for ps in postscripts.values() {
-			println!("post-script {} in {}",ps.get_name(),ps.get_path());
-		}
-		println!();
-		for extra_ps in PostScript::get_extras(desktop.get_name()) {
-			println!("extra post-script {} in {}",extra_ps.get_name(),extra_ps.get_path());
-		}
-	}
+// 		for ps in postscripts.values() {
+// 			println!("post-script {} in {}",ps.get_name(),ps.get_path());
+// 		}
+// 		println!();
+// 		for extra_ps in PostScript::get_extras(desktop.get_name()) {
+// 			println!("extra post-script {} in {}",extra_ps.get_name(),extra_ps.get_path());
+// 		}
+// 	}
 
-}
+// }
