@@ -15,6 +15,11 @@ use crate::core::{
 	config::{GlobalConfig, DesktopConfig}
 };
 
+enum Action{
+	Enable,
+	Disable,
+	Toggle
+}
 pub struct Cli<'a> {
 	app: Command<'a>,
 }
@@ -166,14 +171,22 @@ impl<'a> Cli<'a> {
 				)
 			)
 			.subcommand(Command::new("remove")
-				.about("Remove selected themes to the favourite themes list")
+				.about("Remove selected themes from the favourite themes list")
 				.arg(Arg::new("theme")
 					.required(true)
 					.takes_value(true)
 					.multiple_values(true)
 					.help("Themes to remove")
 				)
+			).subcommand(Command::new("toggle")
+			.about("Toggle selected themes from the favourite themes list")
+			.arg(Arg::new("theme")
+				.required(true)
+				.takes_value(true)
+				.multiple_values(true)
+				.help("Themes to toggle")
 			)
+		)
 		);
 
 		Cli { app }
@@ -217,8 +230,9 @@ impl<'a> Cli<'a> {
 			}
 
 			Some(("fav", sub_matches)) => match sub_matches.subcommand() {
-				Some(("add", sub_sub_matches)) => Self::toggle_fav(sub_sub_matches, true),
-				Some(("remove", sub_sub_matches)) => Self::toggle_fav(sub_sub_matches, false),
+				Some(("add", sub_sub_matches)) => Self::manage_fav(sub_sub_matches, Action::Enable),
+				Some(("remove", sub_sub_matches)) => Self::manage_fav(sub_sub_matches, Action::Disable),
+				Some(("toggle", sub_sub_matches)) => Self::manage_fav(sub_sub_matches, Action::Toggle),
 				_ => ()
 			}
 
@@ -497,44 +511,24 @@ impl<'a> Cli<'a> {
 		desktop_config.save();
 	}
 
-	fn toggle_fav(matches: &ArgMatches, is_adding: bool) {
+	fn manage_fav(matches: &ArgMatches, action: Action) {
 		let mut global_config = GlobalConfig::new();
-		let fav_themes = global_config.get_mut_fav_themes();
 
 		let themes = matches.values_of("theme").unwrap();
-		let all_themes = Theme::get_themes();
 		for theme_name in themes {
-			let theme = match all_themes.iter().find(|t| t.get_name().to_lowercase() == theme_name.to_lowercase()) {
+			let theme = match Theme::get_by_name(theme_name){
 				Some(t) => t,
-				None => {
-					error!("The theme |{}| does not exist!", theme_name);
-					return
-				}
+				None => continue
 			};
-
-			let idx = fav_themes.iter().position(|item| item.get_name() == theme.get_name());
-			match idx {
-				Some(i) => {
-					if is_adding {
-						warn!("Theme |{}| was already in the fav themes list!", theme.get_name());
-					} else {
-						fav_themes.remove(i);
-						info!("Theme |{}| successfuly removed from the fav themes list!", theme.get_name());
-					}
-				},
-				None => {
-					if is_adding {
-						fav_themes.push(theme.clone());
-						info!("Theme |{}| successfuly added to the fav themes list!", theme.get_name());
-					} else {
-						warn!("Theme |{}| was not already in the fav themes list!", theme.get_name());
-					}
-				}
+			match action {
+				Action::Enable => global_config.add_fav_theme(&theme),
+				Action::Disable => global_config.remove_fav_theme(&theme),
+				Action::Toggle => global_config.toggle_fav_theme(&theme)
 			}
 		}
-		
 		global_config.save()
 	}
+
 
 	fn list_desktops() {
 		let all_desktops = Desktop::get_desktops();

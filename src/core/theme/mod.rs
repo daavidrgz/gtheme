@@ -24,7 +24,6 @@ impl Theme {
 		&self.colors
 	}
 
-	//TODO: from str or from ThemeFile??
 	pub fn from(theme: &ThemeFile) -> Self {
 		let mut file = File::open(theme.get_path()).expect("Could not open theme file");
 		let mut content = String::new();
@@ -43,6 +42,16 @@ impl Theme {
 				error!("Error while deserializing theme file |{}|: |{}|", theme.get_path(), e);
 				panic!("Could not deserialize theme file")
 			}
+		}
+	}
+	pub fn get_by_name(name: &str)-> Option<ThemeFile>{
+		let all_themes = Theme::get_themes();
+		match all_themes.into_iter().find(|item| item.get_name().to_lowercase() == name.to_lowercase()){
+			None => {
+				error!("The theme |{}| does not exist!", name);
+				None
+			}
+			Some(theme)=>Some(theme)
 		}
 	}
 	

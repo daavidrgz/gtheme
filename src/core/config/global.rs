@@ -140,12 +140,18 @@ impl GlobalConfig {
 	pub fn get_mut_current_desktop(&mut self) -> &mut Option<DesktopFile> {
 		&mut self.current_desktop
 	}
+	pub fn set_current_desktop(&mut self,desktop:DesktopFile){
+		self.current_desktop = Some(desktop)
+	}
 
 	pub fn get_current_theme(&self) -> &Option<ThemeFile> {
 		&self.current_theme
 	}
 	pub fn get_mut_current_theme(&mut self) -> &mut Option<ThemeFile> {
 		&mut self.current_theme
+	}
+	pub fn set_current_theme(&mut self, theme: ThemeFile) {
+		self.current_theme = Some(theme);
 	}
 
 	pub fn get_fav_themes(&self) -> &Vec<ThemeFile> {
@@ -154,6 +160,42 @@ impl GlobalConfig {
 	pub fn get_mut_fav_themes(&mut self) -> &mut Vec<ThemeFile> {
 		&mut self.fav_themes
 	}
+	pub fn toggle_fav_theme(&mut self,theme:&ThemeFile){
+		let theme_name = theme.get_name().to_lowercase();
+		match self.fav_themes.binary_search_by(|item| item.get_name().to_lowercase().cmp(&theme_name)){
+			Ok(_)=>{
+				self.remove_fav_theme(theme);
+			},
+			Err(_)=> {
+				self.add_fav_theme(theme);
+			}
+		}
+	}
+	pub fn add_fav_theme(&mut self,theme:&ThemeFile){
+		let theme_name = theme.get_name().to_lowercase();
+		match self.fav_themes.binary_search_by(|item| item.get_name().to_lowercase().cmp(&theme_name)){
+			Ok(_)=>{
+				warn!("Theme |{}| was already on fav themes list", theme.get_name());
+			},
+			Err(pos)=> {
+				self.fav_themes.insert(pos,theme.clone());
+				info!("Theme |{}| successfuly added to the fav themes list!", theme.get_name());
+			}
+		}
+	}
+	pub fn remove_fav_theme(&mut self,theme:&ThemeFile){
+		let theme_name = theme.get_name().to_lowercase();
+		match self.fav_themes.binary_search_by(|item| item.get_name().to_lowercase().cmp(&theme_name)){
+			Ok(pos)=>{
+				self.fav_themes.remove(pos);
+				info!("Theme |{}| successfuly removed from the fav themes list!", theme.get_name());
+			},
+			Err(_)=> {
+				warn!("Theme |{}| was not in the fav themes list!", theme.get_name());
+
+			}
+		}
+	} 
 }
 
 #[cfg(test)]
