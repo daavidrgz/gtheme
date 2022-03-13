@@ -253,13 +253,15 @@ impl<'a> Cli<'a> {
 		};
 
 		let mut global_config = GlobalConfig::new();
-		let current_desktop = match global_config.get_current_desktop() {
-			Some(d) => d.to_desktop(),
+
+		let current_desktop_file = match global_config.get_current_desktop() {
+			Some(d) => d,
 			None => {
 				error!("|There is no desktop installed!|");
 				return
 			}
 		};
+		let current_desktop = current_desktop_file.to_desktop();
 		
 		let actived = if matches.is_present("pattern") {
 			let mut all_patterns = Pattern::get_patterns(current_desktop.get_name());
@@ -277,7 +279,7 @@ impl<'a> Cli<'a> {
 			all_patterns.into_iter().for_each(|p| {map.insert(p.get_name().clone(), false);});
 			map
 		} else {
-			let desktop_config = DesktopConfig::new(current_desktop.get_name());
+			let desktop_config = DesktopConfig::new(current_desktop_file);
 			desktop_config.get_actived().clone()
 		};
 
@@ -319,11 +321,11 @@ impl<'a> Cli<'a> {
 
 		let mut global_config = GlobalConfig::new();
 		let previous = match global_config.get_current_desktop() {
-			Some(d) => d.to_desktop(),
-			None => desktop.clone().to_desktop()
+			Some(d) => Some(d.to_desktop()),
+			None => None
 		};
 
-		let desktop_config = DesktopConfig::new(desktop.get_name());
+		let desktop_config = DesktopConfig::new(&desktop);
 
 		let default_theme: ThemeFile = match matches.value_of("theme") {
 			Some(theme_name) => {
@@ -354,15 +356,16 @@ impl<'a> Cli<'a> {
 		let state_word = if state {"enabled"} else {"disabled"};
 
 		let global_config = GlobalConfig::new();
-		let current_desktop = match global_config.get_current_desktop() {
-			Some(d) => d.to_desktop(),
+		let current_desktop_file = match global_config.get_current_desktop() {
+			Some(d) => d,
 			None => {
 				error!("|There is no desktop installed!|");
 				return
 			}
 		};
+		let current_desktop = current_desktop_file.to_desktop();
 
-		let mut desktop_config = DesktopConfig::new(current_desktop.get_name());
+		let mut desktop_config = DesktopConfig::new(current_desktop_file);
 		let actived = desktop_config.get_mut_actived();
 
 		let patterns = matches.values_of("pattern").unwrap();
@@ -401,15 +404,16 @@ impl<'a> Cli<'a> {
 
 	fn toggle_invert(matches : &ArgMatches) {
 		let global_config = GlobalConfig::new();
-		let current_desktop = match global_config.get_current_desktop() {
-			Some(d) => d.to_desktop(),
+		let current_desktop_file = match global_config.get_current_desktop() {
+			Some(d) => d,
 			None => {
 				error!("|There is no desktop installed!|");
 				return
 			}
 		};
+		let current_desktop = current_desktop_file.to_desktop();
 
-		let mut desktop_config = DesktopConfig::new(current_desktop.get_name());
+		let mut desktop_config = DesktopConfig::new(current_desktop_file);
 		let inverted = desktop_config.get_mut_inverted();
 
 		let patterns = matches.values_of("pattern").unwrap();
@@ -447,15 +451,16 @@ impl<'a> Cli<'a> {
 		let state_word = if state {"enabled"} else {"disabled"};
 
 		let global_config = GlobalConfig::new();
-		let current_desktop = match global_config.get_current_desktop() {
-			Some(d) => d.to_desktop(),
+		let current_desktop_file = match global_config.get_current_desktop() {
+			Some(d) => d,
 			None => {
 				error!("|There is no desktop installed!|");
 				return
 			}
 		};
+		let current_desktop = current_desktop_file.to_desktop();
 
-		let mut desktop_config = DesktopConfig::new(current_desktop.get_name());
+		let mut desktop_config = DesktopConfig::new(current_desktop_file);
 		let actived = desktop_config.get_mut_actived();
 
 		let extras = matches.values_of("extra").unwrap();
@@ -620,7 +625,7 @@ impl<'a> Cli<'a> {
 		};
 
 		let all_patterns = Pattern::get_patterns(desktop.get_name());
-		let desktop_config = DesktopConfig::new(desktop.get_name());
+		let desktop_config = DesktopConfig::new(&desktop);
 
 		let enabled = desktop_config.get_actived();
 		let inverted = desktop_config.get_inverted();

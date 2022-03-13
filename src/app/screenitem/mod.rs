@@ -69,9 +69,9 @@ impl ScreenItem {
 		}
 	}
 
-	pub fn apply(&self, global_config: &mut GlobalConfig, desktop_config: &mut DesktopConfig) {
+	pub fn apply(&self, global_config: &mut GlobalConfig, desktop_config: &mut Option<DesktopConfig>) {
 		match self {
-			ScreenItem::Desktop(d) => Self::install_desktop(d.clone(), global_config, desktop_config),
+			ScreenItem::Desktop(d) => Self::install_desktop(d.clone(), global_config),
 			ScreenItem::Theme(t) => Self::apply_theme(t.clone(), global_config, desktop_config),
 			ScreenItem::Pattern(_) => Self::toggle_active(self.clone(), desktop_config, true),
 			ScreenItem::Extra(_) => Self::toggle_active(self.clone(), desktop_config, false),
@@ -92,14 +92,19 @@ impl ScreenItem {
 		}
 	}
 	
-	pub fn is_inverted(&self, desktop_config: &DesktopConfig) -> bool {
+	pub fn is_inverted(&self, desktop_config: &Option<DesktopConfig>) -> bool {
 		match self {
-			ScreenItem::Pattern(p) => *desktop_config.get_inverted().get(p.get_name()).unwrap_or(&false),
+			ScreenItem::Pattern(p) => {
+				match desktop_config{
+					Some(d_config)=>*d_config.get_inverted().get(p.get_name()).unwrap_or(&false),
+					None => false
+				}
+			},
 			_ => false
 		}
 	}
 
-	pub fn is_active(&self, global_config: &GlobalConfig, desktop_config: &DesktopConfig) -> bool {
+	pub fn is_active(&self, global_config: &GlobalConfig, desktop_config: &Option<DesktopConfig>) -> bool {
 		match self {
 			ScreenItem::Desktop(d) => {
 				match global_config.get_current_desktop() {
@@ -113,51 +118,77 @@ impl ScreenItem {
 					None => false
 				}
 			},
-			ScreenItem::Pattern(p) => *desktop_config.get_actived().get(p.get_name()).unwrap_or(&true),
-			ScreenItem::Extra(e) => *desktop_config.get_actived().get(e.get_name()).unwrap_or(&false),
+			ScreenItem::Pattern(p) => { 
+				match desktop_config {
+					Some(d_config)=>*d_config.get_actived().get(p.get_name()).unwrap_or(&true),
+					None => true
+				}
+			},
+			ScreenItem::Extra(e) => { 
+				match desktop_config {
+					Some(d_config)=>*d_config.get_actived().get(e.get_name()).unwrap_or(&false),
+					None => false
+				}
+			},
 			ScreenItem::Help(_) => false
 		}
 	}
 
-	fn toggle_active(item: ScreenItem, desktop_config: &mut DesktopConfig, default: bool) {
-		let actived = desktop_config.get_mut_actived();
+	fn toggle_active(item: ScreenItem, desktop_config: &mut Option<DesktopConfig>, default: bool) {
+
+		let d_config = match desktop_config{
+			Some(config) => config,
+			None=>{
+				warn!("Cannot activate item, |there is no desktop installed!|");
+				return
+			}
+		};
+		let actived = d_config.get_mut_actived();
 		let current_status = *actived.get(item.get_name()).unwrap_or(&default);
 
 		actived.insert(String::from(item.get_name()), !current_status);
-		desktop_config.save()
+		d_config.save()
 	}
 
-	fn apply_theme(theme: ThemeFile, global_config: &mut GlobalConfig, desktop_config: &mut DesktopConfig) {
+	fn apply_theme(theme: ThemeFile, global_config: &mut GlobalConfig, desktop_config: &mut Option<DesktopConfig>) {
 		let current_desktop = match global_config.get_current_desktop() {
 			Some(d) => d.to_desktop(),
 			None => {
-				warn!("Can not apply a theme, |there is no desktop installed!|");
+				warn!("Cannot apply a theme, |there is no desktop installed!|");
+				return
+			}
+		};
+		let d_config = match desktop_config {
+			Some(config) =>config,
+			None=>{
+				warn!("Cannot apply a theme, |there is no desktop installed!|");
 				return
 			}
 		};
 
-		current_desktop.apply(&theme.to_theme(), desktop_config.get_actived(), desktop_config.get_inverted());
+		current_desktop.apply(&theme.to_theme(), d_config.get_actived(), d_config.get_inverted());
 
 		*global_config.get_mut_current_theme() = Some(theme);
 		global_config.save()
 	}
 
-	fn install_desktop(next_desktop: DesktopFile, global_config: &mut GlobalConfig, desktop_config: &mut DesktopConfig) {
+	fn install_desktop(next_desktop: DesktopFile, global_config: &mut GlobalConfig){
 		let current_desktop = match global_config.get_current_desktop() {
-			Some(d) => d.to_desktop(),
-			None => next_desktop.to_desktop()
+			Some(d) => Some(d.to_desktop()),
+			None => None
 		};
+		
 
 		let themes = Theme::get_themes();
 		let aux_theme = themes.into_iter().find(|theme | theme.get_name() == "Nord").unwrap(); 
 
-		let next_desktop_config = DesktopConfig::new(next_desktop.get_name());
+		let next_desktop_config = DesktopConfig::new(&next_desktop);
 		let theme = next_desktop_config.get_default_theme().as_ref().unwrap_or(&aux_theme);
 
 		*global_config.get_mut_current_desktop() = Some(next_desktop.clone());
 		*global_config.get_mut_current_theme() = Some(theme.clone());
 		global_config.save();
 
-		next_desktop.to_desktop().install(&current_desktop, &theme.to_theme(), desktop_config.get_actived(), desktop_config.get_inverted())
+		next_desktop.to_desktop().install(&current_desktop, &theme.to_theme(), next_desktop_config.get_actived(), next_desktop_config.get_inverted())
 	}
 }

@@ -124,11 +124,16 @@ impl Desktop {
 		}
 	}
 
-	pub fn install(&self, previous: &Desktop, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>) {
+	// TODO: Integrate desktopConfig inside Desktop to have direct access to active and inverted
+	pub fn install(&self, previous: &Option<Desktop>, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>) {
 		let config_home = core::expand_path(core::CONFIG_HOME);
 
-		info!("Uninstalling desktop |{}|...", previous.get_name());
-		previous.uninstall();
+		
+		if let Some(previous_desktop) = previous{
+			info!("Uninstalling desktop |{}|...", previous_desktop.get_name());
+			previous_desktop.uninstall();
+		};
+		// Clean files to install
 		self.uninstall();
 
 		let files_to_install = self.get_config_files();
@@ -157,11 +162,17 @@ impl Desktop {
 
 		self.apply(theme, actived, inverted);
 
-		let postscripts = PostScript::get_postscripts(previous.get_name());
-		if let Some(ps) = postscripts.get("desktop-exit") {
-			info!("Executing |desktop-exit| post-script");
-			ps.execute(&vec![]);
-		}
+		match previous {
+			Some(previous_desktop ) =>{
+				//Exit postcript from previous desktop
+				let previous_postscripts = PostScript::get_postscripts(previous_desktop.get_name());
+				if let Some(ps) = previous_postscripts.get("desktop-exit") {
+					info!("Executing |desktop-exit| post-script");
+					ps.execute(&vec![]);
+				}
+			},
+			None=>()
+		};
 	}
 
 	pub fn get_config_files(&self) -> Vec<DirEntry> {
@@ -234,7 +245,7 @@ mod tests{
 		let mut inverted = HashMap::new();
 		inverted.insert(String::from("polybar"), true);
 
-		desktop.install(&previous,&theme,&actived,&inverted);
+		desktop.install(&Some(previous),&theme,&actived,&inverted);
 	}
 
 	#[test]

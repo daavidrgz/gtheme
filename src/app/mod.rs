@@ -68,7 +68,9 @@ impl Ui {
 		}
 
 		app_state.get_global_config().save();
-		app_state.get_desktop_config().save();
+		if let Some(desktop_config) = app_state.get_desktop_config(){
+			desktop_config.save();
+		};
 	}
 
 	fn manage_input(app_state: &mut AppState) -> bool {
@@ -188,7 +190,10 @@ impl Ui {
 						Some(i) => i,
 						None => return true
 					};
-					item.invert(desktop_config);
+					//Dont invert if desktop not installed
+					if let Some(d_config) = desktop_config{
+						item.invert(d_config);
+					} 
 				},
 				KeyCode::Char('e') | KeyCode::Char('E') => {
 					match current_popup {

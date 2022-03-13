@@ -30,13 +30,14 @@ pub struct AppState {
 	popups: HashMap<Popup, StatefulList<ScreenItem>>,
 	show_log: bool,
 	global_config: GlobalConfig,
-	desktop_config: DesktopConfig,
+	desktop_config: Option<DesktopConfig>,
 }
 impl AppState {
 	pub fn default(global_config: GlobalConfig) -> AppState {
-		let current_desktop_str = match global_config.get_current_desktop() {
-			Some(d) => d.get_name().clone(),
-			None => "".to_string(),
+
+		let desktop_config = match global_config.get_current_desktop() {
+			Some(desktop_file) => Some(DesktopConfig::new(&desktop_file)),
+			None => None
 		};
 
 		AppState {
@@ -46,12 +47,12 @@ impl AppState {
 			popups: Self::create_popups(&global_config),
 			show_log: false,
 			global_config,
-			desktop_config: DesktopConfig::new(&current_desktop_str),
+			desktop_config,
 		}
 	}
 	
 	pub fn get_mut_state(&mut self) -> (&mut Screen, &mut HashMap<Screen, [StatefulList<ScreenItem>; 2]>, &mut Option<Popup>,
-		&mut HashMap<Popup, StatefulList<ScreenItem>>, &mut bool, &mut GlobalConfig, &mut DesktopConfig) {
+		&mut HashMap<Popup, StatefulList<ScreenItem>>, &mut bool, &mut GlobalConfig, &mut Option<DesktopConfig>) {
 
 		(&mut self.current_screen, &mut self.screens, &mut self.current_popup, &mut self.popups, &mut self.show_log, &mut self.global_config, &mut self.desktop_config)
 	}
@@ -66,10 +67,10 @@ impl AppState {
 		&mut self.global_config
 	}
 
-	pub fn get_desktop_config(&self) -> &DesktopConfig {
+	pub fn get_desktop_config(&self) -> &Option<DesktopConfig> {
 		&self.desktop_config
 	}
-	pub fn get_mut_desktop_config(&mut self) ->&mut DesktopConfig {
+	pub fn get_mut_desktop_config(&mut self) ->&mut Option<DesktopConfig> {
 		&mut self.desktop_config
 	}
 

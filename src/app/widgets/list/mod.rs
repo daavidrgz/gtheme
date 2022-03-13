@@ -11,7 +11,7 @@ pub struct ListWidget<'a> {
 	widget: List<'a>
 }
 impl<'a> ListWidget<'a> {
-	pub fn new(stateful_list: &StatefulList<ScreenItem>, global_config: &GlobalConfig, desktop_config: &DesktopConfig) -> ListWidget<'a> {
+	pub fn new(stateful_list: &StatefulList<ScreenItem>, global_config: &GlobalConfig, desktop_config: &Option<DesktopConfig>) -> ListWidget<'a> {
 
 		let color = *stateful_list.get_color();
 		let title = stateful_list.get_title();
@@ -74,7 +74,7 @@ impl<'a> ListWidget<'a> {
 		ListWidget { widget }
 	}	
 
-	fn get_item_text(it: usize, screen_item: &ScreenItem, stateful_list: &StatefulList<ScreenItem>, global_config: &GlobalConfig, desktop_config: &DesktopConfig) -> (String, String, String) {
+	fn get_item_text(it: usize, screen_item: &ScreenItem, stateful_list: &StatefulList<ScreenItem>, global_config: &GlobalConfig, desktop_config: &Option<DesktopConfig>) -> (String, String, String) {
 		let mut name = screen_item.get_name().to_string();
 		let mut arrows = String::new();
 

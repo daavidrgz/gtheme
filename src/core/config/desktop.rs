@@ -2,7 +2,9 @@ use std::collections::HashMap;
 use std::fs::{File, OpenOptions};
 use std::io::prelude::*;
 use serde::{Serialize,Deserialize};
-use crate::core::{self,theme::{Theme,ThemeFile}};
+use crate::core::desktop::DesktopFile;
+use crate::core::postscript::PostScript;
+use crate::core::{theme::{Theme,ThemeFile}};
 use log::{info,warn,error};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -14,20 +16,20 @@ struct DesktopConfigDto {
 
 #[derive(Debug,Clone)]
 pub struct DesktopConfig {
-	desktop: String,
+	desktop: DesktopFile,
 	default_theme: Option<ThemeFile>,
 	actived: HashMap<String,bool>,
 	inverted: HashMap<String,bool>,
 }
 
 impl DesktopConfigDto {
-	fn new(desktop: &str) -> DesktopConfigDto {
-		let path = format!("{}/desktops/{}/desktop_config.json",core::expand_path(core::GTHEME_HOME),desktop);
+	fn new(desktop: &DesktopFile) -> DesktopConfigDto {
+		let path = format!("{}/desktop_config.json",desktop.get_path());
 		let mut file = match File::open(&path) {
 			Ok(file) => file,
 			Err(e) => {
 				warn!("Could not open desktop config, using default config: |{}|", e);
-				return Self::default()
+				return Self::default(desktop)
 			}
 		};
 
@@ -36,19 +38,47 @@ impl DesktopConfigDto {
 			Ok(_) => (),
 			Err(e) => {
 				error!("Could not read desktop config, using default config: |{}|", e);
-				return Self::default()
+				return Self::default(desktop)
 			}
 		};
 
-		match serde_json::from_str(&content) {
+		let dto = match serde_json::from_str(&content) {
 			Ok(config) => {
 				info!("Using desktop config |{}|", &path);
 				config
 			},
 			Err(e) => {
 				error!("Could not parse desktop config, using default config: |{}|", e);
-				return Self::default()
+				Self::default(desktop)
 			}
+		};
+
+		//Ensure all keys are filled on hashmaps
+		let desktop_owned = desktop.to_desktop();
+		let patterns = desktop_owned.get_patterns();
+		let mut actived = dto.actived;
+		let mut inverted = dto.inverted;
+		for pattern in patterns{
+			let pattern_name = pattern.get_name();
+			if let None = actived.get(pattern_name) {
+				actived.insert(String::from(pattern_name),true);
+			}
+			if let None = inverted.get(pattern_name) {
+				inverted.insert(String::from(pattern_name),false);
+			}
+		}
+		let extras = PostScript::get_extras(desktop.get_name());
+		for extra in extras{
+			let extra_name = extra.get_name();
+			if let None = actived.get(extra_name) {
+				actived.insert(String::from(extra_name),false);
+			}
+		}
+
+		DesktopConfigDto{
+			default_theme:dto.default_theme,
+			actived,
+			inverted
 		}
 	}
 
@@ -65,14 +95,11 @@ impl DesktopConfigDto {
 		}
 	}
 
-	fn save(&self, desktop: &str) {
-		if desktop == "" {
-			warn!("No desktop specified!");
-			return
-		}
+	fn save(&self, desktop: &DesktopFile) {
 
 		let content = serde_json::to_string(self).unwrap();
-		let path = format!("{}/desktops/{}/desktop_config.json",core::expand_path(core::GTHEME_HOME),desktop);
+		let path = format!("{}/desktop_config.json",desktop.get_path());
+
 		let mut file = match OpenOptions::new().create(true).write(true).truncate(true).open(&path) {
 			Ok(f) => f,
 			Err(e) => {
@@ -81,25 +108,34 @@ impl DesktopConfigDto {
 			}
 		};
 
-    match file.write_all(&content.as_bytes()) {
+   		match file.write_all(&content.as_bytes()) {
 			Err(e) => error!("Could not write desktop config in |{}|: |{}|",&path,e),
 			_ => info!("Saving desktop config...")
 		}
 	}
-}
-
-impl Default for DesktopConfigDto {
-	fn default() -> DesktopConfigDto {
+	fn default(desktop: &DesktopFile) -> DesktopConfigDto{
+		let desktop_owned = desktop.to_desktop();
+		let patterns = desktop_owned.get_patterns();
+		let mut actived = HashMap::new();
+		let mut inverted = HashMap::new();
+		for pattern in patterns{
+			actived.insert(String::from(pattern.get_name()),true);
+			inverted.insert(String::from(pattern.get_name()),false);
+		}
+		let extras = PostScript::get_extras(desktop.get_name());
+		for extra in extras{
+			actived.insert(String::from(extra.get_name()),false);
+		}
 		DesktopConfigDto {
 			default_theme: None,
-			actived: HashMap::new(),
-			inverted: HashMap::new()
+			actived,
+			inverted
 		}
 	}
 }
 
 impl DesktopConfig{
-	pub fn new(desktop: &str) -> Self {
+	pub fn new(desktop: &DesktopFile) -> Self {
 		let dto = DesktopConfigDto::new(desktop);
 		let themes = Theme::get_themes();
 		let default_theme = match dto.default_theme {
@@ -107,7 +143,7 @@ impl DesktopConfig{
 			None => None
 		};
 		DesktopConfig {
-			desktop: String::from(desktop),
+			desktop: desktop.clone(),
 			default_theme,
 			actived: dto.actived,
 			inverted: dto.inverted
@@ -133,17 +169,5 @@ impl DesktopConfig{
 	}
 	pub fn save(&self) {
 		DesktopConfigDto::from(self).save(&self.desktop)
-	}
-}
-
-#[cfg(test)]
-mod tests{
-	use super::*;
-	#[test]
-	fn test_desktop_config(){
-		let config = DesktopConfig::new("jorge");
-
-		config.save();
-		println!("{:?}",config);
 	}
 }
