@@ -171,94 +171,88 @@ impl DesktopConfig{
 	pub fn save(&self) {
 		DesktopConfigDto::from(self).save(&self.desktop)
 	}
+
 	pub fn enable_pattern(&mut self,pattern:&PatternFile){
 		let state = self.actived.get(pattern.get_name()).unwrap_or(&false);
-
 		match state {
-			true => warn!("Pattern |{}| was already |enabled|",pattern.get_name()),
-			false=> {
+			true => warn!("Pattern |{}| was already |enabled| in desktop |{}|", pattern.get_name(), self.desktop.get_name()),
+			false => {
 				self.actived.insert(String::from(pattern.get_name()),true);
-				info!("Pattern |{}| successfully |enabled|!",pattern.get_name());
+				info!("Pattern |{}| successfully |enabled| in desktop |{}|!", pattern.get_name(), self.desktop.get_name());
 			}
 		}
 	}
 	pub fn disable_pattern(&mut self,pattern: &PatternFile) {
 		let state = self.actived.get(pattern.get_name()).unwrap_or(&true);
-		
-		match state{
-			false => warn!("Pattern |{}| was already |disabled|!",pattern.get_name()),
+		match state {
+			false => warn!("Pattern |{}| was already |disabled| in desktop |{}|!", pattern.get_name() ,self.desktop.get_name()),
 			true => {
 				self.actived.insert(String::from(pattern.get_name()),false);
-				info!("Pattern |{}| successfully |disabled|!",pattern.get_name());
+				info!("Pattern |{}| successfully |disabled| in desktop |{}|!", pattern.get_name(), self.desktop.get_name());
 			}
 		}
 	}
 	pub fn toggle_pattern(&mut self, pattern: &PatternFile){
 		let state = self.actived.get(pattern.get_name()).unwrap_or(&true);
-		match state{
-			true=>self.disable_pattern(pattern),
-			false=>self.enable_pattern(pattern)
+		match state {
+			true => self.disable_pattern(pattern),
+			false => self.enable_pattern(pattern)
 		}
 	}
 
 	pub fn enable_invert_pattern(&mut self,pattern:&PatternFile){
 		let state = self.inverted.get(pattern.get_name()).unwrap_or(&false);
-
-		match state{
-			true => warn!("Pattern |{}| was already |inverted|",pattern.get_name()),
-			false=> {
+		match state {
+			true => warn!("Pattern |{}| was already |inverted| in desktop |{}|", pattern.get_name(), self.desktop.get_name()),
+			false => {
 				self.inverted.insert(String::from(pattern.get_name()),true);
-				info!("Pattern |{}| successfully |inverted|!",pattern.get_name());
+				info!("Pattern |{}| successfully |inverted| in desktop |{}|!", pattern.get_name(), self.desktop.get_name());
 			}
 		}
 	}
 	pub fn disable_invert_pattern(&mut self,pattern: &PatternFile) {
 		let state = self.inverted.get(pattern.get_name()).unwrap_or(&true);
-
-		match state{
-			false => {
+		match state {
+			true => {
 				self.inverted.insert(String::from(pattern.get_name()),false);
-				info!("Pattern |{}| successfully |inverted|!",pattern.get_name());
+				info!("Pattern |{}| successfully |inverted| in desktop |{}|!", pattern.get_name(), self.desktop.get_name());
 			}
-			true=> warn!("Pattern |{}| was already |inverted|!",pattern.get_name())
+			false => warn!("Pattern |{}| was already |inverted| in desktop |{}|!", pattern.get_name(), self.desktop.get_name())
 		}
 	}
-	pub fn toggle_invert_pattern(&mut self, pattern: &PatternFile){
+	pub fn toggle_invert_pattern(&mut self, pattern: &PatternFile) {
 		let state = self.inverted.get(pattern.get_name()).unwrap_or(&true);
-		match state{
-			true=>self.disable_pattern(pattern),
-			false=>self.enable_pattern(pattern)
+		match state {
+			true => self.disable_pattern(pattern),
+			false => self.enable_pattern(pattern)
 		}
 	}
 
 	pub fn enable_extra(&mut self,extra:&PostScript){
 		let state = self.actived.get(extra.get_name()).unwrap_or(&false);
-
-		match state{
-			true => warn!("Extra |{}| was already |enabled|",extra.get_name()),
-			false=> {
+		match state {
+			true => warn!("Extra |{}| was already |enabled| in desktop |{}|", extra.get_name(), self.desktop.get_name()),
+			false => {
 				self.actived.insert(String::from(extra.get_name()),true);
-				info!("Extra |{}| successfully |enabled|!",extra.get_name());
+				info!("Extra |{}| successfully |enabled| in desktop |{}|!", extra.get_name(), self.desktop.get_name());
 			}
 		}
 	}
 	pub fn disable_extra(&mut self,extra: &PostScript) {
 		let state = self.actived.get(extra.get_name()).unwrap_or(&true);
-
-		match state{
-			false => {
+		match state {
+			true => {
 				self.actived.insert(String::from(extra.get_name()),false);
-				info!("Extra |{}| successfully |disabled|!",extra.get_name());
+				info!("Extra |{}| successfully |disabled| in desktop |{}|!", extra.get_name(), self.desktop.get_name());
 			}
-			true=> warn!("Extra |{}| was already |disabled|!",extra.get_name())
+			false => warn!("Extra |{}| was already |disabled| in desktop |{}|!", extra.get_name(), self.desktop.get_name())
 		}
 	}
 	pub fn toggle_extra(&mut self, extra: &PostScript){
 		let state = self.actived.get(extra.get_name()).unwrap_or(&true);
-		match state{
-			true=>self.disable_extra(extra),
-			false=>self.enable_extra(extra)
+		match state {
+			true => self.disable_extra(extra),
+			false => self.enable_extra(extra)
 		}
 	}
-
 }

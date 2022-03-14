@@ -9,7 +9,7 @@ use colored::*;
 use clilogger::CliLogger;
 use crate::app;
 use crate::core::{
-	desktop::Desktop,
+	desktop::{Desktop, DesktopFile},
 	theme::{Theme, ThemeFile},
 	pattern::Pattern,
 	postscript::PostScript,
@@ -66,6 +66,7 @@ pub fn start_cli() {
 		}
 
 		Some(("extra", sub_matches)) => match sub_matches.subcommand() {
+			Some(("list", sub_sub_matches)) => list_extras(sub_sub_matches),
 			Some(("enable", sub_sub_matches)) => manage_extras(sub_sub_matches, Action::Enable),
 			Some(("disable", sub_sub_matches)) => manage_extras(sub_sub_matches, Action::Disable),
 			Some(("toggle", sub_sub_matches)) => manage_extras(sub_sub_matches, Action::Toggle),
@@ -175,19 +176,15 @@ fn install_desktop(matches: &ArgMatches) {
 }
 
 fn manage_patterns(matches: &ArgMatches, action:Action) {
-	let global_config = GlobalConfig::new();
-	let current_desktop_file = match global_config.get_current_desktop() {
+	let current_desktop_file = match get_desktop( matches.value_of("desktop")) {
 		Some(d) => d,
-		None => {
-			error!("|There is no desktop installed|, try using -d option");
-			return
-		}
+		None => return
 	};
 
-	let mut desktop_config = DesktopConfig::new(current_desktop_file);
+	let mut desktop_config = DesktopConfig::new(&current_desktop_file);
 	let patterns = matches.values_of("pattern").unwrap();
 	for pattern_str in patterns {
-		let pattern = match Pattern::get_by_name(current_desktop_file,pattern_str) {
+		let pattern = match Pattern::get_by_name(&current_desktop_file,pattern_str) {
 			Some(pattern) => pattern,
 			None => continue
 		};
@@ -201,19 +198,15 @@ fn manage_patterns(matches: &ArgMatches, action:Action) {
 }
 
 fn toggle_invert(matches : &ArgMatches) {
-	let global_config = GlobalConfig::new();
-	let current_desktop_file = match global_config.get_current_desktop() {
+	let current_desktop_file = match get_desktop( matches.value_of("desktop")) {
 		Some(d) => d,
-		None => {
-			error!("|There is no desktop installed|, try using -d option");
-			return
-		}
+		None => return
 	};
-	let mut desktop_config = DesktopConfig::new(current_desktop_file);
+	let mut desktop_config = DesktopConfig::new(&current_desktop_file);
 
 	let patterns = matches.values_of("pattern").unwrap();
 	for pattern_str in patterns {
-		let pattern = match Pattern::get_by_name(current_desktop_file,pattern_str) {
+		let pattern = match Pattern::get_by_name(&current_desktop_file,pattern_str) {
 			Some(pattern) => pattern,
 			None => continue
 		};
@@ -223,20 +216,16 @@ fn toggle_invert(matches : &ArgMatches) {
 }
 
 fn manage_extras(matches: &ArgMatches, action: Action) {
-	let global_config = GlobalConfig::new();
-	let current_desktop_file = match global_config.get_current_desktop() {
+	let current_desktop_file = match get_desktop( matches.value_of("desktop")) {
 		Some(d) => d,
-		None => {
-			error!("|There is no desktop installed|, try using -d option");
-			return
-		}
+		None => return
 	};
 
-	let mut desktop_config = DesktopConfig::new(current_desktop_file);
+	let mut desktop_config = DesktopConfig::new(&current_desktop_file);
 
 	let extras = matches.values_of("extra").unwrap();
 	for extra_str in extras {
-		let extra = match PostScript::get_extra_by_name(current_desktop_file,extra_str) {
+		let extra = match PostScript::get_extra_by_name(&current_desktop_file,extra_str) {
 			Some(pattern) => pattern,
 			None => continue
 		};
@@ -331,23 +320,9 @@ fn list_fav_themes() {
 }
 
 fn list_patterns(matches: &ArgMatches) {
-	let desktop = match matches.value_of("desktop") {
-		Some(desktop_str) => {
-			match Desktop::get_by_name(desktop_str) {
-				Some(d) => d,
-				None => return
-			}
-		},
-		None => {
-			let global_config = GlobalConfig::new();
-			match global_config.get_current_desktop() {
-				Some(d) => d.clone(),
-				None => {
-					warn!("|There is no desktop installed!| Try with -d option instead");
-					return
-				}
-			}
-		}
+	let desktop = match get_desktop( matches.value_of("desktop")) {
+		Some(d) => d,
+		None => return
 	};
 
 	let all_patterns = Pattern::get_patterns(&desktop);
@@ -383,4 +358,54 @@ fn list_patterns(matches: &ArgMatches) {
 		println!("");
 	}
 	println!("");
+}
+
+fn list_extras(matches: &ArgMatches) {
+	let desktop = match get_desktop( matches.value_of("desktop")) {
+		Some(d) => d,
+		None => return
+	};
+
+	let all_extras = PostScript::get_extras(&desktop);
+	let desktop_config = DesktopConfig::new(&desktop);
+
+	let enabled = desktop_config.get_actived();
+
+	let desktop_title = format!("({})", desktop.get_name());
+
+	println!("{} {}\n", "EXTRAS".bold().underline().red(), desktop_title.bold().cyan());
+
+	for p in all_extras {
+		print!("{} {:<20}", "•".red(), p.get_name());
+		match enabled.get(p.get_name()) {
+			Some(e) => if *e {
+					print!(" {}\n", "ON".bold().green());
+				} else {
+					print!(" {}\n", "OFF".bold().red());
+				},
+			None => print!(" {}\n", "OFF".bold().red())
+		}
+	}
+	println!("");
+}
+
+fn get_desktop(desktop_opt: Option<&str>) -> Option<DesktopFile> {
+	match desktop_opt {
+		Some(desktop_str) => {
+			match Desktop::get_by_name(desktop_str) {
+				Some(d) => Some(d),
+				None => None
+			}
+		},
+		None => {
+			let global_config = GlobalConfig::new();
+			match global_config.get_current_desktop() {
+				Some(d) => Some(d.clone()),
+				None => {
+					warn!("|There is no desktop installed!| Try with -d option instead");
+					None
+				}
+			}
+		}
+	}
 }

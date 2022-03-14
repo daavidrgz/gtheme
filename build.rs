@@ -1,6 +1,6 @@
 use clap_complete::{generate_to, shells::Shell};
 use clap_mangen::Man;
-use std::{ env, fs, io::Result };
+use std::{env, fs, io::Result};
 
 include!("src/cli/commands.rs");
 

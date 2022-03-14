@@ -62,7 +62,7 @@ impl Pattern {
 			}
 		}
 	}
-	//TODO: use DesktopFile or str?
+
 	pub fn get_patterns(desktop: &DesktopFile) -> Vec<PatternFile> {
 		
 		let patterns_dir = format!("{}/gtheme/patterns", desktop.get_path());
