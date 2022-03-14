@@ -26,6 +26,10 @@ pub struct Cli<'a> {
 }
 
 impl<'a> Cli<'a> {
+	pub fn get_app(&mut self) -> &mut Command<'a> {
+		return &mut self.app
+	}
+
 	pub fn new() -> Self {
 		let mut app = Command::new("gtheme")
 		.version("1.0")

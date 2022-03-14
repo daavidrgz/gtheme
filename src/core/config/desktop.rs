@@ -174,7 +174,7 @@ impl DesktopConfig{
 	pub fn enable_pattern(&mut self,pattern:&PatternFile){
 		let state = self.actived.get(pattern.get_name()).unwrap_or(&false);
 
-		match state{
+		match state {
 			true => warn!("Pattern |{}| was already |enabled|",pattern.get_name()),
 			false=> {
 				self.actived.insert(String::from(pattern.get_name()),true);
@@ -184,13 +184,13 @@ impl DesktopConfig{
 	}
 	pub fn disable_pattern(&mut self,pattern: &PatternFile) {
 		let state = self.actived.get(pattern.get_name()).unwrap_or(&true);
-
+		
 		match state{
-			false => {
+			false => warn!("Pattern |{}| was already |disabled|!",pattern.get_name()),
+			true => {
 				self.actived.insert(String::from(pattern.get_name()),false);
 				info!("Pattern |{}| successfully |disabled|!",pattern.get_name());
 			}
-			true=> warn!("Pattern |{}| was already |disabled|!",pattern.get_name())
 		}
 	}
 	pub fn toggle_pattern(&mut self, pattern: &PatternFile){
