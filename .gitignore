@@ -1,3 +1,5 @@
 /target
+/completions
+/manpage
 global_config.json
 desktop_config.json
