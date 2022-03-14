@@ -559,8 +559,8 @@ impl<'a> Cli<'a> {
 						Color::Red
 					},
 				None => {
-					print!(" {}", "ON".bold().green());
-					Color::Green
+					print!(" {}", "OFF".bold().red());
+					Color::Red
 				}
 			};
 

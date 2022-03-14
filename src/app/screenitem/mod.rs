@@ -73,8 +73,8 @@ impl ScreenItem {
 		match self {
 			ScreenItem::Desktop(d) => Self::install_desktop(d.clone(), global_config),
 			ScreenItem::Theme(t) => Self::apply_theme(t.clone(), global_config, desktop_config),
-			ScreenItem::Pattern(_) => Self::toggle_active(self.clone(), desktop_config, true),
-			ScreenItem::Extra(_) => Self::toggle_active(self.clone(), desktop_config, false),
+			ScreenItem::Pattern(_) => Self::toggle_active(self.clone(), desktop_config),
+			ScreenItem::Extra(_) => Self::toggle_active(self.clone(), desktop_config),
 			ScreenItem::Help(_) => ()
 		}
 	}
@@ -120,13 +120,13 @@ impl ScreenItem {
 			},
 			ScreenItem::Pattern(p) => { 
 				match desktop_config {
-					Some(d_config)=>*d_config.get_actived().get(p.get_name()).unwrap_or(&true),
+					Some(d_config) => *d_config.get_actived().get(p.get_name()).unwrap_or(&false),
 					None => true
 				}
 			},
 			ScreenItem::Extra(e) => { 
 				match desktop_config {
-					Some(d_config)=>*d_config.get_actived().get(e.get_name()).unwrap_or(&false),
+					Some(d_config) => *d_config.get_actived().get(e.get_name()).unwrap_or(&false),
 					None => false
 				}
 			},
@@ -134,17 +134,16 @@ impl ScreenItem {
 		}
 	}
 
-	fn toggle_active(item: ScreenItem, desktop_config: &mut Option<DesktopConfig>, default: bool) {
-
+	fn toggle_active(item: ScreenItem, desktop_config: &mut Option<DesktopConfig>) {
 		let d_config = match desktop_config{
 			Some(config) => config,
-			None=>{
+			None => {
 				warn!("Cannot activate item, |there is no desktop installed!|");
 				return
 			}
 		};
 		let actived = d_config.get_mut_actived();
-		let current_status = *actived.get(item.get_name()).unwrap_or(&default);
+		let current_status = *actived.get(item.get_name()).unwrap_or(&false);
 
 		actived.insert(String::from(item.get_name()), !current_status);
 		d_config.save()
