@@ -1,24 +1,33 @@
-// use clap_complete::{generate_to, shells::Bash};
-// use std::env;
-// use std::io::Error;
+use clap_complete::{generate_to, shells::Shell};
+use std::{
+    env, fs,
+    io::Result,
+    path::{Path, PathBuf},
+};
 
-// include!("src/cli/mod.rs");
+include!("src/cli/commands.rs");
 
-fn main() {
-	// let outdir = match env::var_os("OUT_DIR") {
-	// 		None => return Ok(()),
-	// 		Some(outdir) => outdir,
-	// };
+fn main() -> Result<()> {
+			let out_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("completions/");
 
-	// let mut app = Cli::new().get_app();
-	// let path = generate_to(
-	// 	Bash,
-	// 	&mut cmd, // We need to specify what generator to use
-	// 	"gtheme",  // We need to specify the bin name manually
-	// 	outdir,   // We need to specify where to write to
-	// )?;
+			// Generate completions
+			let mut app = build_app();
+			generate_to(Shell::Bash, &mut app, "gtheme", &out_dir)?;
+			generate_to(Shell::Zsh, &mut app, "gtheme", &out_dir)?;
+			generate_to(Shell::Fish, &mut app, "gtheme", &out_dir)?;
+			generate_to(Shell::PowerShell, &mut app, "gtheme", &out_dir)?;
+			generate_to(Shell::Elvish, &mut app, "gtheme", &out_dir)?;
 
-	// println!("cargo:warning=completion file is generated: {:?}", path);
+			// Generate manpage
+			// let app = app.name("gtheme");
+			// let man = clap_mangen::Man::new(app);
+			// let mut buffer: Vec<u8> = Default::default();
+			// man.render(&mut buffer)?;
+			// std::fs::write(manpage_out_dir.join("gtheme.1"), buffer)?;
 
-	()
-}
+    println!("cargo:rerun-if-changed=build.rs");
+    println!("cargo:rerun-if-changed=./src/cli/commands.rs");
+    println!("cargo:rerun-if-env-changed=GENERATE");
+
+    Ok(())
+	}

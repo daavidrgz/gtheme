@@ -1,0 +1,533 @@
+#compdef gtheme
+
+autoload -U is-at-least
+
+_gtheme() {
+    typeset -A opt_args
+    typeset -a _arguments_options
+    local ret=1
+
+    if is-at-least 5.2; then
+        _arguments_options=(-s -S -C)
+    else
+        _arguments_options=(-s -C)
+    fi
+
+    local context curcontext="$curcontext" state line
+    _arguments "${_arguments_options[@]}" \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-V[Print version information]' \
+'--version[Print version information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+":: :_gtheme_commands" \
+"*::: :->gtheme" \
+&& ret=0
+    case $state in
+    (gtheme)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:gtheme-command-$line[1]:"
+        case $line[1] in
+            (theme)
+_arguments "${_arguments_options[@]}" \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+":: :_gtheme__theme_commands" \
+"*::: :->theme" \
+&& ret=0
+
+    case $state in
+    (theme)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:gtheme-theme-command-$line[1]:"
+        case $line[1] in
+            (list)
+_arguments "${_arguments_options[@]}" \
+'--version[Print version information]' \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+&& ret=0
+;;
+(apply)
+_arguments "${_arguments_options[@]}" \
+'-p+[Apply the theme only on selected patterns]:pattern: ' \
+'--pattern=[Apply the theme only on selected patterns]:pattern: ' \
+'-i+[Invert the foreground and background colors on selected patterns]:pattern: ' \
+'--invert=[Invert the foreground and background colors on selected patterns]:pattern: ' \
+'--version[Print version information]' \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+':theme -- Theme to apply on all active patterns by default:' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" \
+'--version[Print version information]' \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+'*::subcommand -- The subcommand whose help message to display:' \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(desktop)
+_arguments "${_arguments_options[@]}" \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+":: :_gtheme__desktop_commands" \
+"*::: :->desktop" \
+&& ret=0
+
+    case $state in
+    (desktop)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:gtheme-desktop-command-$line[1]:"
+        case $line[1] in
+            (list)
+_arguments "${_arguments_options[@]}" \
+'--version[Print version information]' \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+&& ret=0
+;;
+(install)
+_arguments "${_arguments_options[@]}" \
+'-t+[Apply specified theme after installing the desktop]: : ' \
+'--theme=[Apply specified theme after installing the desktop]: : ' \
+'--version[Print version information]' \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+':desktop -- Desktop to install:' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" \
+'--version[Print version information]' \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+'*::subcommand -- The subcommand whose help message to display:' \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(pattern)
+_arguments "${_arguments_options[@]}" \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+":: :_gtheme__pattern_commands" \
+"*::: :->pattern" \
+&& ret=0
+
+    case $state in
+    (pattern)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:gtheme-pattern-command-$line[1]:"
+        case $line[1] in
+            (list)
+_arguments "${_arguments_options[@]}" \
+'-d+[List patterns of the specified desktop]: : ' \
+'--desktop=[List patterns of the specified desktop]: : ' \
+'--version[Print version information]' \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+&& ret=0
+;;
+(enable)
+_arguments "${_arguments_options[@]}" \
+'--version[Print version information]' \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+'*::pattern -- Patterns to enable:' \
+&& ret=0
+;;
+(disable)
+_arguments "${_arguments_options[@]}" \
+'--version[Print version information]' \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+'*::pattern -- Patterns to disable:' \
+&& ret=0
+;;
+(toggle)
+_arguments "${_arguments_options[@]}" \
+'--version[Print version information]' \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+'*::pattern -- Patterns to toggle:' \
+&& ret=0
+;;
+(invert)
+_arguments "${_arguments_options[@]}" \
+'--version[Print version information]' \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+'*::pattern -- Patterns to invert:' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" \
+'--version[Print version information]' \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+'*::subcommand -- The subcommand whose help message to display:' \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(extra)
+_arguments "${_arguments_options[@]}" \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+":: :_gtheme__extra_commands" \
+"*::: :->extra" \
+&& ret=0
+
+    case $state in
+    (extra)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:gtheme-extra-command-$line[1]:"
+        case $line[1] in
+            (enable)
+_arguments "${_arguments_options[@]}" \
+'--version[Print version information]' \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+'*::extra -- Extras to enable:' \
+&& ret=0
+;;
+(disable)
+_arguments "${_arguments_options[@]}" \
+'--version[Print version information]' \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+':extra -- Extras to disable:' \
+&& ret=0
+;;
+(toggle)
+_arguments "${_arguments_options[@]}" \
+'--version[Print version information]' \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+':extra -- Extras to toggle:' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" \
+'--version[Print version information]' \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+'*::subcommand -- The subcommand whose help message to display:' \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(fav)
+_arguments "${_arguments_options[@]}" \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+":: :_gtheme__fav_commands" \
+"*::: :->fav" \
+&& ret=0
+
+    case $state in
+    (fav)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:gtheme-fav-command-$line[1]:"
+        case $line[1] in
+            (list)
+_arguments "${_arguments_options[@]}" \
+'--version[Print version information]' \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+&& ret=0
+;;
+(add)
+_arguments "${_arguments_options[@]}" \
+'--version[Print version information]' \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+'*::theme -- Themes to add:' \
+&& ret=0
+;;
+(remove)
+_arguments "${_arguments_options[@]}" \
+'--version[Print version information]' \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+'*::theme -- Themes to remove:' \
+&& ret=0
+;;
+(toggle)
+_arguments "${_arguments_options[@]}" \
+'--version[Print version information]' \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+'*::theme -- Themes to toggle:' \
+&& ret=0
+;;
+(help)
+_arguments "${_arguments_options[@]}" \
+'--version[Print version information]' \
+'-h[Print help information]' \
+'--help[Print help information]' \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+'*::subcommand -- The subcommand whose help message to display:' \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+;;
+(help)
+_arguments "${_arguments_options[@]}" \
+'-v[Show more information]' \
+'--verbose[Show more information]' \
+'*::subcommand -- The subcommand whose help message to display:' \
+&& ret=0
+;;
+        esac
+    ;;
+esac
+}
+
+(( $+functions[_gtheme_commands] )) ||
+_gtheme_commands() {
+    local commands; commands=(
+'theme:Manage themes' \
+'desktop:Manage desktops' \
+'pattern:Manage patterns' \
+'extra:Manage extras' \
+'fav:Manage fav themes' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'gtheme commands' commands "$@"
+}
+(( $+functions[_gtheme__fav__add_commands] )) ||
+_gtheme__fav__add_commands() {
+    local commands; commands=()
+    _describe -t commands 'gtheme fav add commands' commands "$@"
+}
+(( $+functions[_gtheme__theme__apply_commands] )) ||
+_gtheme__theme__apply_commands() {
+    local commands; commands=()
+    _describe -t commands 'gtheme theme apply commands' commands "$@"
+}
+(( $+functions[_gtheme__desktop_commands] )) ||
+_gtheme__desktop_commands() {
+    local commands; commands=(
+'list:List all installed desktops' \
+'install:Install specified desktop' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'gtheme desktop commands' commands "$@"
+}
+(( $+functions[_gtheme__extra__disable_commands] )) ||
+_gtheme__extra__disable_commands() {
+    local commands; commands=()
+    _describe -t commands 'gtheme extra disable commands' commands "$@"
+}
+(( $+functions[_gtheme__pattern__disable_commands] )) ||
+_gtheme__pattern__disable_commands() {
+    local commands; commands=()
+    _describe -t commands 'gtheme pattern disable commands' commands "$@"
+}
+(( $+functions[_gtheme__extra__enable_commands] )) ||
+_gtheme__extra__enable_commands() {
+    local commands; commands=()
+    _describe -t commands 'gtheme extra enable commands' commands "$@"
+}
+(( $+functions[_gtheme__pattern__enable_commands] )) ||
+_gtheme__pattern__enable_commands() {
+    local commands; commands=()
+    _describe -t commands 'gtheme pattern enable commands' commands "$@"
+}
+(( $+functions[_gtheme__extra_commands] )) ||
+_gtheme__extra_commands() {
+    local commands; commands=(
+'enable:Enable specified extras in the current desktop' \
+'disable:Disable specified extras in the current desktop' \
+'toggle:Toggle specified extras in the current desktop' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'gtheme extra commands' commands "$@"
+}
+(( $+functions[_gtheme__fav_commands] )) ||
+_gtheme__fav_commands() {
+    local commands; commands=(
+'list:List favourite themes' \
+'add:Add selected themes to the favourite themes list' \
+'remove:Remove selected themes from the favourite themes list' \
+'toggle:Toggle selected themes from the favourite themes list' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'gtheme fav commands' commands "$@"
+}
+(( $+functions[_gtheme__desktop__help_commands] )) ||
+_gtheme__desktop__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'gtheme desktop help commands' commands "$@"
+}
+(( $+functions[_gtheme__extra__help_commands] )) ||
+_gtheme__extra__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'gtheme extra help commands' commands "$@"
+}
+(( $+functions[_gtheme__fav__help_commands] )) ||
+_gtheme__fav__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'gtheme fav help commands' commands "$@"
+}
+(( $+functions[_gtheme__help_commands] )) ||
+_gtheme__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'gtheme help commands' commands "$@"
+}
+(( $+functions[_gtheme__pattern__help_commands] )) ||
+_gtheme__pattern__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'gtheme pattern help commands' commands "$@"
+}
+(( $+functions[_gtheme__theme__help_commands] )) ||
+_gtheme__theme__help_commands() {
+    local commands; commands=()
+    _describe -t commands 'gtheme theme help commands' commands "$@"
+}
+(( $+functions[_gtheme__desktop__install_commands] )) ||
+_gtheme__desktop__install_commands() {
+    local commands; commands=()
+    _describe -t commands 'gtheme desktop install commands' commands "$@"
+}
+(( $+functions[_gtheme__pattern__invert_commands] )) ||
+_gtheme__pattern__invert_commands() {
+    local commands; commands=()
+    _describe -t commands 'gtheme pattern invert commands' commands "$@"
+}
+(( $+functions[_gtheme__desktop__list_commands] )) ||
+_gtheme__desktop__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'gtheme desktop list commands' commands "$@"
+}
+(( $+functions[_gtheme__fav__list_commands] )) ||
+_gtheme__fav__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'gtheme fav list commands' commands "$@"
+}
+(( $+functions[_gtheme__pattern__list_commands] )) ||
+_gtheme__pattern__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'gtheme pattern list commands' commands "$@"
+}
+(( $+functions[_gtheme__theme__list_commands] )) ||
+_gtheme__theme__list_commands() {
+    local commands; commands=()
+    _describe -t commands 'gtheme theme list commands' commands "$@"
+}
+(( $+functions[_gtheme__pattern_commands] )) ||
+_gtheme__pattern_commands() {
+    local commands; commands=(
+'list:List all patterns of the current desktop by default' \
+'enable:Enable specified patterns in the current desktop' \
+'disable:Disable specified patterns in the current desktop' \
+'toggle:Toggle specified patterns in the current desktop' \
+'invert:Invert specified patterns or return them to default if they are already inverted' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'gtheme pattern commands' commands "$@"
+}
+(( $+functions[_gtheme__fav__remove_commands] )) ||
+_gtheme__fav__remove_commands() {
+    local commands; commands=()
+    _describe -t commands 'gtheme fav remove commands' commands "$@"
+}
+(( $+functions[_gtheme__theme_commands] )) ||
+_gtheme__theme_commands() {
+    local commands; commands=(
+'list:List all installed themes' \
+'apply:Apply specified theme' \
+'help:Print this message or the help of the given subcommand(s)' \
+    )
+    _describe -t commands 'gtheme theme commands' commands "$@"
+}
+(( $+functions[_gtheme__extra__toggle_commands] )) ||
+_gtheme__extra__toggle_commands() {
+    local commands; commands=()
+    _describe -t commands 'gtheme extra toggle commands' commands "$@"
+}
+(( $+functions[_gtheme__fav__toggle_commands] )) ||
+_gtheme__fav__toggle_commands() {
+    local commands; commands=()
+    _describe -t commands 'gtheme fav toggle commands' commands "$@"
+}
+(( $+functions[_gtheme__pattern__toggle_commands] )) ||
+_gtheme__pattern__toggle_commands() {
+    local commands; commands=()
+    _describe -t commands 'gtheme pattern toggle commands' commands "$@"
+}
+
+_gtheme "$@"
