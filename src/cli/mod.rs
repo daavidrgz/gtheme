@@ -15,6 +15,7 @@ use crate::core::{
 	config::{GlobalConfig, DesktopConfig}
 };
 
+const DEFAULT_THEME: &str = "Nord";
 enum Action{
 	Enable,
 	Disable,
@@ -37,63 +38,66 @@ impl<'a> Cli<'a> {
 			.help("Show more information")
 		);
 
-		app = app.subcommand(Command::new("apply")
-			.about("Apply specified theme")
-			.args([
-				Arg::new("theme")
-					.required(true)
-					.takes_value(true)
-					.help("Theme to apply on all active patterns by default"),
-				
-				Arg::new("pattern")
-					.short('p')
-					.long("pattern")
-					.takes_value(true)
-					.multiple_values(true)
-					.value_name("pattern")
-					.help("Apply the theme only on selected patterns"),
-
-				Arg::new("invert")
-					.short('i')
-					.long("invert")
-					.takes_value(true)
-					.multiple_values(true)
-					.value_name("pattern")
-					.help("Invert the foreground and background colors on selected patterns"),
-			])
-		);
-
-		app = app.subcommand(Command::new("install")
-			.about("Install specified desktop")
-			.args([
-				Arg::new("desktop")
-					.required(true)
-					.takes_value(true)
-					.help("Desktop to install"),
-
-				Arg::new("theme")
-					.short('t')
-					.long("theme")
-					.takes_value(true)
-					.help("Apply specified theme after installing the desktop")
-			])
-		);
-
-		app = app.subcommand(Command::new("list")
-			.about("List all installed themes, patterns or desktops")
+		app = app.subcommand(Command::new("theme")
+			.about("Manage themes")
 			.subcommand_required(true)
-			.subcommand(Command::new("desktops")
+			.subcommand(Command::new("list")
+				.about("List all installed themes")
+			)
+			.subcommand(Command::new("apply")
+				.about("Apply specified theme")
+				.args([
+					Arg::new("theme")
+						.required(true)
+						.takes_value(true)
+						.help("Theme to apply on all active patterns by default"),
+
+					Arg::new("pattern")
+						.short('p')
+						.long("pattern")
+						.takes_value(true)
+						.multiple_values(true)
+						.value_name("pattern")
+						.help("Apply the theme only on selected patterns"),
+
+					Arg::new("invert")
+						.short('i')
+						.long("invert")
+						.takes_value(true)
+						.multiple_values(true)
+						.value_name("pattern")
+						.help("Invert the foreground and background colors on selected patterns"),
+				])
+			)
+		);
+
+		app = app.subcommand(Command::new("desktop")
+			.about("Manage desktops")
+			.subcommand_required(true)
+			.subcommand(Command::new("list")
 				.about("List all installed desktops")
 			)
-			.subcommand(Command::new("themes")
-				.about("List all themes")
-				.arg(Arg::new("favourite")
-					.short('f')
-					.long("favourite")
-					.help("List only favourite themes")
-				)
+			.subcommand(Command::new("install")
+				.about("Install specified desktop")
+				.args([
+					Arg::new("desktop")
+						.required(true)
+						.takes_value(true)
+						.help("Desktop to install"),
+
+					Arg::new("theme")
+						.short('t')
+						.long("theme")
+						.takes_value(true)
+						.help("Apply specified theme after installing the desktop")
+				])
 			)
-			.subcommand(Command::new("patterns")
+		);
+
+		app = app.subcommand(Command::new("pattern")
+			.about("Manage patterns")
+			.subcommand_required(true)
+			.subcommand(Command::new("list")
 			.about("List all patterns of the current desktop by default")
 				.arg(Arg::new("desktop")
 					.short('d')
@@ -102,11 +106,6 @@ impl<'a> Cli<'a> {
 					.help("List patterns of the specified desktop")
 				)
 			)
-		);
-
-		app = app.subcommand(Command::new("pattern")
-			.about("Enable or disable patterns in the current desktop")
-			.subcommand_required(true)
 			.subcommand(Command::new("enable")
 				.about("Enable specified patterns in the current desktop")
 				.arg(Arg::new("pattern")
@@ -146,7 +145,7 @@ impl<'a> Cli<'a> {
 		);
 
 		app = app.subcommand(Command::new("extra")
-			.about("Enable or disable extras in the current desktop")
+			.about("Manage extras")
 			.subcommand_required(true)
 			.subcommand(Command::new("enable")
 				.about("Enable specified extras in the current desktop")
@@ -176,8 +175,11 @@ impl<'a> Cli<'a> {
 		);
 
 		app = app.subcommand(Command::new("fav")
-			.about("Add or remove selected themes from the favourite themes list")
+			.about("Manage fav themes")
 			.subcommand_required(true)
+			.subcommand(Command::new("list")
+			.about("List favourite themes")
+			)
 			.subcommand(Command::new("add")
 				.about("Add selected themes to the favourite themes list")
 				.arg(Arg::new("theme")
@@ -219,7 +221,7 @@ impl<'a> Cli<'a> {
 
 		// Logger init
 		static CLI_LOGGER: CliLogger = CliLogger;
-		
+
 		if matches.is_present("verbose") {
 			log::set_max_level(LevelFilter::Info);
 		} else {
@@ -229,11 +231,21 @@ impl<'a> Cli<'a> {
 
 		println!("");
 		match matches.subcommand() {
-			Some(("apply", sub_matches)) => Self::apply_theme(sub_matches),
 
-			Some(("install", sub_matches)) => Self::install_desktop(sub_matches),
+			Some(("desktop", sub_matches)) => match sub_matches.subcommand() {
+				Some(("list", _)) => Self::list_desktops(),
+				Some(("apply", sub_sub_matches)) => Self::install_desktop(sub_sub_matches),
+				_ => ()
+			}
+
+			Some(("theme", sub_matches)) => match sub_matches.subcommand() {
+				Some(("list", _)) => Self::list_themes(),
+				Some(("apply", sub_sub_matches)) => Self::apply_theme(sub_sub_matches),
+				_ => ()
+			}
 
 			Some(("pattern", sub_matches)) => match sub_matches.subcommand() {
+				Some(("list", sub_sub_matches)) => Self::list_patterns(sub_sub_matches),
 				Some(("enable", sub_sub_matches)) => Self::manage_patterns(sub_sub_matches, Action::Enable),
 				Some(("disable", sub_sub_matches)) => Self::manage_patterns(sub_sub_matches, Action::Disable),
 				Some(("toggle", sub_sub_matches)) => Self::manage_patterns(sub_sub_matches, Action::Toggle),
@@ -249,16 +261,10 @@ impl<'a> Cli<'a> {
 			}
 
 			Some(("fav", sub_matches)) => match sub_matches.subcommand() {
+				Some(("list", _)) => Self::list_fav_themes(),
 				Some(("add", sub_sub_matches)) => Self::manage_fav(sub_sub_matches, Action::Enable),
 				Some(("remove", sub_sub_matches)) => Self::manage_fav(sub_sub_matches, Action::Disable),
 				Some(("toggle", sub_sub_matches)) => Self::manage_fav(sub_sub_matches, Action::Toggle),
-				_ => ()
-			}
-
-			Some(("list", sub_matches)) => match sub_matches.subcommand() {
-				Some(("desktops", _)) => Self::list_desktops(),
-				Some(("themes", sub_sub_matches)) => Self::list_themes(sub_sub_matches),
-				Some(("patterns", sub_sub_matches)) => Self::list_patterns(sub_sub_matches),
 				_ => ()
 			}
 
@@ -266,23 +272,12 @@ impl<'a> Cli<'a> {
 		}
 	}
 
-	fn is_valid_theme(theme_name: &str) -> Option<ThemeFile> {
-		let themes = Theme::get_themes();
-		match themes.into_iter().find(|t| t.get_name().to_lowercase() == theme_name.to_lowercase()) {
-			Some(t) => Some(t),
-			None => None
-		}
-	}
-
 	fn apply_theme(matches: &ArgMatches) {
 		let theme_name = matches.value_of("theme").unwrap();
 
-		let theme = match Self::is_valid_theme(theme_name) {
+		let theme = match Theme::get_by_name(theme_name) {
 			Some(t) => t,
-			None => {
-				error!("The theme |{}| does not exist!", theme_name);
-				return
-			}
+			None => return
 		};
 
 		let mut global_config = GlobalConfig::new();
@@ -295,44 +290,33 @@ impl<'a> Cli<'a> {
 			}
 		};
 		let current_desktop = current_desktop_file.to_desktop();
-		
-		let actived = if matches.is_present("pattern") {
-			let mut all_patterns = Pattern::get_patterns(current_desktop_file);
+		let desktop_config = DesktopConfig::new(current_desktop_file);
+
+		let mut actived: HashMap<String,bool> = HashMap::new();
+		if matches.is_present("pattern") {
 			let patterns = matches.values_of("pattern").unwrap();
 			for p in patterns {
-				let size = all_patterns.len();
-				all_patterns = all_patterns.into_iter().filter(|e| e.get_name() != p).collect();
-				if size == all_patterns.len() {
-					error!("The pattern |{}| does not exist!", p);
-					return
-				}
-			}
-
-			let mut map: HashMap<String,bool> = HashMap::new();
-			all_patterns.into_iter().for_each(|p| {map.insert(p.get_name().clone(), false);});
-			map
-		} else {
-			let desktop_config = DesktopConfig::new(current_desktop_file);
-			desktop_config.get_actived().clone()
-		};
-
-		let inverted = if matches.is_present("invert") {
-			let mut map: HashMap<String,bool> = HashMap::new();
-			let all_patterns = Pattern::get_patterns(current_desktop_file);
-			let patterns = matches.values_of("invert").unwrap();
-			for p in patterns {
-				match all_patterns.iter().find(|e| e.get_name() == p) {
-					Some(_) => map.insert(p.to_string(), true),
-					None => {
-						error!("The pattern |{}| does not exist!", p);
-						return
-					}
+				match Pattern::get_by_name(current_desktop_file, p) {
+					Some(_) => actived.insert(p.to_string(), true),
+					None => continue
 				};
 			}
-			map
 		} else {
-			HashMap::new()
-		};
+			actived = desktop_config.get_actived().clone()
+		}
+
+		let mut inverted: HashMap<String,bool> = HashMap::new();
+		if matches.is_present("invert") {
+			let patterns = matches.values_of("invert").unwrap();
+			for p in patterns {
+				match Pattern::get_by_name(current_desktop_file, p) {
+					Some(_) => inverted.insert(p.to_string(), true),
+					None => continue
+				};
+			}
+		} else {
+			inverted = desktop_config.get_inverted().clone()
+		}
 
 		current_desktop.apply(&theme.to_theme(), &actived, &inverted);
 
@@ -342,14 +326,10 @@ impl<'a> Cli<'a> {
 
 	fn install_desktop(matches: &ArgMatches) {
 		let desktop_name = matches.value_of("desktop").unwrap();
-		
-		let all_desktops = Desktop::get_desktops();
-		let desktop = match all_desktops.into_iter().find(|d| d.get_name().to_lowercase() == desktop_name.to_lowercase()) {
+
+		let desktop = match Desktop::get_by_name(desktop_name) {
 			Some(d) => d,
-			None => {
-				error!("The desktop |{}| does not exist!", desktop_name);
-				return
-			}
+			None => return
 		};
 
 		let mut global_config = GlobalConfig::new();
@@ -362,18 +342,15 @@ impl<'a> Cli<'a> {
 
 		let default_theme: ThemeFile = match matches.value_of("theme") {
 			Some(theme_name) => {
-				match Self::is_valid_theme(theme_name) {
+				match Theme::get_by_name(theme_name) {
 					Some(t) => t,
-					None => {
-						error!("The theme |{}| does not exist!", theme_name);
-						return
-					}
+					None => return
 				}
 			},
 			None => {
 				match desktop_config.get_default_theme() {
 					Some(t) => t.clone(),
-					None => Theme::get_themes().into_iter().find(|t| t.get_name() == "Nord" ).unwrap()
+					None => Theme::get_by_name(DEFAULT_THEME).unwrap()
 				}
 			}
 		};
@@ -431,10 +408,9 @@ impl<'a> Cli<'a> {
 			desktop_config.toggle_invert_pattern(&pattern);
 		}
 		desktop_config.save();
-	} 
+	}
 
 	fn manage_extras(matches: &ArgMatches, action: Action) {
-
 		let global_config = GlobalConfig::new();
 		let current_desktop_file = match global_config.get_current_desktop() {
 			Some(d) => d,
@@ -452,7 +428,7 @@ impl<'a> Cli<'a> {
 				Some(pattern) => pattern,
 				None => continue
 			};
-			match action{
+			match action {
 				Action::Enable => desktop_config.enable_extra(&extra),
 				Action::Disable => desktop_config.disable_extra(&extra),
 				Action::Toggle => desktop_config.toggle_extra(&extra),
@@ -501,19 +477,14 @@ impl<'a> Cli<'a> {
 		println!("");
 	}
 
-	fn list_themes(matches: &ArgMatches) {
-		if matches.is_present("favourite") {
-			Self::list_fav_themes();
-			return
-		}
-
+	fn list_themes() {
 		let all_themes = Theme::get_themes();
 		let global_config = GlobalConfig::new();
 		let current_theme = match global_config.get_current_theme() {
 			Some(t) => t.get_name(),
 			None => ""
 		};
-		
+
 		println!("{}\n", "THEMES".bold().underline().yellow());
 
 		for t in all_themes {
@@ -534,7 +505,7 @@ impl<'a> Cli<'a> {
 		};
 
 		let fav_themes = global_config.get_fav_themes();
-		
+
 		println!("{}\n", "FAV THEMES".bold().underline().blue());
 
 		for t in fav_themes {
@@ -548,23 +519,21 @@ impl<'a> Cli<'a> {
 	}
 
 	fn list_patterns(matches: &ArgMatches) {
-		let desktop = if matches.is_present("desktop") {
-			let desktop_str = matches.value_of("desktop").unwrap();
-			let all_desktops = Desktop::get_desktops();
-			match all_desktops.iter().find(|d| d.get_name().to_lowercase() == desktop_str.to_lowercase()) {
-				Some(d) => d.clone(),
-				None => {
-					error!("The desktop |{}| does not exist!", desktop_str);
-					return
+		let desktop = match matches.value_of("desktop") {
+			Some(desktop_str) => {
+				match Desktop::get_by_name(desktop_str) {
+					Some(d) => d,
+					None => return
 				}
-			}
-		} else {
-			let global_config = GlobalConfig::new();
-			match global_config.get_current_desktop() {
-				Some(d) => d.clone(),
-				None => {
-					warn!("|There is no desktop installed!| Try with -d option instead");
-					return
+			},
+			None => {
+				let global_config = GlobalConfig::new();
+				match global_config.get_current_desktop() {
+					Some(d) => d.clone(),
+					None => {
+						warn!("|There is no desktop installed!| Try with -d option instead");
+						return
+					}
 				}
 			}
 		};
@@ -583,14 +552,14 @@ impl<'a> Cli<'a> {
 			print!("{} {:<20}", "•".magenta(), p.get_name());
 			let color = match enabled.get(p.get_name()) {
 				Some(e) => if *e {
-					print!(" {}", "ON".bold().green());
-					Color::Green
-				} else {
-					print!(" {}", "OFF".bold().red());
-					Color::Red
-				},
+						print!(" {}", "ON".bold().green());
+						Color::Green
+					} else {
+						print!(" {}", "OFF".bold().red());
+						Color::Red
+					},
 				None => {
-					print!(" {}", "ON".bold().green()); 
+					print!(" {}", "ON".bold().green());
 					Color::Green
 				}
 			};
@@ -603,4 +572,4 @@ impl<'a> Cli<'a> {
 		}
 		println!("");
 	}
-} 
+}

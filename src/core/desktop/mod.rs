@@ -112,7 +112,7 @@ impl Desktop {
 			let pattern = pattern_file.to_pattern();
 			
 			//If not activated,skip pattern
-			if !*actived.get(pattern.get_name()).unwrap_or(&true) { continue }
+			if !*actived.get(pattern.get_name()).unwrap_or(&false) { continue }
 
 			pattern.fill(theme, *inverted.get(pattern.get_name()).unwrap_or(&false));
 			if let Some(postscript) = post_scripts.get(pattern_file.get_name()) {
