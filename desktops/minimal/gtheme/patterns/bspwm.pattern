@@ -25,5 +25,5 @@ pgrep -x sxhkd > /dev/null || sxhkd &
 picom  &
 ~/.fehbg
 
-pkill -f dborder-script &>/dev/null
+pkill -f dborder &>/dev/null
 bash -c "exec -a dborder-script $HOME/.config/bspwm/dborder" &
