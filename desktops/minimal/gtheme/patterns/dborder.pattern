@@ -1,11 +1,11 @@
-%output-file%=~/.config/bspwm/dborder
+<[output-file]>=~/.config/bspwm/dborder
 #!/bin/sh
 #  double borders
 # needs chwb2 from wmutils/opt
 
-outer='0x%background%'   # outer
-inner1='0x%cyan%'  # focused
-inner2='0x%black%'  # normal
+outer='0x<[background]>'   # outer
+inner1='0x<[cyan]>'  # focused
+inner2='0x<[black]>'  # normal
 
 trap 'bspc config border_width 0; kill -9 -$$' INT TERM
 
