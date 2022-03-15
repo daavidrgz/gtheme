@@ -18,14 +18,14 @@ pub struct Pattern {
 impl Pattern {
 	//TODO: From str or from PatternFile??
 	pub fn from(pattern: &PatternFile) -> Self {
-		let re = Regex::new("%output-file%=(.*)(\r\n|\r|\n)").unwrap();
+		let re = Regex::new(r"<\[output-file\]>=(.*)(\r\n|\r|\n)").unwrap();
 		let mut file = File::open(pattern.get_path()).expect(&format!("Error while opening pattern: {}", pattern.get_path()));
 
 		let mut content = String::new();
 		file.read_to_string(&mut content).expect(&format!("Error while reading pattern: {}", pattern.get_path()));
 
 		if !re.is_match(&content){
-			panic!("Pattern {} does not have output file specified (hint: %output-file%=/path/to/output/file)",pattern.get_path());
+			panic!("Pattern {} does not have output file specified (hint: <[output-file]>=/path/to/output/file)",pattern.get_path());
 		}
 		let captured = re.captures(&content).unwrap();
 		//captured[0] is the whole matched expression.
@@ -147,21 +147,21 @@ impl Pattern {
 				key
 			};
 
-			let re = Regex::new(&format!("%{}%", real_key)).unwrap();
+			let re = Regex::new(&format!(r"<\[{}\]>", real_key)).unwrap();
 			result = re.replace_all(&result, value).into_owned();
 		}
 		// fill theme-name
 
-		let re = Regex::new("%theme-name%").unwrap();
+		let re = Regex::new(r"<\[theme-name\]>").unwrap();
 		result = re.replace_all(&result, theme.get_name()).into_owned();
 
 		//Fill user defined properties
 		for (key,value) in user_config.get_properties(){
-			let re = Regex::new(&format!("%{}%", key)).unwrap();
+			let re = Regex::new(&format!(r"<\[{}\]>", key)).unwrap();
 			result = re.replace_all(&result, value).into_owned();
 		}
 	
-		let re = Regex::new(r"%((\w|-)+)%").unwrap();
+		let re = Regex::new(r"<\[((\w|-)+)\]>").unwrap();
 		for caps in re.captures_iter(&result){
 			warn!("Could not fill property |{}| in pattern |{}|", &caps[1],self.get_name());
 		};

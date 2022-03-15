@@ -1,9 +1,9 @@
-%output-file%=~/.mozilla/firefox/l6lop2co.default-release/chrome/userChrome.css
-/* %theme-name% */
+<[output-file]>=~/.mozilla/firefox/l6lop2co.default-release/chrome/userChrome.css
+/* <[theme-name]> */
 
 :root {
-  --sfwindow: #%background%;
-  --sfsecondary: #%blue%;
+  --sfwindow: #<[background>];
+  --sfsecondary: #<[blue>];
 }
 
 /* Urlbar View */
@@ -50,7 +50,7 @@
 /* Inactive tabs color */
 #navigator-toolbox {
   font-weight: 500 !important;
-  color: #%foreground% !important;
+  color: #<[foreground>] !important;
   background-color: var(--sfwindow) !important;
 }
 
@@ -109,11 +109,11 @@
 }
 
 .tabbrowser-tabs .tab-text {
-  color: #%foreground% !important;
+  color: #<[foreground>] !important;
 }
 
 .tabbrowser-tabs .tab-text2 {
-  color: #%foreground% !important;
+  color: #<[foreground>] !important;
 }
 
 .tabbrowser-tab:is([visuallyselected='true'], [multiselected])
@@ -172,7 +172,7 @@ toolbarbutton.bookmark-item:not(.subviewbutton) {
 }
 
 .urlbarView-url {
-  color: #%cyan-hg% !important;
+  color: #<[cyan-hg>] !important;
 }
 
 /* Disable elements  */

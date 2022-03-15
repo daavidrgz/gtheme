@@ -223,8 +223,8 @@ impl DesktopConfig{
 	pub fn toggle_invert_pattern(&mut self, pattern: &PatternFile) {
 		let state = self.inverted.get(pattern.get_name()).unwrap_or(&true);
 		match state {
-			true => self.disable_pattern(pattern),
-			false => self.enable_pattern(pattern)
+			true => self.disable_invert_pattern(pattern),
+			false => self.enable_invert_pattern(pattern)
 		}
 	}
 
