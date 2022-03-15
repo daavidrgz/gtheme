@@ -1,5 +1,5 @@
 <[output-file]>=~/.config/dunst/dunstrc
-# %theme-name%
+# <[theme-name]>
 
 # ██████╗ ██╗   ██╗███╗   ██╗███████╗████████╗
 # ██╔══██╗██║   ██║████╗  ██║██╔════╝╚══██╔══╝
@@ -58,7 +58,7 @@ padding = 12
 horizontal_padding = 20
 frame_width = 0
 
-frame_color = "#%green%"
+frame_color = "#<[green]>"
 separator_color = frame
 
 sort = yes
@@ -121,23 +121,23 @@ mouse_right_click = close_current
 #----------------------
 
 [urgency_low]
-background = "#%background%"
-foreground = "#%foreground%"
-highlight = "#%cyan%"
+background = "#<[background]>"
+foreground = "#<[foreground]>"
+highlight = "#<[cyan]>"
 timeout = 5
 icon = /usr/share/icons/Papirus/48x48/emblems/emblem-information.svg
 
 [urgency_normal]
-background = "#%background%"
-foreground = "#%foreground%"
-highlight = "#%cyan%"
+background = "#<[background]>"
+foreground = "#<[foreground]>"
+highlight = "#<[cyan]>"
 timeout = 5
 icon = /usr/share/icons/Papirus/48x48/emblems/emblem-information.svg
 
 [urgency_critical]
-background = "#%background%"
-foreground = "#%foreground%"
-highlight = "#%red%"
+background = "#<[background]>"
+foreground = "#<[foreground]>"
+highlight = "#<[red]>"
 timeout = 5
 icon = /usr/share/icons/Papirus/48x48/emblems/emblem-important.svg
 
@@ -258,7 +258,7 @@ new_icon = /usr/share/icons/dunst/system/caps_off.svg
 ; new_icon = /usr/share/icons/dunst/system/color.svg
 ; [color_preview]
 ; appname = "Color Preview"
-; format = "#%s"
+; format = "#<[s"
 ; new_icon = ""
 
 [flameshot]

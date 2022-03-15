@@ -1,12 +1,12 @@
 <[output-file]>=~/.config/alacritty/alacritty.yml
-# %theme-name%
+# <[theme-name]> 
 
 window:
   padding:
     x: 18
     y: 18
   dyanmic_padding: true
-  
+
 font:
   normal:
     family: DejaVuSansMono Nerd Font

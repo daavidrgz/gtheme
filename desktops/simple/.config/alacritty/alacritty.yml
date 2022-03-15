@@ -1,12 +1,11 @@
-#  -------- Gtheme: Everforest-Dark-Hard --------
+# Snazzy 
 
 window:
   padding:
-    x: 10
-    y: 10
-  opacity: 0.5
+    x: 18
+    y: 18
   dyanmic_padding: true
-  
+
 font:
   normal:
     family: DejaVuSansMono Nerd Font
@@ -26,29 +25,29 @@ cursor:
 
 colors:
   cursor:
-    text: "#d3c6aa"
-    cursor: "#d3c6aa"
-  selection:
-    text: "#2b3339"
-    background: "#d3c6aa"
+    text: '0xF1F1F0'
+    cursor: '0x97979B'
+  #selection:
+  #  text: '0x000000'
+  #  background: '0xFFFACD'
   primary:
-    background: "#2b3339"
-    foreground: "#d3c6aa"
+    background: '0x112031'
+    foreground: '0xF1F1F0'
   normal:
-    black: "#4b565c"
-    red: "#e67e80"
-    green: "#a7c080"
-    yellow: "#dbbc7f"
-    blue: "#7fbbb3"
-    magenta: "#d699b6"
-    cyan: "#83c092"
-    white: "#d3c6aa"
+    black: '0x112031'
+    red: '0xFF5C57'
+    green: '0x5AF78E'
+    yellow: '0xF3F99D'
+    blue: '0x57C7FF'
+    magenta: '0xFF6AC1'
+    cyan: '0x9AEDFE'
+    white: '0xF1F1F0'
   bright:
-    black: "#4b565c"
-    red: "#e67e80"
-    green: "#a7c080"
-    yellow: "#dbbc7f"
-    blue: "#7fbbb3"
-    magenta: "#d699b6"
-    cyan: "#83c092"
-    white: "#d3c6aa"
+    black: '0x686868'
+    red: '0xFF5C57'
+    green: '0x5AF78E'
+    yellow: '0xF3F99D'
+    blue: '0x57C7FF'
+    magenta: '0xFF6AC1'
+    cyan: '0x9AEDFE'
+    white: '0xF1F1F0'

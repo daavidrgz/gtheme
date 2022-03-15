@@ -1,3 +1,4 @@
+<[output-file]>=~/.config/sxhkd/sxhkdrc
 # ███████╗██╗  ██╗██╗  ██╗██╗  ██╗██████╗ 
 # ██╔════╝╚██╗██╔╝██║  ██║██║ ██╔╝██╔══██╗
 # ███████╗ ╚███╔╝ ███████║█████╔╝ ██║  ██║
@@ -11,15 +12,19 @@
 
 # Terminal emulator
 super + Return
-    alacritty
+    <[terminal]>
 
 # Terminal emulator (nvidia_gpu)
 super + shift + Return
-    prime-run alacritty
+    prime-run <[terminal]>
 
 # Launcher
 super + d
-    ~/.config/rofi/launcher/launcher.sh
+    ~/.config/rofi/launcher.sh
+
+# start/stop animated wallpaper
+super + p
+    ~/.config/sxhkd/scripts/manageWallpaper.sh
  
 # Reload sxhkd
 super + Escape
@@ -29,14 +34,8 @@ super + Escape
 #   CUSTOM
 #----------------------
 
-ctrl + super + c
-    ~/.config/rofi/calculator/calculator.sh
-
 ctrl + super + f
     firefox
-
-alt + Escape
-    ~/.config/rofi/powermenu/powermenu.sh
 
 ctrl + super + o
     kitty --hold -e rclone sync -P OneDrive:Música/Canciones\ Hi-Res ~/music

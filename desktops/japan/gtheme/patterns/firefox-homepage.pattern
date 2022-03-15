@@ -1,5 +1,5 @@
-%output-file%=~/.mozilla/firefox/homepage/app.css
-/* %theme-name% */
+<[output-file]>=~/.mozilla/firefox/homepage/app.css
+/* <[theme-name]> */
 
 @import url('assets/fonts/open-sans.css');
 
@@ -15,12 +15,12 @@
   --iconsize: 3vh;
 
   /* Light theme  */
-  --accent: #%green-hg%; /* Hover color */
-  --bg: #%background%; /* Background color */
-  --sbg: #%background%99; /* Cards color */
+  --accent: #<[green-hg]>; /* Hover color */
+  --bg: #<[background]>; /* Background color */
+  --sbg: #<[background]>99; /* Cards color */
 
-  --fg: #%foreground%; /* Foreground color */
-  --sfg: #%foreground%; /* Sceondary Foreground color */
+  --fg: #<[foreground]>; /* Foreground color */
+  --sfg: #<[foreground]>; /* Sceondary Foreground color */
 
   /* Image background  */
 
@@ -38,12 +38,12 @@
 
 /* Dark theme  */
 .darktheme {
-  --accent: #%green-hg%; /* Hover color */
-  --bg: #%background%; /* Background color */
-  --sbg: #%background%99; /* Cards color */
+  --accent: #<[green-hg]>; /* Hover color */
+  --bg: #<[background]>; /* Background color */
+  --sbg: #<[background]>99; /* Cards color */
 
-  --fg: #%foreground%; /* Foreground color */
-  --sfg: #%foreground%; /* Sceondary Foreground color */
+  --fg: #<[foreground]>; /* Foreground color */
+  --sfg: #<[foreground]>; /* Sceondary Foreground color */
   --imgcol: linear-gradient(
     rgba(0, 0, 0, 0.85),
     rgba(0, 0, 0, 0.85)

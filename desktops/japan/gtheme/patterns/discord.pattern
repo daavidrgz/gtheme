@@ -1,3 +1,4 @@
+<[output-file]>=~/.config/BetterDiscord/themes/zelk.theme.css
 /**
  * @name Zelk
  * @version 1.2.2
@@ -7,7 +8,6 @@
  * @source https://github.com/schnensch0/zelk
  * @invite tMEcBhsNqA
  */
-%output-file%=~/.config/BetterDiscord/themes/zelk.theme.css
 /*         ▀▀█ █▀▀ █   █ █
            ▄▀  █▀▀ █   █▀▄
            ▀▀▀ ▀▀▀ ▀▀▀ ▀ ▀           */
@@ -44,15 +44,15 @@
 /*-------------DARK MODE-------------*/
 /*---------------BASIC---------------*/
 .theme-dark {
-  --foreground: #%foreground%;
-  --accent-color: #%blue%;
-  --accent-color-2: #%cyan%;
-  --accent-color-red: #%red%;
-  --accent-color-dim: #%cyan%77;
-  --background-1: #%background%;
-  --background-2: #%background%aa;
-  --background-accent: #%foreground%22;
-  --border-color: #%background%55;
+  --foreground: #<[foreground]>;
+  --accent-color: #<[blue]>;
+  --accent-color-2: #<[cyan]>;
+  --accent-color-red: #<[red]>;
+  --accent-color-dim: #<[cyan]>77;
+  --background-1: #<[background]>;
+  --background-2: #<[background]>aa;
+  --background-accent: #<[foreground]>22;
+  --border-color: #<[background]>55;
 }
 /*-------------LIGHT MODE------------*/
 .theme-light {

@@ -114,7 +114,10 @@ impl Pattern {
 		info!("Filling |{}| pattern with |{}| theme...", self.get_name(), theme.get_name());
 
 		let filled_content = self.fill_values(theme, is_inverted,user_config);
-	
+		let path = std::path::Path::new(self.get_output());
+
+		let prefix = path.parent().unwrap();
+		fs::create_dir_all(prefix).unwrap();
 		//If cant create output file, returns
 		let mut output_file = match File::create(self.get_output()) {
 			Ok(file) => file,

@@ -1,13 +1,300 @@
-%output-file%=~/.config/polybar/colors.ini
-;; %theme-name%
+<[output-file]>=~/.config/polybar/config
+;; <[theme-name]>
 
 [color]
-bg = #%background%
-fg = #%foreground%
-black = #%black%
-red = #%red%
-green = #%green%
-yellow = #%yellow%
-blue = #%blue%
-magenta = #%magenta%
-cyan = #%cyan%
+bg = #<[background]>
+fg = #<[foreground]>
+black = #<[black]>
+red = #<[red]>
+green = #<[green]>
+yellow = #<[yellow]>
+blue = #<[blue]>
+magenta = #<[magenta]>
+cyan = #<[cyan]>
+
+## ==== BASEMODULE ====
+[module/basemodule]
+interval = 1
+format-prefix-font = 2
+format = <label>
+format-prefix-foreground = ${color.fg}
+format-prefix-background = ${color.magenta}
+format-overline = ${color.bg}
+format-underline = ${color.bg}
+format-prefix-padding = 1
+label-font = 3
+label-padding = 1
+label-foreground = ${color.bg}
+label-background = ${color.fg}
+
+## ==== MODULES ====
+
+[bar/main]
+width = 100%
+offset-x = 0%
+offset-y = 0%
+padding-left = 1
+padding-right = 1
+height = 38
+bottom = true
+radius = 0
+fixed-center = true
+background = ${color.bg}
+line-size = 6
+border-top-size = 2
+border-color = ${color.magenta}
+
+monitor = <[monitor]>
+monitor-fallback = <[monitor-fallback]>
+
+wm-restack = bspwm
+module-margin-left = 1
+
+font-0 = "mononoki Nerd Font:pixelsize=12;0"
+font-1 = "mononoki Nerd Font:size=11;1"
+font-2 = "mononoki Nerd Font:size=10;2"
+font-3 = "mononoki Nerd Font:size=14;3"
+
+modules-left = bitcoin ethereum cpu_clock gmail newsboat checkupdates
+modules-center = mpd
+modules-right = cpu memory pulseaudio filesystem backlight battery date
+
+[module/ping]
+inherit = module/basemodule
+type = custom/script
+exec = ~/.config/polybar/scripts/ping.sh
+format-prefix-foreground = ${colors.format-prefix-fg}
+format-prefix-background = ${colors.format-prefix-bg}
+format-prefix = 
+label = %output:6%
+
+[module/memory]
+inherit = module/basemodule
+type = internal/memory
+format-prefix = "MEM"
+label = %percentage_used%%
+
+
+[module/cpu]
+inherit = module/basemodule
+type = internal/cpu
+format-prefix = "CPU"
+label = %percentage%%
+
+[module/battery]
+inherit = module/basemodule
+type = custom/script
+exec = ~/.config/polybar/scripts/battery.py
+interval = 15
+format-prefix = "BAT"
+label = "%output%%"
+
+
+[module/trash]
+inherit = module/basemodule
+type = custom/script
+exec = ~/.config/polybar/scripts/trash.sh
+click-left = ~/.config/polybar/scripts/trash.sh --clean &
+interval = 60
+format-prefix = "JNK"
+label = %output%
+
+[module/cpu_clock]
+inherit = module/basemodule
+type = custom/script
+exec = ~/.config/polybar/scripts/cpu_clock.py
+format-prefix = "MHZ"
+label = "%output%"
+
+
+[module/wireguard]
+inherit = module/basemodule
+type = custom/script
+interval = 3
+exec = [[ ! -z "$(sudo wg show | head -n 1 | awk '{print $NF}')" ]] && echo "NL" || echo "Off"
+format-prefix-foreground = #AD7AEB
+format-prefix = 
+label = "%output%"
+
+[module/checkupdates]
+inherit = module/basemodule
+type = custom/script
+exec = ~/.config/polybar/scripts/checkupdates.sh
+interval = 120
+format-prefix = "PKG"
+label = "%output%"
+
+[module/docker]
+inherit = module/basemodule
+type = custom/script
+exec = docker ps -q | wc -l
+format-prefix-foreground =  #CE2029
+format-prefix = 
+label = "%output%"
+
+[module/newsboat]
+inherit = module/basemodule
+type = custom/script
+exec = newsboat -x reload; newsboat -x print-unread | awk '{ print $1 }'
+interval = 1200
+format-prefix = "RSS"
+label = "%output%"
+
+
+[module/pulseaudio]
+inherit = module/basemodule
+type = custom/script
+exec = pactl list sinks | grep '^[[:space:]]Volume:' | head -n $(( $SINK + 1 )) | tail -n 1 | sed -e 's,.* \([0-9][0-9]*\)%.*,\1,'
+format-prefix = "VOL"
+label = "%output%%"
+
+[module/gmail]
+inherit = module/basemodule
+type = custom/script
+exec = ~/.config/polybar/scripts/gmail_unread.py
+interval = 10
+format-prefix = "MSG"
+label = "%output%"
+click-left = xdg-open "https://mail.google.com/mail/u/0/#inbox" &
+
+[module/backlight]
+inherit = module/basemodule
+type = internal/backlight
+card = <[backlight-card]>
+enable-scroll = false
+format-prefix = "LGT"
+; label = 80%
+label = %percentage%%
+
+[module/date]
+inherit = module/basemodule
+type = internal/date
+date = %R
+label = %date%
+format-prefix = "DAT"
+
+[module/temperature]
+inherit = module/basemodule
+type = internal/temperature
+thermal-zone = 0
+warn-temperature = 100
+format-prefix-foreground = #CE2029
+format-prefix = 
+label = "%temperature-c%"
+
+[module/mpd]
+type = internal/mpd
+
+interval = 1
+
+format-online = <label-song>  <icon-prev> <toggle> <icon-next>  <label-time>
+format-online-prefix = "  "
+format-online-prefix-background = ${color.magenta}
+format-online-prefix-foreground = ${color.fg}
+format-online-background = ${color.magenta}
+format-online-foreground = ${color.fg}
+
+format-online-overline = ${color.bg}
+format-online-underline = ${color.bg}
+
+format-offline = <label-offline>
+format-offline-prefix = "  "
+format-offline-background = ${color.fg}
+format-offline-foreground = ${color.bg}
+
+label-song =  "%artist% - %title%"
+label-song-maxlen = 25
+label-song-ellipsis = true
+
+label-time = " %elapsed% / %total% "
+label-time-background = ${color.fg}
+label-time-foreground = ${color.bg}
+
+; Available tokens:
+;   None
+label-offline = " Offline"
+
+; Only applies if <icon-X> is used
+icon-play = 契
+icon-pause = 
+icon-stop = 栗
+icon-prev = 玲
+icon-next = 怜
+
+[module/filesystem]
+type = internal/fs
+interval = 25
+mount-0 = /home
+format-mounted-prefix = "HDD"
+label-mounted-padding = 1
+label-mounted-font = 3
+label-mounted = "%percentage_free%%"
+format-mounted-prefix-font = 2
+format-mounted-prefix-padding = 1
+format-mounted-prefix-background = ${color.magenta}
+format-mounted-prefix-foreground = ${color.fg}
+label-mounted-background = ${color.fg}
+label-mounted-foreground = ${color.bg}
+format-mounted-overline = ${color.bg}
+format-mounted-underline = ${color.bg} 
+
+[module/bitcoin]
+type = custom/script
+inherit = module/basemodule
+interval = 60
+exec = ~/.config/polybar/scripts/crypto.py BTC USD 24
+format-prefix = "BTC"
+click-left = xdg-open "https://coinmarketcap.com/currencies/bitcoin/" &
+
+[module/ethereum]
+type = custom/script
+inherit = module/basemodule
+interval = 60
+exec = ~/.config/polybar/scripts/crypto.py ETH USD 24
+format-prefix = "ETH"
+click-left = xdg-open "https://coinmarketcap.com/currencies/ethereum/" &
+
+[module/wireless-network]
+type = internal/network
+interface = wlan0
+
+[module/download]
+type = internal/network
+interface = wlo1
+interval = 0.5
+accumulate-stats = true
+format-connected-prefix = 
+format-connected-prefix-font = 2
+format-connected-prefix-padding = 1
+format-connected-prefix-overline = #ffffff
+format-connected-prefix-underline = #ffffff
+format-connected-prefix-foreground = #000000
+format-connected-prefix-background = #EFB8CC
+label-connected-overline = #ffffff
+label-connected-underline = #ffffff
+label-connected-padding = 1
+label-connected-font = 3
+label-connected = "%downspeed:8%"
+label-connected-background = #3F495B
+label-connected-foreground = #ffffff
+
+[module/upload]
+type = internal/network
+interface = wlo1
+interval = 0.5
+accumulate-stats = true
+format-connected-prefix = 
+format-connected-prefix-font = 2
+format-connected-prefix-padding = 1
+format-connected-prefix-overline = #ffffff
+format-connected-prefix-underline = #ffffff
+format-connected-prefix-foreground = #000000
+format-connected-prefix-background = #EFB8CC
+label-connected-overline = #ffffff
+label-connected-underline = #ffffff
+label-connected-padding = 1
+label-connected-font = 3
+label-connected-background = #3F495B
+label-connected-foreground = #ffffff
+label-connected = %upspeed:8%
+format-margin-left = 5

@@ -1,5 +1,5 @@
-%output-file%=~/.config/dunst/dunstrc
-# %theme-name%
+<[output-file]>=~/.config/dunst/dunstrc
+# <[theme-name]>
 
 # ██████╗ ██╗   ██╗███╗   ██╗███████╗████████╗
 # ██╔══██╗██║   ██║████╗  ██║██╔════╝╚══██╔══╝
@@ -20,7 +20,7 @@ separator_height = 3
 padding = 10
 horizontal_padding = 20
 frame_width = 2
-frame_color = "#%cyan%"
+frame_color = "#<[cyan]>"
 separator_color = frame
 sort = no
 idle_threshold = 0
@@ -57,26 +57,26 @@ class = Dunst
 startup_notification = false
 
 [urgency_low]
-background = "#%background%"
-foreground = "#%foreground%"
+background = "#<[background]>"
+foreground = "#<[foreground]>"
 timeout = 3
-highlight = "#%blue%"
+highlight = "#<[blue]>"
 
 [urgency_normal]
-background = "#%background%"
-foreground = "#%foreground%"
+background = "#<[background]>"
+foreground = "#<[foreground]>"
 timeout = 3
-highlight = "#%blue%"
+highlight = "#<[blue]>"
 
 [urgency_critical]
-background = "#%background%"
-foreground = "#%foreground%"
+background = "#<[background]>"
+foreground = "#<[foreground]>"
 timeout = 3
-highlight = "#%blue%"
+highlight = "#<[blue]>"
 
 [repeater]
-background = "#%background%"
-foreground = "#%foreground%"
+background = "#<[background]>"
+foreground = "#<[foreground]>"
 timeout = 4
 
 # •• Volume
