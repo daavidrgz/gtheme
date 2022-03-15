@@ -17,7 +17,7 @@ pub struct Pattern {
 impl Pattern {
 	//TODO: From str or from PatternFile??
 	pub fn from(pattern: &PatternFile) -> Self {
-		let re = Regex::new("%output-file%=(.*)").unwrap();
+		let re = Regex::new("%output-file%=(.*)(\r\n|\r|\n)").unwrap();
 		let mut file = File::open(pattern.get_path()).expect(&format!("Error while opening pattern: {}", pattern.get_path()));
 
 		let mut content = String::new();
@@ -30,8 +30,6 @@ impl Pattern {
 		//captured[0] is the whole matched expression.
 		let output_path = core::expand_path(&captured[1]);
 
-		//Delete where output-file is declared.
-		let re = Regex::new("%output-file%=.*").unwrap();
 		content = String::from(re.replace(&content,""));
 
 		Pattern {
