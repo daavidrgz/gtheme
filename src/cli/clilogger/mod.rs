@@ -44,7 +44,8 @@ impl Log for CliLogger {
 		};
 
 		let time = Local::now().format("%H:%M:%S %Y-%m-%d");
-		let plain_text = format!("[{}] {} - {}\n", time, record.level(), record.args());
+		let record_text = record.args().to_string().replace("|","");
+		let plain_text = format!("[{}] {}: {}\n", time, record.level(), record_text);
 		match log_file.write_all(plain_text.as_bytes()) {
 			Err(_) => (),
 			_ => ()
