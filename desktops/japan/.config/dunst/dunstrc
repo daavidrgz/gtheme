@@ -1,27 +1,39 @@
+# Gruvbox-Dark
+
+# ██████╗ ██╗   ██╗███╗   ██╗███████╗████████╗
+# ██╔══██╗██║   ██║████╗  ██║██╔════╝╚══██╔══╝
+# ██║  ██║██║   ██║██╔██╗ ██║███████╗   ██║   
+# ██║  ██║██║   ██║██║╚██╗██║╚════██║   ██║   
+# ██████╔╝╚██████╔╝██║ ╚████║███████║   ██║   
+# ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚══════╝   ╚═╝   
+                              
 [global]
 monitor = 0
-follow = keyboard
+follow = mouse
+per_monitor_dpi = false
 indicate_hidden = no
 shrink = no
 transparency = 0
 notification_height = 0
-separator_height = 8
+separator_height = 3
 padding = 10
-horizontal_padding = 10
-frame_width = 3
-frame_color = "#3F3B3B"
-separator_color = "#05050500"
+horizontal_padding = 20
+frame_width = 2
+frame_color = "#689d6a"
+separator_color = frame
 sort = no
 idle_threshold = 0
 
 ### Position ###
+origin = top-right
+offset = 15x50
 
 ### Text ###
 
-font = mononoki Nerd Font 9
-line_height = 12
+font = mononoki Nerd Font 11
+line_height = 10
 markup = full
-format = "%s \n\n%b"
+format = "<b>%s</b>\n%b"
 alignment = right
 show_age_threshold = -1
 word_wrap = no
@@ -35,6 +47,7 @@ show_indicators = no
 icon_position = left
 max_icon_size = 64
 sticky_history = yes
+icon_path = /usr/share/icons/Papirus/64x64/apps
 
 # Maximum amount of notifications kept in history
 history_length = 1
@@ -42,28 +55,98 @@ title = Dunst
 class = Dunst
 startup_notification = false
 
-[experimental]
-per_monitor_dpi = 96
-
 [urgency_low]
-background = "#ffffff"
-foreground = "#30302F"
+background = "#282828"
+foreground = "#ebdbb2"
 timeout = 3
-icon = ~/.config/notice.png
+highlight = "#458588"
 
 [urgency_normal]
-background = "#ffffff"
-foreground = "#30302F"
+background = "#282828"
+foreground = "#ebdbb2"
 timeout = 3
-icon = ~/.config/notice.png
+highlight = "#458588"
 
 [urgency_critical]
-background = "#ffffff"
-foreground = "#30302F"
+background = "#282828"
+foreground = "#ebdbb2"
 timeout = 3
-icon = ~/.config/notice.png
+highlight = "#458588"
 
 [repeater]
-background = "#ffffff"
-foreground = "#30302F"
+background = "#282828"
+foreground = "#ebdbb2"
 timeout = 4
+
+# •• Volume
+
+[volume0]
+format = "<b>%s</b>"
+appname = System
+summary = Volume: [0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-audio-volume-high.svg
+[volume1]
+format = "<b>%s</b>"
+appname = System
+summary = Volume: [0-3][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-audio-volume-low.svg
+[volume2]
+format = "<b>%s</b>"
+appname = System
+summary = Volume: [4-6][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-audio-volume-medium.svg
+[volume3]
+format = "<b>%s</b>"
+appname = System
+summary = Volume: [7-9][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-audio-volume-high.svg
+
+[sound_off]
+format = "<b>%s</b>"
+appname = System
+summary = "Audio Muted"
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-audio-volume-muted.svg
+[sound_on]
+format = "<b>%s</b>"
+appname = System
+summary = "Audio Unmuted"
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-audio-volume-low.svg
+
+# •• Backlight
+
+[backlight0]
+format = "<b>%s</b>"
+appname = System
+summary = Brightness: [0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-display-brightness-low.svg
+[backlight1]
+format = "<b>%s</b>"
+appname = System
+summary = Brightness: [0-3][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-display-brightness-low.svg
+[backlight2]
+format = "<b>%s</b>"
+appname = System
+summary = Brightness: [4-6][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-display-brightness-medium.svg
+[backlight3]
+format = "<b>%s</b>"
+appname = System
+summary = Brightness: [7-9][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-display-brightness-high.svg
+[backlight4]
+format = "<b>%s</b>"
+appname = System
+summary = Brightness: [7-9][0-9]*
+new_icon = /usr/share/icons/Papirus/48x48/status/notification-display-brightness-full.svg
+
+# •• Applications
+
+[flameshot]
+appname = flameshot
+format = "<b>%a</b>\n%b"
+timeout = 3
+
+[spotify]
+appname = Spotify
+format = "<b>%s</b>\n%b"

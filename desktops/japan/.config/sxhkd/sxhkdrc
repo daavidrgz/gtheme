@@ -1,31 +1,48 @@
-#
-# Common hotkeys
-#
-# terminal emulator
-super + Return
-	alacritty
+# ███████╗██╗  ██╗██╗  ██╗██╗  ██╗██████╗ 
+# ██╔════╝╚██╗██╔╝██║  ██║██║ ██╔╝██╔══██╗
+# ███████╗ ╚███╔╝ ███████║█████╔╝ ██║  ██║
+# ╚════██║ ██╔██╗ ██╔══██║██╔═██╗ ██║  ██║
+# ███████║██╔╝ ██╗██║  ██║██║  ██╗██████╔╝
+# ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ 
 
-# program launcher
-super + @space
-	~/.config/rofi/launcher.sh
+#----------------------
+#   BASIC
+#----------------------
+
+# Terminal emulator
+super + Return
+    alacritty
+
+# Terminal emulator (nvidia_gpu)
+super + shift + Return
+    prime-run alacritty
+
+# Launcher
+super + d
+    ~/.config/rofi/launcher.sh
 
 # start/stop animated wallpaper
 super + p
     ~/.config/sxhkd/scripts/manageWallpaper.sh
-
-# Firefox
-ctrl + super + f
-   firefox
-
-# Update music
-ctrl + super + o
-    kitty --hold -e rclone sync -P OneDrive:Música/Canciones\ Hi-Res ~/music
-
+ 
 # Reload sxhkd
 super + Escape
     pkill -USR1 -x sxhkd
 
+#----------------------
+#   CUSTOM
+#----------------------
 
+ctrl + super + f
+    firefox
+
+ctrl + super + o
+    kitty --hold -e rclone sync -P OneDrive:Música/Canciones\ Hi-Res ~/music
+
+#----------------------
+#   BSPWM
+#----------------------
+ 
 # Quit/Restart bspwm
 super + alt + {q,r}
     bspc {quit,wm -r}
@@ -76,7 +93,19 @@ alt + Tab
 # focus the next/previous desktop in the current monitor
 super + bracket{left,right}
     bspc desktop -f {prev,next}.local
- 
+
+# move window to next/previous desktop in the current monitor
+super + shift + bracket{left,right}
+    bspc node -d {prev,next}.local -f
+
+# focus to next/previous monitor
+super + alt + bracket{left,right}
+    bspc monitor -f {prev,next}
+
+# move windows betweeen monitors
+super + alt + shift + bracket{left,right}
+    bspc node -m {prev,next} -
+
 # focus the last node/desktop
 super + {grave,Tab}
     bspc {node,desktop} -f last
@@ -129,19 +158,20 @@ alt + super + {Left,Down,Up,Right}
 #----------------------
 
 XF86Audio{Raise,Lower}Volume
-		~/.config/sxhkd/scripts/manageVolume.sh {--increase,--decrease}
+    ~/.config/sxhkd/scripts/manageVolume.sh {--increase,--decrease}
 
 XF86AudioMute
-		pamixer --toggle-mute && if pamixer --get-mute; then dunstify -a System -t 1000 -h string:x-dunst-stack-tag:volume "Audio Muted"; else dunstify -a System -t 1000 -h string:x-dunst-stack-tag:volume "Audio Unmuted"; fi
+	pamixer --toggle-mute && if pamixer --get-mute; then dunstify -a System -t 1000 -h string:x-dunst-stack-tag:volume "Audio Muted"; else dunstify -a System -t 1000 -h string:x-dunst-stack-tag:volume "Audio Unmuted"; fi
 
 XF86Audio{Play,Stop,Next,Prev} 
-		playerctl {play-pause,stop,next,previous}
+    playerctl {play-pause,stop,next,previous}
 
 XF86MonBrightness{Up,Down}
-		brightnessctl set {+5%,5%-} && dunstify -a System -t 1000 -h string:x-dunst-stack-tag:volume -h int:value:$(brightnessctl info | grep "Current brightness" | sed 's/.*\((.*)\).*/\1/g' | tr -d '()%') "Brightness: $(brightnessctl info | grep "Current brightness" | sed 's/.*\((.*)\).*/\1/g' | tr -d '()')"
+	brightnessctl set {+5%,5%-} && dunstify -a System -t 1000 -h string:x-dunst-stack-tag:volume -h int:value:$(brightnessctl info | grep "Current brightness" | sed 's/.*\((.*)\).*/\1/g' | tr -d '()%') "Brightness: $(brightnessctl info | grep "Current brightness" | sed 's/.*\((.*)\).*/\1/g' | tr -d '()')"
 
 Print
     flameshot full -c -p ~/pictures/screenshots
 
 super + Print
     flameshot gui -p ~/pictures/screenshots
+    

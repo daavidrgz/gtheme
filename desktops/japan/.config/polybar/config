@@ -1,4 +1,15 @@
-include-file = ~/.config/polybar/colors.ini
+;; Gruvbox-Dark
+
+[color]
+bg = #282828
+fg = #ebdbb2
+black = #282828
+red = #cc241d
+green = #98971a
+yellow = #d79921
+blue = #458588
+magenta = #b16286
+cyan = #689d6a
 
 ## ==== BASEMODULE ====
 [module/basemodule]
@@ -32,7 +43,7 @@ line-size = 6
 border-top-size = 2
 border-color = ${color.magenta}
 
-monitor = HDMI-0
+monitor = DP-2
 monitor-fallback = DP-2
 
 wm-restack = bspwm
@@ -148,7 +159,7 @@ click-left = xdg-open "https://mail.google.com/mail/u/0/#inbox" &
 [module/backlight]
 inherit = module/basemodule
 type = internal/backlight
-card = intel_backlight
+card = nvidia_0
 enable-scroll = false
 format-prefix = "LGT"
 ; label = 80%
