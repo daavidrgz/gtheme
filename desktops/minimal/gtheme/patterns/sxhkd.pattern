@@ -20,7 +20,7 @@ super + shift + Return
 
 # Launcher
 super + d
-    ~/.config/rofi/launcher/launcher.sh
+    ~/.config/rofi/launcher.sh
  
 # Reload sxhkd
 super + Escape
