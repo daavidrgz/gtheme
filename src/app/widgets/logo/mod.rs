@@ -6,6 +6,7 @@ use tui::{
 	style::{Color, Style},
 	text::{Span, Spans},
 };
+use tint::Color as TintColor;
 
 use logo_content::LOGO_CONTENT;
 use crate::core::theme::Theme;
@@ -23,7 +24,7 @@ impl<'a> LogoWidget<'a> {
 				let mut colors: Vec<Color> = vec![];
 				for key in color_keys {
 					let hex_color = format!("#{}", colors_map.get(key).unwrap());
-					let (r,g,b) = tint::Color::from_hex(&hex_color).to_rgb255();
+					let (r,g,b) = TintColor::from_hex(&hex_color).to_rgb255();
 					colors.push(Color::Rgb(r,g,b));
 				}
 				colors

@@ -2,7 +2,6 @@ bspwm
 sxhkd
 picom-ibhagwan fork
 rofi
-kitty
 dunst
 polybar
 cpupower
