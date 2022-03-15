@@ -59,7 +59,7 @@ impl DesktopConfigDto {
 		let patterns = desktop_owned.get_patterns();
 		let mut actived = dto.actived;
 		let mut inverted = dto.inverted;
-		for pattern in patterns{
+		for pattern in patterns {
 			let pattern_name = pattern.get_name();
 			if let None = actived.get(pattern_name) {
 				actived.insert(String::from(pattern_name),true);
