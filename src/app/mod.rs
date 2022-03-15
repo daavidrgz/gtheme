@@ -182,7 +182,7 @@ impl Ui {
 					if current_list == LEFT_LIST { 
 						lists.get_mut(LEFT_LIST).unwrap().remove_fav(&item, global_config)
 					} else {
-						lists.get_mut(LEFT_LIST).unwrap().add_fav(&item, global_config)
+						lists.get_mut(LEFT_LIST).unwrap().add_fav(&item, global_config);
 					}
 				},
 				KeyCode::Char('i') | KeyCode::Char('I') => {

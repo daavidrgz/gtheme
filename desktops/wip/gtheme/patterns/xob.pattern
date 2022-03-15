@@ -1,5 +1,5 @@
-%output-file%=~/.config/xob/styles.cfg
-# %theme-name%
+<[output-file]>=~/.config/xob/styles.cfg
+# <[theme-name]>
 
 vol = {
 	x         = {relative = 0 offset = 88}
@@ -12,12 +12,12 @@ vol = {
 	orientation = "horizontal"
 	color = {
 		normal = {
-				fg = "#%cyan%";
-				bg = "#%background%";
+				fg = "#<[cyan]>";
+				bg = "#<[background]>";
 		};
 		alt = {
-				fg = "#%background%";
-				bg = "#%background%";
+				fg = "#<[background]>";
+				bg = "#<[background]>";
 		};
 	};
 };
@@ -33,12 +33,12 @@ brightness = {
 	orientation = "horizontal"
 	color = {
 		normal = {
-				fg = "#%magenta%";
-				bg = "#%background%";
+				fg = "#<[magenta]>";
+				bg = "#<[background]>";
 		};
 		alt = {
-				fg = "#%background%";
-				bg = "#%background%";
+				fg = "#<[background]>";
+				bg = "#<[background]>";
 		};
 	};
 };
