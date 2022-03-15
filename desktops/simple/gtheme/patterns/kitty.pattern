@@ -1,6 +1,32 @@
-<[output-file]>=~/.config/kitty/colors.conf
+<[output-file]>=~/.config/kitty/kitty.conf
 # <[theme-name]>
 
+# ██╗  ██╗██╗████████╗████████╗██╗   ██╗
+# ██║ ██╔╝██║╚══██╔══╝╚══██╔══╝╚██╗ ██╔╝
+# █████╔╝ ██║   ██║      ██║    ╚████╔╝ 
+# ██╔═██╗ ██║   ██║      ██║     ╚██╔╝  
+# ██║  ██╗██║   ██║      ██║      ██║   
+# ╚═╝  ╚═╝╚═╝   ╚═╝      ╚═╝      ╚═╝   
+
+
+# •• Font
+font_family      <[default-font]>
+bold_font        auto
+italic_font      auto
+bold_italic_font auto
+font_size <[default-font-size]>
+
+# •• Look & Sound
+enable_audio_bell no
+cursor_shape beam
+window_padding_width 20.0
+
+# •• Performance
+repaint_delay 7
+update_check_interval 0
+allow_remote_control true
+
+# •• Theme
 foreground               #<[foreground]>
 background               #<[background]>
 selection_foreground     #<[selection-foreground]>

@@ -30,7 +30,9 @@ impl DesktopConfigDto {
 			Ok(file) => file,
 			Err(e) => {
 				warn!("Could not open desktop config, using default config: |{}|", e);
-				return Self::default(desktop)
+				let config =  Self::default(desktop);
+				config.save(desktop);
+				return config;
 			}
 		};
 
@@ -39,7 +41,9 @@ impl DesktopConfigDto {
 			Ok(_) => (),
 			Err(e) => {
 				error!("Could not read desktop config, using default config: |{}|", e);
-				return Self::default(desktop)
+				let config =  Self::default(desktop);
+				config.save(desktop);
+				return config;
 			}
 		};
 

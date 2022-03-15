@@ -25,7 +25,9 @@ impl GlobalConfigDto {
 			Ok(file) => file,
 			Err(e) => {
 				warn!("Could not open global config, using default config: |{}|", e);
-				return Self::default()
+				let config =  Self::default();
+				config.save();
+				return config;
 			}
 		};
 		let mut content = String::new();
@@ -33,7 +35,9 @@ impl GlobalConfigDto {
 			Ok(_) => (),
 			Err(e) => {
 				error!("Could not read global config, using default config: |{}|", e);
-				return Self::default()
+				let config =  Self::default();
+				config.save();
+				return config;
 			}
 		};
 		match serde_json::from_str(&content){
