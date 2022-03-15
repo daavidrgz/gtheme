@@ -3,7 +3,7 @@ pub mod commands;
 
 use std::collections::HashMap;
 use clap::ArgMatches;
-use log::{LevelFilter, error, warn};
+use log::{LevelFilter, error, warn, Level};
 use colored::*;
 use term_grid::{Grid, GridOptions, Direction, Filling};
 // use terminal_size::terminal_size;
@@ -34,14 +34,16 @@ pub fn start_cli() {
 	}
 
 	// Logger init
-	static CLI_LOGGER: CliLogger = CliLogger;
-
+	
+	log::set_max_level(LevelFilter::Info);
 	if matches.is_present("verbose") {
-		log::set_max_level(LevelFilter::Info);
+		static CLI_LOGGER: CliLogger = CliLogger{level: Level::Info};
+		log::set_logger(&CLI_LOGGER).unwrap();
+
 	} else {
-		log::set_max_level(LevelFilter::Warn);
+		static CLI_LOGGER: CliLogger = CliLogger{level: Level::Warn};
+		log::set_logger(&CLI_LOGGER).unwrap();
 	}
-	log::set_logger(&CLI_LOGGER).unwrap();
 
 	println!("");
 	match matches.subcommand() {
