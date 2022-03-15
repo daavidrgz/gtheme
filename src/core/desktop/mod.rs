@@ -5,6 +5,7 @@ use crate::core;
 use crate::core::pattern::*;
 use crate::core::theme::Theme;
 use crate::core::postscript::PostScript;
+use crate::core::config::UserConfig;
 
 use log::{info,error};
 
@@ -106,15 +107,17 @@ impl Desktop {
 	pub fn apply(&self, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>) {
 		//parameter HashMap(pattern_name,bool) in order to implement inverted themes
 
+
 		let post_scripts = self.get_post_scripts();
 		info!("Applying |{}| theme to |{}| desktop...", theme.get_name(), self.get_name());
+		let user_config = UserConfig::new();
 		for pattern_file in self.get_patterns(){
 			let pattern = pattern_file.to_pattern();
 			
 			//If not activated,skip pattern
 			if !*actived.get(pattern.get_name()).unwrap_or(&false) { continue }
 
-			pattern.fill(theme, *inverted.get(pattern.get_name()).unwrap_or(&false));
+			pattern.fill(theme, *inverted.get(pattern.get_name()).unwrap_or(&false),&user_config);
 			if let Some(postscript) = post_scripts.get(pattern_file.get_name()) {
 				info!("Executing |{}| post-script...", postscript.get_name());
 				postscript.execute(&vec![String::from(pattern.get_output())])

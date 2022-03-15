@@ -1,6 +1,6 @@
 %output-file%=/home/jorge/.config/kitty/colors.conf
 # %theme-name%
-
+# %monitor%
 foreground               #%foreground%
 background               #%background%
 selection_foreground     #%selection-foreground%

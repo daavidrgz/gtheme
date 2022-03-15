@@ -7,14 +7,12 @@ use log::{info,warn,error};
 
 #[derive(Debug, Serialize, Deserialize)]
 struct UserConfigDto {
-	mandatory:HashMap<String,String>,
-	extra:HashMap<String,String>
+	properties:HashMap<String,String>,
 }
 
 #[derive(Debug)]
 pub struct UserConfig {
-	mandatory:HashMap<String,String>,
-	extra:HashMap<String,String>
+	properties:HashMap<String,String>,
 }
  
 impl UserConfigDto {
@@ -24,7 +22,9 @@ impl UserConfigDto {
 			Ok(file) => file,
 			Err(e) => {
 				warn!("Could not open user config, using default config: |{}|", e);
-				return Self::default()
+				let config =  Self::default();
+				config.save();
+				return config
 			}
 		};
 		let mut content = String::new();
@@ -32,7 +32,9 @@ impl UserConfigDto {
 			Ok(_) => (),
 			Err(e) => {
 				error!("Could not read user config, using default config: |{}|", e);
-				return Self::default()
+				let config =  Self::default();
+				config.save();
+				return config;
 			}
 		};
 		match serde_json::from_str(&content){
@@ -49,8 +51,7 @@ impl UserConfigDto {
 
 	fn from(config:&UserConfig) -> Self {
 		UserConfigDto {
-			mandatory: config.mandatory.clone(),
-			extra:config.extra.clone()
+			properties: config.properties.clone(),
 		}
 	}
 
@@ -75,8 +76,7 @@ impl UserConfigDto {
 impl Default for UserConfigDto {
 	fn default() -> UserConfigDto {
 		UserConfigDto {
-			mandatory:HashMap::new(),
-			extra:HashMap::new()
+			properties:HashMap::new(),
 		}
 	}
 }
@@ -86,32 +86,21 @@ impl UserConfig {
 		let dto = UserConfigDto::new();
 
 		UserConfig {
-			mandatory:dto.mandatory,
-			extra:dto.extra
+			properties:dto.properties,
 		}
 	}
 
 	pub fn save(&self) {
 		UserConfigDto::from(self).save()
 	}
-	pub fn set_mandatory(&mut self, property:&str,value:&str){
-		self.mandatory.insert(String::from(property),String::from(value));
+	pub fn set_properties(&mut self, property:&str,value:&str){
+		self.properties.insert(String::from(property),String::from(value));
 	}
-	pub fn set_extra(&mut self, property:&str,value:&str){
-		self.extra.insert(String::from(property),String::from(value));
+	pub fn set_property(&mut self, property:&str,value:&str){
+		self.properties.insert(String::from(property),String::from(value));
 	}
-	pub fn get_mandatory(&self) -> &HashMap<String,String>{
-		&self.mandatory
-	}
-	pub fn get_extra(&self) -> &HashMap<String, String> {
-		&self.extra
-	}
-	fn check_mandatory(&self){
-		let path = format!("{}/user_config.json",core::expand_path(core::GTHEME_HOME));
-
-		if let None = self.mandatory.get("monitor"){
-			warn!("Monitor property is not set on user config |({})|",path)
-		}
+	pub fn get_properties(&self) -> &HashMap<String,String>{
+		&self.properties
 	}
 }
 
@@ -122,7 +111,7 @@ mod tests{
 	#[test]
 	fn test_config(){
 		let mut config = UserConfig::new();
-		config.set_mandatory("monitor", "HDMI-0");
+		config.set_properties("monitor", "HDMI-0");
 		config.save();
 	}
 }

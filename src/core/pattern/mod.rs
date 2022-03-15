@@ -1,11 +1,12 @@
 use std::fs::{self,File};
 use std::io::prelude::*;
 use regex::Regex;
-use log::{info,error};
+use log::{info,error,warn};
 
 use crate::core;
 use crate::core::theme::Theme;
 use crate::core::desktop::DesktopFile;
+use crate::core::config::UserConfig;
 
 #[derive(Debug)]
 pub struct Pattern {
@@ -109,10 +110,10 @@ impl Pattern {
 		vec
 	}
 
-	pub fn fill(&self, theme: &Theme, is_inverted: bool) {
+	pub fn fill(&self, theme: &Theme, is_inverted: bool, user_config: &UserConfig) {
 		info!("Filling |{}| pattern with |{}| theme...", self.get_name(), theme.get_name());
 
-		let filled_content = self.fill_values(theme, is_inverted);
+		let filled_content = self.fill_values(theme, is_inverted,user_config);
 	
 		//If cant create output file, returns
 		let mut output_file = match File::create(self.get_output()) {
@@ -131,7 +132,7 @@ impl Pattern {
 		}
 	}
 
-	fn fill_values(&self, theme: &Theme, is_inverted: bool) -> String {
+	fn fill_values(&self, theme: &Theme, is_inverted: bool, user_config: &UserConfig) -> String {
 		let mut result = String::from(&self.content);
 		for (key,value) in theme.get_colors().iter() {
 			let real_key = if is_inverted {
@@ -149,6 +150,21 @@ impl Pattern {
 			let re = Regex::new(&format!("%{}%", real_key)).unwrap();
 			result = re.replace_all(&result, value).into_owned();
 		}
+		// fill theme-name
+
+		let re = Regex::new("%theme-name%").unwrap();
+		result = re.replace_all(&result, theme.get_name()).into_owned();
+
+		//Fill user defined properties
+		for (key,value) in user_config.get_properties(){
+			let re = Regex::new(&format!("%{}%", key)).unwrap();
+			result = re.replace_all(&result, value).into_owned();
+		}
+	
+		let re = Regex::new(r"%((\w|-)+)%").unwrap();
+		for caps in re.captures_iter(&result){
+			warn!("Could not fill property |{}| in pattern |{}|", &caps[1],self.get_name());
+		};
 		result
 	}
 }
