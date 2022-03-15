@@ -1,4 +1,5 @@
 use log::{Record, Level, Metadata, Log};
+use chrono::Local;
 use colored::*;
 use std::{fs::{File, OpenOptions}, io::Write};
 
@@ -34,16 +35,20 @@ impl Log for CliLogger {
 				_ => ()
 			}
 		});
-		println!("\n")
+		println!("\n");
 
 		let log_path: String = format!("{}/gtheme.log", core::expand_path(core::GTHEME_HOME));
-		let log_file: File = match OpenOptions::new().create(true).write(true).open(&log_path) {
+		let mut log_file: File = match OpenOptions::new().create(true).write(true).append(true).open(&log_path) {
 			Ok(f) => f,
-			Err(e) => return
+			Err(_) => return
 		};
 
-		let plain_text = format!("{} - {}", record.level(), record.args());
-		log_file.write_all(plain_text.as_bytes());
+		let time = Local::now().format("%H:%M:%S %Y-%m-%d");
+		let plain_text = format!("{} {} - {}\n", time, record.level(), record.args());
+		match log_file.write_all(plain_text.as_bytes()) {
+			Err(_) => (),
+			_ => ()
+		}
 	}
 
 	fn flush(&self) {}
