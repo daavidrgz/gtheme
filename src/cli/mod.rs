@@ -5,6 +5,8 @@ use std::collections::HashMap;
 use clap::ArgMatches;
 use log::{LevelFilter, error, warn};
 use colored::*;
+use term_grid::{Grid, GridOptions, Direction, Filling};
+// use terminal_size::terminal_size;
 
 use clilogger::CliLogger;
 use crate::app;
@@ -288,14 +290,29 @@ fn list_themes() {
 
 	println!("{}\n", "THEMES".bold().underline().yellow());
 
-	for t in all_themes {
+	let print_themes: Vec<String> = all_themes.into_iter().map(|t| {
 		if t.get_name() == current_theme {
-			println!("{} {}", "•".green(), t.get_name().bold().green());
+			format!("{} {}", "•".green(), t.get_name())
 		} else {
-			println!("{} {}", "•".yellow(), t.get_name());
-		};
+			format!("{} {}", "•".yellow(), t.get_name())
+		}
+	}).collect();
+
+	let mut grid = Grid::new(GridOptions {
+		filling: Filling::Spaces(2),
+		direction: Direction::TopToBottom,
+	});
+	
+	for s in print_themes {
+		grid.add(s.into());
 	}
-	println!("");
+
+	// let term_width: usize = match terminal_size() {
+	// 	Some((width, _)) => width.0.into(),
+	// 	None => return 
+	// };
+
+	println!("{}", grid.fit_into_columns(3));
 }
 
 fn list_fav_themes() {

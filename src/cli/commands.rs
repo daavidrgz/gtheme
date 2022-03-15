@@ -17,6 +17,7 @@ pub fn build_app() -> Command<'static> {
 		);
 
 		app = app.subcommand(Command::new("theme")
+			.alias("t")
 			.about("Manage themes")
 			.subcommand_required(true)
 			.subcommand(Command::new("list")
@@ -52,6 +53,7 @@ pub fn build_app() -> Command<'static> {
 		);
 
 		app = app.subcommand(Command::new("desktop")
+			.alias("d")
 			.about("Manage desktops")
 			.subcommand_required(true)
 			.subcommand(Command::new("list")
@@ -77,6 +79,7 @@ pub fn build_app() -> Command<'static> {
 		);
 
 		app = app.subcommand(Command::new("pattern")
+			.alias("p")
 			.about("Manage patterns")
 			.subcommand_required(true)
 			.subcommand(Command::new("list")
@@ -156,6 +159,7 @@ pub fn build_app() -> Command<'static> {
 		);
 
 		app = app.subcommand(Command::new("extra")
+			.alias("e")
 			.about("Manage extras")
 			.subcommand_required(true)
 			.subcommand(Command::new("list")
@@ -219,6 +223,7 @@ pub fn build_app() -> Command<'static> {
 		);
 
 		app = app.subcommand(Command::new("fav")
+			.alias("f")
 			.about("Manage fav themes")
 			.subcommand_required(true)
 			.subcommand(Command::new("list")
