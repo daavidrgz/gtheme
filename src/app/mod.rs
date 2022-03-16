@@ -21,7 +21,7 @@ use crossterm::{
 
 use crate::core::config::GlobalConfig;
 use crate::app::{
-	widgets::{ListWidget, LogoWidget, OptionsWidget, HelpWidget, LoggerWidget},
+	widgets::{ListWidget, LogoWidget, HelpWidget, LoggerWidget},
 	appstate::{AppState, Screen, Popup}
 };
 
@@ -267,8 +267,8 @@ impl Ui {
 		f.render_widget(logo_widget.get_widget(), logo_container);
 
 		// Options
-		let options_widget = OptionsWidget::new();
-		f.render_widget(options_widget.get_widget(), options_container);
+		// let options_widget = OptionsWidget::new();
+		// f.render_widget(options_widget.get_widget(), options_container);
 
 		// Lists
 		let widget_list_1 = ListWidget::new(&lists[0], global_config, desktop_config);
