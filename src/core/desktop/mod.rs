@@ -107,7 +107,6 @@ impl Desktop {
 	pub fn apply(&self, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>) {
 		//parameter HashMap(pattern_name,bool) in order to implement inverted themes
 
-
 		let post_scripts = self.get_post_scripts();
 		info!("Applying |{}| theme to |{}| desktop...", theme.get_name(), self.get_name());
 		let user_config = UserConfig::new();

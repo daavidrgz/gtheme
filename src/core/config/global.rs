@@ -175,7 +175,7 @@ impl GlobalConfig {
 			}
 		}
 	}
-	pub fn add_fav_theme(&mut self,theme:&ThemeFile){
+	pub fn add_fav_theme(&mut self, theme: &ThemeFile) {
 		let theme_name = theme.get_name().to_lowercase();
 		match self.fav_themes.binary_search_by(|item| item.get_name().to_lowercase().cmp(&theme_name)){
 			Ok(_)=>{
@@ -187,7 +187,7 @@ impl GlobalConfig {
 			}
 		}
 	}
-	pub fn remove_fav_theme(&mut self,theme:&ThemeFile){
+	pub fn remove_fav_theme(&mut self, theme: &ThemeFile){
 		let theme_name = theme.get_name().to_lowercase();
 		match self.fav_themes.binary_search_by(|item| item.get_name().to_lowercase().cmp(&theme_name)){
 			Ok(pos)=>{

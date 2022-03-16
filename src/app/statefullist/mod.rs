@@ -167,38 +167,32 @@ impl StatefulList<ScreenItem> {
 	pub fn add_fav(&mut self, item: &ScreenItem, global_config: &mut GlobalConfig) {
 		match item {
 			ScreenItem::Theme(t) => {
-				let fav_themes = global_config.get_mut_fav_themes();
-				let idx = fav_themes.iter().position(|item| item.get_name() == t.get_name());
+				global_config.add_fav_theme(t);
+				global_config.save();
 
-				match idx {
-					Some(_) => (),
-					None => {
-						fav_themes.push(t.clone());
-						self.items.push(ScreenItem::Theme(t.clone()));
-						global_config.save()
-					}
+				let theme_name = t.get_name().to_lowercase();
+				match self.items.binary_search_by(|item| item.get_name().to_lowercase().cmp(&theme_name)) {
+					Ok(_) => (),
+					Err(pos) => self.items.insert(pos, item.clone())
 				}
 			}
-			_ => {}
+			_ => ()
 		}
 	}
 
 	pub fn remove_fav(&mut self, item: &ScreenItem, global_config: &mut GlobalConfig) {
 		match item {
 			ScreenItem::Theme(t) => {
-				let fav_themes = global_config.get_mut_fav_themes();
-				let idx = fav_themes.iter().position(|item| item.get_name() == t.get_name());
-				
-				match idx {
-					Some(i) => {
-						fav_themes.remove(i);
-						self.items.remove(i);
-						global_config.save()
-					},
-					None => ()
+				global_config.remove_fav_theme(t);
+				global_config.save();
+
+				let theme_name = t.get_name().to_lowercase();
+				match self.items.binary_search_by(|item| item.get_name().to_lowercase().cmp(&theme_name)) {
+					Ok(pos) => {self.items.remove(pos);},
+					Err(_) => ()
 				}
 			}
-			_ => {}
+			_ => ()
 		}
 	}
 }

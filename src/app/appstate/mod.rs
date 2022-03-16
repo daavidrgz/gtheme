@@ -75,17 +75,15 @@ impl AppState {
 	}
 
 	fn create_screens(global_config: &GlobalConfig) -> HashMap<Screen, [StatefulList<ScreenItem>; 2]> {
-		let current_desktop = global_config.get_current_desktop();
-
-		let desktops = Desktop::get_desktops().into_iter().map(|d|ScreenItem::Desktop(d)).collect();
+		let desktops = Desktop::get_desktops().into_iter().map(|d| ScreenItem::Desktop(d)).collect();
 		let desktops_list = StatefulList::with_items(desktops)
 			.color(Color::Cyan)
 			.title("DESKTOPS ")
 			.selected(true);
 
-		let patterns = match current_desktop{
-			None=>vec![],
-			Some(desktop)=> Pattern::get_patterns(desktop).into_iter().map(|p|ScreenItem::Pattern(p)).collect()
+		let patterns = match global_config.get_current_desktop() {
+			None => vec![],
+			Some(desktop) => Pattern::get_patterns(desktop).into_iter().map(|p| ScreenItem::Pattern(p)).collect()
 		};
 		let patterns_list = StatefulList::with_items(patterns)
 			.color(Color::Magenta)
@@ -96,13 +94,13 @@ impl AppState {
 			.inactive_text_color(Color::Red)
 			.alignment(true);
 
-		let fav_themes = global_config.get_fav_themes().into_iter().map(|f|ScreenItem::Theme(f.clone())).collect();
+		let fav_themes = global_config.get_fav_themes().into_iter().map(|f| ScreenItem::Theme(f.clone())).collect();
 		let fav_themes_list = StatefulList::with_items(fav_themes)
 			.color(Color::Blue)
 			.title("FAV-THEMES ")
 			.selected(true);
 
-		let themes = Theme::get_themes().into_iter().map(|t|ScreenItem::Theme(t)).collect();
+		let themes = Theme::get_themes().into_iter().map(|t| ScreenItem::Theme(t)).collect();
 		let themes_list = StatefulList::with_items(themes)
 			.color(Color::Green)
 			.title("THEMES ")
@@ -132,9 +130,9 @@ impl AppState {
 	}
 
 	fn create_extras_list(global_config: &GlobalConfig) -> StatefulList<ScreenItem> {
-		let extras = match global_config.get_current_desktop(){
+		let extras = match global_config.get_current_desktop() {
 			None => vec![],
-			Some(desktop) => PostScript::get_extras(desktop).into_iter().map(|e|ScreenItem::Extra(e)).collect()
+			Some(desktop) => PostScript::get_extras(desktop).into_iter().map(|e| ScreenItem::Extra(e)).collect()
 		};
 
 		StatefulList::with_items(extras)

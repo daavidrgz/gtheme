@@ -71,10 +71,10 @@ impl ScreenItem {
 
 	pub fn apply(&self, global_config: &mut GlobalConfig, desktop_config: &mut Option<DesktopConfig>) {
 		match self {
-			ScreenItem::Desktop(d) => Self::install_desktop(d.clone(), global_config),
-			ScreenItem::Theme(t) => Self::apply_theme(t.clone(), global_config, desktop_config),
-			ScreenItem::Pattern(_) => Self::toggle_active(self.clone(), desktop_config),
-			ScreenItem::Extra(_) => Self::toggle_active(self.clone(), desktop_config),
+			ScreenItem::Desktop(d) => Self::install_desktop(d, global_config),
+			ScreenItem::Theme(t) => Self::apply_theme(t, global_config, desktop_config),
+			ScreenItem::Pattern(_) => Self::toggle_active(self, desktop_config),
+			ScreenItem::Extra(_) => Self::toggle_active(self, desktop_config),
 			ScreenItem::Help(_) => ()
 		}
 	}
@@ -82,10 +82,7 @@ impl ScreenItem {
 	pub fn invert(&self, desktop_config: &mut DesktopConfig) {
 		match self {
 			ScreenItem::Pattern(p) => {
-				let inverted = desktop_config.get_mut_inverted();
-				let current_status = *inverted.get(p.get_name()).unwrap_or(&false);
-		
-				inverted.insert(String::from(p.get_name()), !current_status);
+				desktop_config.toggle_invert_pattern(p);
 				desktop_config.save()
 			},
 			_ => {}
@@ -95,8 +92,8 @@ impl ScreenItem {
 	pub fn is_inverted(&self, desktop_config: &Option<DesktopConfig>) -> bool {
 		match self {
 			ScreenItem::Pattern(p) => {
-				match desktop_config{
-					Some(d_config)=>*d_config.get_inverted().get(p.get_name()).unwrap_or(&false),
+				match desktop_config {
+					Some(d_config) => *d_config.get_inverted().get(p.get_name()).unwrap_or(&false),
 					None => false
 				}
 			},
@@ -134,22 +131,24 @@ impl ScreenItem {
 		}
 	}
 
-	fn toggle_active(item: ScreenItem, desktop_config: &mut Option<DesktopConfig>) {
-		let d_config = match desktop_config{
-			Some(config) => config,
+	fn toggle_active(item: &ScreenItem, desktop_config_opt: &mut Option<DesktopConfig>) {
+		let desktop_config = match desktop_config_opt {
 			None => {
 				warn!("Cannot activate item, |there is no desktop installed!|");
 				return
 			}
+			Some(config) => config,
 		};
-		let actived = d_config.get_mut_actived();
-		let current_status = *actived.get(item.get_name()).unwrap_or(&false);
 
-		actived.insert(String::from(item.get_name()), !current_status);
-		d_config.save()
+		match item {
+			ScreenItem::Pattern(p) => desktop_config.toggle_pattern(p),
+			ScreenItem::Extra(e) => desktop_config.toggle_extra(e),
+			_ => ()
+		}
+		desktop_config.save()
 	}
 
-	fn apply_theme(theme: ThemeFile, global_config: &mut GlobalConfig, desktop_config: &mut Option<DesktopConfig>) {
+	fn apply_theme(theme: &ThemeFile, global_config: &mut GlobalConfig, desktop_config_opt: &mut Option<DesktopConfig>) {
 		let current_desktop = match global_config.get_current_desktop() {
 			Some(d) => d.to_desktop(),
 			None => {
@@ -157,29 +156,27 @@ impl ScreenItem {
 				return
 			}
 		};
-		let d_config = match desktop_config {
-			Some(config) =>config,
-			None=>{
+		let desktop_config = match desktop_config_opt {
+			Some(config) => config,
+			None => {
 				warn!("Cannot apply a theme, |there is no desktop installed!|");
 				return
 			}
 		};
 
-		current_desktop.apply(&theme.to_theme(), d_config.get_actived(), d_config.get_inverted());
+		current_desktop.apply(&theme.to_theme(), desktop_config.get_actived(), desktop_config.get_inverted());
 
-		*global_config.get_mut_current_theme() = Some(theme);
+		*global_config.get_mut_current_theme() = Some(theme.clone());
 		global_config.save()
 	}
 
-	fn install_desktop(next_desktop: DesktopFile, global_config: &mut GlobalConfig){
+	fn install_desktop(next_desktop: &DesktopFile, global_config: &mut GlobalConfig){
 		let current_desktop = match global_config.get_current_desktop() {
 			Some(d) => Some(d.to_desktop()),
 			None => None
 		};
 		
-
-		let themes = Theme::get_themes();
-		let aux_theme = themes.into_iter().find(|theme | theme.get_name() == "Nord").unwrap(); 
+		let aux_theme = Theme::get_by_name("Nord").unwrap(); 
 
 		let next_desktop_config = DesktopConfig::new(&next_desktop);
 		let theme = next_desktop_config.get_default_theme().as_ref().unwrap_or(&aux_theme);
