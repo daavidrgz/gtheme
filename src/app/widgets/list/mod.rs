@@ -75,22 +75,21 @@ impl<'a> ListWidget<'a> {
 	}	
 
 	fn get_item_text(it: usize, screen_item: &ScreenItem, stateful_list: &StatefulList<ScreenItem>, global_config: &GlobalConfig, desktop_config: &Option<DesktopConfig>) -> (String, String, String) {
-		let mut name = screen_item.get_name().to_string();
-		let mut arrows = String::new();
+		let name_str = screen_item.get_name();
 
-		name = match stateful_list.get_state().selected() {
+		let mut arrows = String::new();
+		let mut name = if *stateful_list.get_alignment() { format!("   {:<20} ", name_str) } else { format!("   {} ", name_str) };
+		match stateful_list.get_state().selected() {
 			Some(idx) => {
 				if idx == it {
 					arrows = if idx == 0 { "↓".to_string() }
 					else if idx + 1 == stateful_list.get_length() { "↑".to_string() }
 					else { "↓ ↑".to_string() };
 
-					if *stateful_list.get_alignment() { format!(" ‣ {:<20} ", name) } else { format!(" ‣ {} ", name) }
-				} else {
-					if *stateful_list.get_alignment() { format!("   {:<20} ", name) } else { format!("   {} ", name) }
+					name = if *stateful_list.get_alignment() { format!(" ‣ {:<20} ", name_str) } else { format!(" ‣ {} ", name_str) }
 				}
 			},
-			None => if *stateful_list.get_alignment() { format!("   {:<20} ", name) } else { format!("   {} ", name) }
+			None => ()
 		};
 	
 		let mut active_text = if screen_item.is_active(global_config, desktop_config) {

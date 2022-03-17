@@ -1,0 +1,38 @@
+{
+	"name": "Nu-Disco",
+	"extras": {
+		"vscode": ["Nu Disco Dark"],
+		"wallpaper": ["~/.config/gtheme/wallpapers/Radical/radpack-3.jpg"]
+	},
+	"colors": {
+		"background": "0C001F",
+		"foreground": "49CDCB",
+		"cursor": "49CDCB",
+		"selection-background": "49CDCB",
+		"selection-foreground": "0C001F",
+
+		"black": "3b4252",
+		"black-hg": "4c566a",
+
+		"red": "F67DAE",
+		"red-hg": "F67DAE",
+
+		"green": "5FD588",
+		"green-hg": "5FD588",
+
+		"yellow": "FDB170",
+		"yellow-hg": "FDB170",
+
+		"blue": "5A95D7",
+		"blue-hg": "5A95D7",
+
+		"magenta": "D1BAFB",
+		"magenta-hg": "D1BAFB",
+
+		"cyan": "51E5DF",
+		"cyan-hg": "51E5DF",
+
+		"white": "EFEEF2",
+		"white-hg": "EFEEF2"
+	}
+}
