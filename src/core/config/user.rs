@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::fs::{File, OpenOptions};
 use std::io::prelude::*;
 use serde::{Serialize,Deserialize};
+use toml;
 use crate::core::{self};
 use log::{info,warn,error};
 
@@ -17,11 +18,11 @@ pub struct UserConfig {
  
 impl UserConfigDto {
 	fn new() -> Self {
-		let path = format!("{}/user_config.json",core::expand_path(core::GTHEME_HOME));
+		let path = format!("{}/user_settings.toml",core::expand_path(core::GTHEME_HOME));
 		let mut file = match File::open(&path) {
 			Ok(file) => file,
 			Err(e) => {
-				warn!("Could not open user config, using default config: |{}|", e);
+				warn!("Could not open user settings, using default config: |{}|", e);
 				let config =  Self::default();
 				config.save();
 				return config
@@ -31,19 +32,19 @@ impl UserConfigDto {
 		match  file.read_to_string(&mut content) {
 			Ok(_) => (),
 			Err(e) => {
-				error!("Could not read user config, using default config: |{}|", e);
+				error!("Could not read user settings, using default config: |{}|", e);
 				let config =  Self::default();
 				config.save();
 				return config;
 			}
 		};
-		match serde_json::from_str(&content){
+		match toml::from_str(&content){
 			Ok(config) => {
-				info!("Using user config |{}|",&path);
+				info!("Using user settings |{}|",&path);
 				config
 			},
 			Err(e) => {
-				error!("Could not parse user config, using default config: |{}|", e);
+				error!("Could not parse user settings, using default config: |{}|", e);
 				return Self::default()
 			}
 		}
@@ -56,8 +57,8 @@ impl UserConfigDto {
 	}
 
 	fn save(&self) {
-		let content = serde_json::to_string_pretty(self).unwrap();
-		let path = format!("{}/user_config.json",core::expand_path(core::GTHEME_HOME));
+		let content = toml::to_string_pretty(self).unwrap();
+		let path = format!("{}/user_settings.toml",core::expand_path(core::GTHEME_HOME));
 		let mut file = match OpenOptions::new().create(true).write(true).truncate(true).open(&path) {
 			Ok(f) => f,
 			Err(e) => {
@@ -66,8 +67,8 @@ impl UserConfigDto {
 			}
 		};
 		match file.write_all(&content.as_bytes()){
-			Err(e) => error!("Could not write user config in |{}|: |{}|", &path, e),
-			_=> info!("Saving user config...")
+			Err(e) => error!("Could not write user settings in |{}|: |{}|", &path, e),
+			_=> info!("Saving user settings...")
 		}	
 	}
 
