@@ -29,7 +29,7 @@ bspc rule -a Zathura state=tiled
 bspc rule -a Rofi state=floating
 
 # •• Keymap
-setxkbmap -layout us -variant altgr-intl
+setxkbmap -layout <[keyboard-layout]> -variant <[keyboard-variant]>
 
 # •• Key press rate
 xset r rate 200 40
