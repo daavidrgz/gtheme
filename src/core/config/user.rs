@@ -22,7 +22,7 @@ impl UserConfigDto {
 		let mut file = match File::open(&path) {
 			Ok(file) => file,
 			Err(e) => {
-				warn!("Could not open user settings, using default config: |{}|", e);
+				warn!("Could not open user settings, using default settings: |{}|", e);
 				let config =  Self::default();
 				config.save();
 				return config
@@ -32,7 +32,7 @@ impl UserConfigDto {
 		match  file.read_to_string(&mut content) {
 			Ok(_) => (),
 			Err(e) => {
-				error!("Could not read user settings, using default config: |{}|", e);
+				error!("Could not read user settings, using default settings: |{}|", e);
 				let config =  Self::default();
 				config.save();
 				return config;
@@ -44,7 +44,7 @@ impl UserConfigDto {
 				config
 			},
 			Err(e) => {
-				error!("Could not parse user settings, using default config: |{}|", e);
+				error!("Could not parse user settings, using default settings: |{}|", e);
 				return Self::default()
 			}
 		}

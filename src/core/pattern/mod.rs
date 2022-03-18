@@ -1,3 +1,4 @@
+use std::collections::HashSet;
 use std::fs::{self,File};
 use std::io::prelude::*;
 use regex::Regex;
@@ -164,10 +165,15 @@ impl Pattern {
 			result = re.replace_all(&result, value).into_owned();
 		}
 	
+		//Find not filled properties
+		let mut missing_properties = HashSet::new();
 		let re = Regex::new(r"<\[((\w|-)+)\]>").unwrap();
 		for caps in re.captures_iter(&result){
-			warn!("Could not fill property |{}| in pattern |{}|", &caps[1],self.get_name());
+			missing_properties.insert(String::from(&caps[1]));
 		};
+		for missing_property in missing_properties{
+			warn!("Could not fill property |{}| in pattern |{}|", missing_property,self.get_name());
+		}
 		result
 	}
 }
