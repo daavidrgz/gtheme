@@ -197,7 +197,6 @@ impl Pattern {
 					//If pair property-default value were not replaced before
 					if default_properties.insert((property.clone(),default_value.clone())){
 						let re = Regex::new(&format!(r"<\[{}\|{}\]>", property, default_value)).unwrap();
-
 						default_filled_result = re.replace_all(&default_filled_result, default_value).into_owned();
 					}
 				}
