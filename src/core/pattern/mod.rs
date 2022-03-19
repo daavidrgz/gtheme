@@ -165,20 +165,51 @@ impl Pattern {
 
 		//Fill user defined properties
 		for (key,value) in user_config.get_properties(){
-			let re = Regex::new(&format!(r"<\[{}\]>", key)).unwrap();
+			let re = Regex::new(&format!(r"<\[({})(?:\|(.*))?\]>",key)).unwrap();
 			result = re.replace_all(&result, value).into_owned();
 		}
 	
 		//Find not filled properties
 		let mut missing_properties = HashSet::new();
-		let re = Regex::new(r"<\[((\w|-)+)\]>").unwrap();
+		let mut default_properties = HashSet::new();
+
+		let re = Regex::new(r"<\[((?:\w|-)+)(?:\|(.*))?\]>").unwrap();
+
+		let mut default_filled_result = result.clone();
 		for caps in re.captures_iter(&result){
-			missing_properties.insert(String::from(&caps[1]));
+			let property = match caps.get(1){
+				None => {
+					//This warning should not happen, since property name captured group
+					//is not optional, hence a string <[]> does not match in the regex and 
+					//can't enter in this branch
+					warn!("There is an empty property in pattern |{}|",self.get_name());
+					continue
+				},
+				Some(value)=> String::from(value.as_str())
+			};
+			let default =caps.get(2);
+			match default{
+				None => {
+					missing_properties.insert(property);
+				},
+				Some(value) =>{
+					let default_value = String::from(value.as_str());
+					//If pair property-default value were not replaced before
+					if default_properties.insert((property.clone(),default_value.clone())){
+						let re = Regex::new(&format!(r"<\[{}\|{}\]>", property, default_value)).unwrap();
+
+						default_filled_result = re.replace_all(&default_filled_result, default_value).into_owned();
+					}
+				}
+			};
 		};
 		for missing_property in missing_properties{
 			warn!("Could not fill property |{}| in pattern |{}|", missing_property,self.get_name());
 		}
-		result
+		for (default_property,value) in default_properties{
+			info!("Filled property |{}| with default value |{}| in pattern |{}|", default_property, value, self.get_name());
+		}
+		default_filled_result
 	}
 }
 
@@ -200,14 +231,20 @@ impl PatternFile {
 	}
 }
 
-// #[cfg(test)]
-// mod tests{
-// 	use super::*;
-// 	#[test]
-// 	fn test_get_patterns() {
-// 		let patterns = Pattern::get_patterns("simple");
-// 		for pattern in &patterns {
-// 			println!("Pattern: {} in {}", pattern.get_name(), pattern.get_path())
-// 		}
-// 	}
-// }
+#[cfg(test)]
+mod tests{
+	use super::*;
+	#[test]
+	fn test_regex_fill(){
+		let content = "<[]>";
+		let re = Regex::new(r"<\[((?:\w|-)+)?(?:\|(.*))?\]>").unwrap();
+
+		println!("{}", re.is_match(content));
+		for caps in re.captures_iter(content){
+			// println!("{}",String::from(&caps[1]));
+			// println!("{}",String::from(&caps[3]));
+			// let cap =caps.get(1);
+			dbg!(caps);
+		};		
+	}
+}
