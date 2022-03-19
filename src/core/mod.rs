@@ -69,7 +69,7 @@ mod tests{
 		let mut inverted = HashMap::new();
 		inverted.insert(String::from("polybar"), true);
 
-		desktop.apply(&theme,&active,&inverted);
+		desktop.apply(&theme,&active,&inverted,false);
 	}
 
 }

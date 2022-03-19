@@ -135,7 +135,7 @@ fn apply_theme(matches: &ArgMatches) {
 		inverted = desktop_config.get_inverted().clone()
 	}
 
-	current_desktop.apply(&theme.to_theme(), &actived, &inverted);
+	current_desktop.apply(&theme.to_theme(), &actived, &inverted,false);
 
 	*global_config.get_mut_current_theme() = Some(theme);
 	global_config.save()
@@ -176,7 +176,7 @@ fn install_desktop(matches: &ArgMatches) {
 	*global_config.get_mut_current_theme() = Some(default_theme.clone());
 	global_config.save();
 
-	desktop.to_desktop().install(&previous, &default_theme.to_theme(), desktop_config.get_actived(), desktop_config.get_inverted())
+	desktop.to_desktop().install(&previous, &default_theme.to_theme(), desktop_config.get_actived(), desktop_config.get_inverted(),false)
 }
 
 fn manage_patterns(matches: &ArgMatches, action:Action) {

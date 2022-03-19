@@ -104,8 +104,9 @@ impl Desktop {
 		vec
 	}
 
-	pub fn apply(&self, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>) {
+	pub fn apply(&self, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>,dry_run: bool) {
 		//parameter HashMap(pattern_name,bool) in order to implement inverted themes
+		info!("Applying theme in dry-run mode...");
 
 		let post_scripts = self.get_post_scripts();
 		info!("Applying |{}| theme to |{}| desktop...", theme.get_name(), self.get_name());
@@ -116,10 +117,14 @@ impl Desktop {
 			//If not activated,skip pattern
 			if !*actived.get(pattern.get_name()).unwrap_or(&false) { continue }
 
-			pattern.fill(theme, *inverted.get(pattern.get_name()).unwrap_or(&false),&user_config);
+			pattern.fill(theme, *inverted.get(pattern.get_name()).unwrap_or(&false),&user_config,dry_run);
 			if let Some(postscript) = post_scripts.get(pattern_file.get_name()) {
 				info!("Executing |{}| post-script...", postscript.get_name());
-				postscript.execute(&vec![String::from(pattern.get_output())])
+
+				//Dont execute postscripts on dry-run mode
+				if !dry_run{
+					postscript.execute(&vec![String::from(pattern.get_output())])
+				}
 			}
 		}
 
@@ -131,7 +136,10 @@ impl Desktop {
 				.map(|arg|core::expand_path(arg)).collect();
 			
 			info!("Executing |{}| extra...",extra_ps.get_name());
-			extra_ps.execute(&args);
+
+			if !dry_run{
+				extra_ps.execute(&args);
+			}
 		}
 	}
 
@@ -151,20 +159,31 @@ impl Desktop {
 	}
 
 	// TODO: Integrate desktopConfig inside Desktop to have direct access to active and inverted
-	pub fn install(&self, previous: &Option<Desktop>, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>) {
+	pub fn install(&self, previous: &Option<Desktop>, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>,dry_run:bool) {
 		let config_home = core::expand_path(core::CONFIG_HOME);
 
+		if dry_run{
+			info!("Installing desktop in dry-run mode...")
+		}
 		if let Some(previous_desktop) = previous{
 			info!("Uninstalling desktop |{}|...", previous_desktop.get_name());
-			previous_desktop.uninstall();
+			if !dry_run {
+				previous_desktop.uninstall();
+			}
 		};
-		// Clean files to install
-		self.uninstall();
+		if !dry_run{
+			// Clean files to install
+			self.uninstall();
+		}
+
 
 		let files_to_install = self.get_config_files();
 
 		info!("Installing desktop |{}|...", self.get_name());
 		for entry in files_to_install {
+			//Break loop if dry_run
+			if dry_run {break}
+
 			let from = entry.path();
 
 			let file_name = match entry.file_name().into_string() {
@@ -176,6 +195,7 @@ impl Desktop {
 			};
 			let to = format!("{}/{}",config_home,file_name);
 
+
 			let mut options = fs_extra::dir::CopyOptions::new();
 			options.overwrite = true;
 			options.copy_inside = true;
@@ -185,18 +205,19 @@ impl Desktop {
 			}
 		}
 
-		self.apply(theme, actived, inverted);
+		self.apply(theme, actived, inverted,dry_run);
 
-		match previous {
-			Some(previous_desktop ) =>{
+		if let Some(previous_desktop) =  previous {
 				//Exit postcript from previous desktop
-				let previous_postscripts = previous_desktop.get_post_scripts();
-				if let Some(ps) = previous_postscripts.get("desktop-exit") {
-					info!("Executing |desktop-exit| post-script");
-					ps.execute(&vec![]);
-				}
-			},
-			None=>()
+			let previous_postscripts = previous_desktop.get_post_scripts();
+			if let Some(ps) = previous_postscripts.get("desktop-exit") {
+				info!("Executing |desktop-exit| post-script");
+				
+				//Dont execute exit postscript if dry-run mode
+				if !dry_run{
+					ps.execute(&vec![])
+				};
+			}
 		};
 	}
 
@@ -269,7 +290,7 @@ mod tests{
 		let mut inverted = HashMap::new();
 		inverted.insert(String::from("polybar"), true);
 
-		desktop.install(&Some(previous),&theme,&actived,&inverted);
+		desktop.install(&Some(previous),&theme,&actived,&inverted,false);
 	}
 
 	#[test]

@@ -164,7 +164,7 @@ impl ScreenItem {
 			}
 		};
 
-		current_desktop.apply(&theme.to_theme(), desktop_config.get_actived(), desktop_config.get_inverted());
+		current_desktop.apply(&theme.to_theme(), desktop_config.get_actived(), desktop_config.get_inverted(),false);
 
 		*global_config.get_mut_current_theme() = Some(theme.clone());
 		global_config.save()
@@ -185,6 +185,6 @@ impl ScreenItem {
 		*global_config.get_mut_current_theme() = Some(theme.clone());
 		global_config.save();
 
-		next_desktop.to_desktop().install(&current_desktop, &theme.to_theme(), next_desktop_config.get_actived(), next_desktop_config.get_inverted())
+		next_desktop.to_desktop().install(&current_desktop, &theme.to_theme(), next_desktop_config.get_actived(), next_desktop_config.get_inverted(),false)
 	}
 }

@@ -111,10 +111,14 @@ impl Pattern {
 		vec
 	}
 
-	pub fn fill(&self, theme: &Theme, is_inverted: bool, user_config: &UserConfig) {
+	pub fn fill(&self, theme: &Theme, is_inverted: bool, user_config: &UserConfig,dry_run: bool) {
 		info!("Filling |{}| pattern with |{}| theme...", self.get_name(), theme.get_name());
 
 		let filled_content = self.fill_values(theme, is_inverted,user_config);
+
+		//Return if dry_run mode. i.e, dont write content to output path
+		if dry_run{return}
+
 		let path = std::path::Path::new(self.get_output());
 
 		let prefix = path.parent().unwrap();
