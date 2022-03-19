@@ -182,7 +182,7 @@ impl Pattern {
 					//This warning should not happen, since property name captured group
 					//is not optional, hence a string <[]> does not match in the regex and 
 					//can't enter in this branch
-					warn!("There is an empty property in pattern |{}|",self.get_name());
+					warn!("There is an empty property (<[]>) in pattern |{}|",self.get_name());
 					continue
 				},
 				Some(value)=> String::from(value.as_str())
