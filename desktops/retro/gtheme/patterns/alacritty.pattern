@@ -1,19 +1,19 @@
-%output-file%=~/.config/alacritty/alacritty.yml
-# %theme-name%
+<[output-file]>=~/.config/alacritty/alacritty.yml
+# <[theme-name]> 
 
 window:
   padding:
     x: 18
     y: 18
   dyanmic_padding: true
-  
+
 font:
   normal:
-    family: DejaVuSansMono Nerd Font
+    family: RobotoMono Nerd Font
   bold:
-    family: DejaVuSansMono Nerd Font 
+    family: RobotoMono Nerd Font 
   italic:
-    family: DejaVuSansMono Nerd Font
+    family: RobotoMono Nerd Font
   size: 8
   offset:
     x: 0
@@ -26,29 +26,29 @@ cursor:
 
 colors:
   cursor:
-    text: '0x%foreground%'
-    cursor: '0x%cursor%'
+    text: '0x<[foreground]>'
+    cursor: '0x<[cursor]>'
   #selection:
-  #  text: '0x%selection-foreground%'
-  #  background: '0x%selection-background%'
+  #  text: '0x<[selection-foreground]>'
+  #  background: '0x<[selection-background]>'
   primary:
-    background: '0x%background%'
-    foreground: '0x%foreground%'
+    background: '0x<[background]>'
+    foreground: '0x<[foreground]>'
   normal:
-    black: '0x%black%'
-    red: '0x%red%'
-    green: '0x%green%'
-    yellow: '0x%yellow%'
-    blue: '0x%blue%'
-    magenta: '0x%magenta%'
-    cyan: '0x%cyan%'
-    white: '0x%white%'
+    black: '0x<[black]>'
+    red: '0x<[red]>'
+    green: '0x<[green]>'
+    yellow: '0x<[yellow]>'
+    blue: '0x<[blue]>'
+    magenta: '0x<[magenta]>'
+    cyan: '0x<[cyan]>'
+    white: '0x<[white]>'
   bright:
-    black: '0x%black-hg%'
-    red: '0x%red-hg%'
-    green: '0x%green-hg%'
-    yellow: '0x%yellow-hg%'
-    blue: '0x%blue-hg%'
-    magenta: '0x%magenta-hg%'
-    cyan: '0x%cyan-hg%'
-    white: '0x%white-hg%'
+    black: '0x<[black-hg]>'
+    red: '0x<[red-hg]>'
+    green: '0x<[green-hg]>'
+    yellow: '0x<[yellow-hg]>'
+    blue: '0x<[blue-hg]>'
+    magenta: '0x<[magenta-hg]>'
+    cyan: '0x<[cyan-hg]>'
+    white: '0x<[white-hg]>'

@@ -21,8 +21,6 @@ configuration {
     display-combi: 					"Combi";
 }
 
-@import "~/.config/rofi/colors.rasi"
-
 window {
     background-color:    @bg;
     border-radius:       14px;
