@@ -106,7 +106,10 @@ impl Desktop {
 
 	pub fn apply(&self, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>,dry_run: bool) {
 		//parameter HashMap(pattern_name,bool) in order to implement inverted themes
-		info!("Applying theme in dry-run mode...");
+		
+		if dry_run{
+			info!("Applying theme in dry-run mode...");
+		}
 
 		let post_scripts = self.get_post_scripts();
 		info!("Applying |{}| theme to |{}| desktop...", theme.get_name(), self.get_name());
