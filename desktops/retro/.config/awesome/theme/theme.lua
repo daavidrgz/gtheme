@@ -21,8 +21,8 @@ theme.bg_focus      = "#272727"
 theme.fg_normal     = "#272727"
 theme.fg_focus     = "#FFF4DE"
 
-theme.useless_gap   = 12
-theme.border_width  = 4
+theme.useless_gap   = 8
+theme.border_width  = 3
 theme.border_normal = "#272727"
 theme.border_focus  = "#272727"
 theme.border_marked = "#272727"
@@ -31,14 +31,13 @@ theme.border_marked = "#272727"
 
 theme.taglist_fg = "#272727"
 
-
 -- menu
 
 theme.menu_submenu_icon = gfs.get_configuration_dir() .. "theme/submenu.png"
 theme.menu_height = dpi(25)
 theme.menu_width = dpi(120)
 theme.menu_bg = "#FFF4DE"
-theme.menu_font = "RobotoMono Nerd Font Medium 12"
+theme.menu_font = "RobotoMono Nerd Font Medium 9"
 
 -- awesome icon
 
@@ -46,7 +45,7 @@ theme.awesome_icon = gfs.get_configuration_dir() .. "theme/awesome.png"
 
 -- tag preview
 
-theme.tag_preview_widget_border_radius = 16        
+theme.tag_preview_widget_border_radius = 14   
 theme.tag_preview_client_border_radius = 4
 theme.tag_preview_client_opacity = 1
 theme.tag_preview_client_bg = theme.bg_normal        
@@ -54,7 +53,7 @@ theme.tag_preview_client_border_color = "#272727"
 theme.tag_preview_client_border_width = 2   
 theme.tag_preview_widget_bg = theme.bg_normal          
 theme.tag_preview_widget_border_color = "#272727"   
-theme.tag_preview_widget_border_width = 4    
+theme.tag_preview_widget_border_width = 3
 theme.tag_preview_widget_margin = 5          
 
 -- titlebar

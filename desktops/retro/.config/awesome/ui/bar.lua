@@ -175,7 +175,7 @@ awful.screen.connect_for_each_screen(function(s)
         screen = s,
         height = 30,
         width = 1850,
-        border_width = 4,
+        border_width = 3,
         border_color = "#272727",
         widget = wibox.container.background()
     })
