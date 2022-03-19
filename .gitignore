@@ -4,4 +4,4 @@
 global_config.json
 desktop_config.json
 user_settings.toml
-gtheme.log
+gtheme.log*

@@ -1,7 +1,8 @@
 use log::{Record, Level, Metadata, Log};
 use chrono::Local;
 use colored::*;
-use std::{fs::{File, OpenOptions}, io::Write};
+use file_rotate::{FileRotate, suffix::AppendCount, ContentLimit, compression::Compression};
+use std::io::Write;
 
 use crate::core;
 
@@ -38,14 +39,17 @@ impl Log for CliLogger {
 		}
 		
 		let log_path: String = format!("{}/gtheme.log", core::expand_path(core::GTHEME_HOME));
-		let mut log_file: File = match OpenOptions::new().create(true).write(true).append(true).open(&log_path) {
-			Ok(f) => f,
-			Err(_) => return
-		};
+		let mut log_file = FileRotate::new(
+			log_path,
+			AppendCount::new(2),
+			ContentLimit::Lines(10),
+			Compression::None
+		);
 
 		let time = Local::now().format("%H:%M:%S %Y-%m-%d");
 		let record_text = record.args().to_string().replace("|","");
 		let plain_text = format!("[{}] {}: {}\n", time, record.level(), record_text);
+
 		match log_file.write_all(plain_text.as_bytes()) {
 			Err(_) => (),
 			_ => ()
