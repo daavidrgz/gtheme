@@ -50,7 +50,7 @@ pub fn start_cli() {
 
 		Some(("desktop", sub_matches)) => match sub_matches.subcommand() {
 			Some(("list", _)) => list_desktops(),
-			Some(("apply", sub_sub_matches)) => install_desktop(sub_sub_matches),
+			Some(("apply", sub_sub_matches)) => apply_desktop(sub_sub_matches),
 			_ => ()
 		}
 
@@ -135,13 +135,17 @@ fn apply_theme(matches: &ArgMatches) {
 		inverted = desktop_config.get_inverted().clone()
 	}
 
-	current_desktop.apply(&theme.to_theme(), &actived, &inverted,false);
+	let dry_run = matches.is_present("dry-run");
 
-	*global_config.get_mut_current_theme() = Some(theme);
-	global_config.save()
+	current_desktop.apply(&theme.to_theme(), &actived, &inverted, dry_run);
+
+	if !dry_run {
+		*global_config.get_mut_current_theme() = Some(theme);
+		global_config.save()
+	}
 }
 
-fn install_desktop(matches: &ArgMatches) {
+fn apply_desktop(matches: &ArgMatches) {
 	let desktop_name = matches.value_of("desktop").unwrap();
 
 	let desktop = match Desktop::get_by_name(desktop_name) {
@@ -172,11 +176,15 @@ fn install_desktop(matches: &ArgMatches) {
 		}
 	};
 
-	*global_config.get_mut_current_desktop() = Some(desktop.clone());
-	*global_config.get_mut_current_theme() = Some(default_theme.clone());
-	global_config.save();
+	let dry_run = matches.is_present("dry-run");
 
-	desktop.to_desktop().install(&previous, &default_theme.to_theme(), desktop_config.get_actived(), desktop_config.get_inverted(),false)
+	if !dry_run {
+		*global_config.get_mut_current_desktop() = Some(desktop.clone());
+		*global_config.get_mut_current_theme() = Some(default_theme.clone());
+		global_config.save();
+	}
+
+	desktop.to_desktop().install(&previous, &default_theme.to_theme(), desktop_config.get_actived(), desktop_config.get_inverted(), dry_run);
 }
 
 fn manage_patterns(matches: &ArgMatches, action:Action) {

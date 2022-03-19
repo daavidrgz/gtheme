@@ -48,6 +48,11 @@ pub fn build_app() -> Command<'static> {
 						.multiple_values(true)
 						.value_name("pattern")
 						.help("Invert the foreground and background colors on selected patterns"),
+
+					Arg::new("dry-run")
+						.long("dry-run")
+						.takes_value(false)
+						.help("See possible errors when applying the theme without changing disk files. It does not effectively change theme.")
 				])
 			)
 		);
@@ -73,7 +78,12 @@ pub fn build_app() -> Command<'static> {
 						.short('t')
 						.long("theme")
 						.takes_value(true)
-						.help("Apply specified theme after installing the desktop")
+						.help("Apply specified theme after installing the desktop"),
+
+					Arg::new("dry-run")
+						.long("dry-run")
+						.takes_value(false)
+						.help("See possible errors when applying the desktop without changing disk files. It does not effectively change desktop.")
 				])
 			)
 		);
