@@ -42,7 +42,7 @@ impl Log for CliLogger {
 		let mut log_file = FileRotate::new(
 			log_path,
 			AppendCount::new(2),
-			ContentLimit::Lines(10),
+			ContentLimit::Lines(1000),
 			Compression::None
 		);
 

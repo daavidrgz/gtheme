@@ -71,7 +71,7 @@ impl ScreenItem {
 
 	pub fn apply(&self, global_config: &mut GlobalConfig, desktop_config: &mut Option<DesktopConfig>) {
 		match self {
-			ScreenItem::Desktop(d) => Self::install_desktop(d, global_config),
+			ScreenItem::Desktop(d) => Self::apply_desktop(d, global_config),
 			ScreenItem::Theme(t) => Self::apply_theme(t, global_config, desktop_config),
 			ScreenItem::Pattern(_) => Self::toggle_active(self, desktop_config),
 			ScreenItem::Extra(_) => Self::toggle_active(self, desktop_config),
@@ -164,13 +164,18 @@ impl ScreenItem {
 			}
 		};
 
-		current_desktop.apply(&theme.to_theme(), desktop_config.get_actived(), desktop_config.get_inverted(),false);
+		current_desktop.apply(
+			&theme.to_theme(),
+			desktop_config.get_actived(),
+			desktop_config.get_inverted(),
+			false
+		);
 
 		*global_config.get_mut_current_theme() = Some(theme.clone());
 		global_config.save()
 	}
 
-	fn install_desktop(next_desktop: &DesktopFile, global_config: &mut GlobalConfig){
+	fn apply_desktop(next_desktop: &DesktopFile, global_config: &mut GlobalConfig){
 		let current_desktop = match global_config.get_current_desktop() {
 			Some(d) => Some(d.to_desktop()),
 			None => None
@@ -185,6 +190,12 @@ impl ScreenItem {
 		*global_config.get_mut_current_theme() = Some(theme.clone());
 		global_config.save();
 
-		next_desktop.to_desktop().install(&current_desktop, &theme.to_theme(), next_desktop_config.get_actived(), next_desktop_config.get_inverted(),false)
+		next_desktop.to_desktop().install(
+			&current_desktop,
+			&theme.to_theme(),
+			next_desktop_config.get_actived(),
+			next_desktop_config.get_inverted(),
+			false
+		)
 	}
 }
