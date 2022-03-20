@@ -48,6 +48,8 @@ pub fn start_cli() {
 	println!("");
 	match matches.subcommand() {
 
+		Some(("status", _)) => show_summary(),
+
 		Some(("desktop", sub_matches)) => match sub_matches.subcommand() {
 			Some(("list", _)) => list_desktops(),
 			Some(("apply", sub_sub_matches)) => apply_desktop(sub_sub_matches),
@@ -61,7 +63,7 @@ pub fn start_cli() {
 		}
 
 		Some(("pattern", sub_matches)) => match sub_matches.subcommand() {
-			Some(("list", sub_sub_matches)) => list_patterns(sub_sub_matches),
+			Some(("list", sub_sub_matches)) => list_patterns(Some(sub_sub_matches)),
 			Some(("enable", sub_sub_matches)) => manage_patterns(sub_sub_matches, Action::Enable),
 			Some(("disable", sub_sub_matches)) => manage_patterns(sub_sub_matches, Action::Disable),
 			Some(("toggle", sub_sub_matches)) => manage_patterns(sub_sub_matches, Action::Toggle),
@@ -70,7 +72,7 @@ pub fn start_cli() {
 		}
 
 		Some(("extra", sub_matches)) => match sub_matches.subcommand() {
-			Some(("list", sub_sub_matches)) => list_extras(sub_sub_matches),
+			Some(("list", sub_sub_matches)) => list_extras(Some(sub_sub_matches)),
 			Some(("enable", sub_sub_matches)) => manage_extras(sub_sub_matches, Action::Enable),
 			Some(("disable", sub_sub_matches)) => manage_extras(sub_sub_matches, Action::Disable),
 			Some(("toggle", sub_sub_matches)) => manage_extras(sub_sub_matches, Action::Toggle),
@@ -269,6 +271,34 @@ fn manage_fav(matches: &ArgMatches, action: Action) {
 	global_config.save()
 }
 
+fn show_summary() {
+	let global_config = GlobalConfig::new();
+	let current_desktop = match global_config.get_current_desktop() {
+		Some(d) => d.get_name(),
+		None => {
+			error!("|There is no desktop installed!|");
+			return
+		}
+	};
+
+	let current_theme = match global_config.get_current_theme() {
+		Some(t) => t.get_name(),
+		None => {
+			error!("|There is no theme installed!|");
+			return
+		} 
+	};
+
+	println!("{}", "CURRENT DESKTOP".bold().underline().cyan());
+	println!("{} {}\n", "•".cyan(), current_desktop);
+
+	println!("{}", "CURRENT THEME".bold().underline().yellow());
+	println!("{} {}\n", "•".yellow(), current_theme);
+
+	list_patterns(None);
+	list_extras(None);
+}
+
 
 fn list_desktops() {
 	let all_desktops = Desktop::get_desktops();
@@ -321,7 +351,7 @@ fn list_themes() {
 	// 	Some((width, _)) => width.0.into(),
 	// 	None => return 
 	// };
-
+	
 	println!("{}", grid.fit_into_columns(3));
 }
 
@@ -346,8 +376,12 @@ fn list_fav_themes() {
 	println!("");
 }
 
-fn list_patterns(matches: &ArgMatches) {
-	let desktop = match get_desktop( matches.value_of("desktop")) {
+fn list_patterns(matches: Option<&ArgMatches>) {
+	let desktop_opt = match matches {
+		Some(m) => m.value_of("desktop"),
+		None => None
+	};
+	let desktop = match get_desktop(desktop_opt) {
 		Some(d) => d,
 		None => return
 	};
@@ -387,8 +421,12 @@ fn list_patterns(matches: &ArgMatches) {
 	println!("");
 }
 
-fn list_extras(matches: &ArgMatches) {
-	let desktop = match get_desktop( matches.value_of("desktop")) {
+fn list_extras(matches: Option<&ArgMatches>) {
+	let desktop_opt = match matches {
+		Some(m) => m.value_of("desktop"),
+		None => None
+	};
+	let desktop = match get_desktop(desktop_opt) {
 		Some(d) => d,
 		None => return
 	};

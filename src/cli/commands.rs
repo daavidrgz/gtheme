@@ -16,6 +16,10 @@ pub fn build_app() -> Command<'static> {
 			.help("Show more information")
 		);
 
+		app = app.subcommand(Command::new("status")
+			.alias("s")
+			.about("Show current gtheme status"));
+
 		app = app.subcommand(Command::new("theme")
 			.alias("t")
 			.about("Manage themes")
