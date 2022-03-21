@@ -1,4 +1,4 @@
 #!/bin/bash
 
-sleep 0.5
+sleep 1
 bspc wm -r
