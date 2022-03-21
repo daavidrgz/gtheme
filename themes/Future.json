@@ -1,6 +1,7 @@
 {
 	"name": "Future",
 	"extras": {
+		"vscode": ["Ayu Dark Bordered"],
 		"wallpaper": ["~/.config/gtheme/wallpapers/Future/future-material.jpg"]
 	},
 	"colors": {
