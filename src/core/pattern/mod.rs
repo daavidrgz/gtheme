@@ -25,9 +25,6 @@ impl Pattern {
 		let mut content = String::new();
 		file.read_to_string(&mut content).expect(&format!("Error while reading pattern: {}", pattern.get_path()));
 
-		// if !re.is_match(&content){
-		// 	panic!("Pattern {} does not have output file specified (hint: <[output-file]>=/path/to/output/file)",pattern.get_path());
-		// }
 		let output_path = match re.captures(&content){
 			Some(capture)=>Some(core::expand_path(&capture[1])),
 			None=>None
