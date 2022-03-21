@@ -12,6 +12,9 @@ blue = #<[blue]>
 cyan = #<[cyan]>
 
 [bar/main]
+monitor = <[monitor]>
+monitor-fallback = <[monitor-fallback]>
+
 width = 99%
 height = 40
 offset-x = 0.5%
