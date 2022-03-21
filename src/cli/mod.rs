@@ -289,10 +289,10 @@ fn show_summary() {
 		} 
 	};
 
-	println!("{}", "CURRENT DESKTOP".bold().underline().cyan());
+	println!("{}\n", "CURRENT DESKTOP".bold().underline().cyan());
 	println!("{} {}\n", "•".cyan(), current_desktop);
 
-	println!("{}", "CURRENT THEME".bold().underline().yellow());
+	println!("{}\n", "CURRENT THEME".bold().underline().yellow());
 	println!("{} {}\n", "•".yellow(), current_theme);
 
 	list_patterns(None);

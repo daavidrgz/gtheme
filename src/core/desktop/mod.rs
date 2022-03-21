@@ -126,7 +126,8 @@ impl Desktop {
 
 				//Dont execute postscripts on dry-run mode
 				if !dry_run{
-					postscript.execute(&vec![String::from(pattern.get_output())])
+					let output = pattern.get_output().as_ref().unwrap_or(&"".to_string()).clone();
+					postscript.execute(&vec![output])
 				}
 			}
 		}

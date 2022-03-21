@@ -13,7 +13,7 @@ use crate::core::config::UserConfig;
 pub struct Pattern {
 	name: String,
 	path: String,
-	output: String,
+	output: Option<String>,
 	content: String
 }
 impl Pattern {
@@ -25,13 +25,13 @@ impl Pattern {
 		let mut content = String::new();
 		file.read_to_string(&mut content).expect(&format!("Error while reading pattern: {}", pattern.get_path()));
 
-		if !re.is_match(&content){
-			panic!("Pattern {} does not have output file specified (hint: <[output-file]>=/path/to/output/file)",pattern.get_path());
-		}
-		let captured = re.captures(&content).unwrap();
-		//captured[0] is the whole matched expression.
-		let output_path = core::expand_path(&captured[1]);
-
+		// if !re.is_match(&content){
+		// 	panic!("Pattern {} does not have output file specified (hint: <[output-file]>=/path/to/output/file)",pattern.get_path());
+		// }
+		let output_path = match re.captures(&content){
+			Some(capture)=>Some(core::expand_path(&capture[1])),
+			None=>None
+		};
 		content = String::from(re.replace(&content,""));
 
 		Pattern {
@@ -48,7 +48,7 @@ impl Pattern {
 	pub fn get_path(&self) -> &String {
 		&self.path
 	}
-	pub fn get_output(&self) -> &String 	{
+	pub fn get_output(&self) -> &Option<String> 	{
 		&self.output
 	}
 
@@ -116,25 +116,32 @@ impl Pattern {
 
 		let filled_content = self.fill_values(theme, is_inverted,user_config);
 
+		let output_path = match self.get_output(){
+			Some(output_path)=>output_path,
+			None=>{
+				error!("Pattern |{}| does not have output file specified (hint: <[output-file]>=/path/to/output/file)", self.get_name());
+				return
+			}
+		};
 		//Return if dry_run mode. i.e, dont write content to output path
 		if dry_run{return}
 
-		let path = std::path::Path::new(self.get_output());
+		let path = std::path::Path::new(output_path);
 
 		let prefix = path.parent().unwrap();
 		fs::create_dir_all(prefix).unwrap();
 		//If cant create output file, returns
-		let mut output_file = match File::create(self.get_output()) {
+		let mut output_file = match File::create(output_path) {
 			Ok(file) => file,
 			Err(e) => {
-				error!("Could not create |{}|: |{}|", self.get_output(), e);
+				error!("Could not create |{}|: |{}|", output_path, e);
 				return;
 			}
 		};
 		match output_file.write_all(filled_content.as_bytes()) {
 			Ok(_) => (),
 			Err(e) => {
-				error!("Could not write to |{}|: |{}|", self.get_output(), e);
+				error!("Could not write to |{}|: |{}|", output_path, e);
 				return;
 			}
 		}
