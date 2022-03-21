@@ -126,6 +126,7 @@ impl Pattern {
 		let path = std::path::Path::new(output_path);
 
 		let prefix = path.parent().unwrap();
+		// TODO: error handling
 		fs::create_dir_all(prefix).unwrap();
 		//If cant create output file, returns
 		let mut output_file = match File::create(output_path) {
