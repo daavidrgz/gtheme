@@ -16,6 +16,7 @@ pgrep -x sxhkd > /dev/null || sxhkd &
 bspc config pointer_motion_interval 5
 
 bspc monitor <[monitor]> -d I II III IV V VI VII VIII IX X
+bspc monitor <[monitor-fallback]> -d I II III IV V VI VII VIII IX X
 
 bspc config window_gap 20
 bspc config border_width 0
