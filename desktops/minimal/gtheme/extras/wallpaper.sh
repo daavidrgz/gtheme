@@ -11,6 +11,6 @@ if [ "$IS_THEMED" == "true" ]; then
 	declare OUTPUT_EXTENSION=$(basename $WALLPAPER_URL | sed 's/.*\.//')
 	WALLPAPER_URL="$IMAGE_THEMING_PATH/$OUTPUT_NAME-custom.$OUTPUT_EXTENSION"
 fi
-
+sleep 0.3
 cp "$WALLPAPER_URL" ~/.wallpaper
 feh --bg-fill "$WALLPAPER_URL"
