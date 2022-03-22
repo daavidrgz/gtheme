@@ -1,5 +1,5 @@
-use std::process::{Command, Stdio};
-use log::{warn,error};
+use std::{process::{Command, Stdio}, env};
+use log::{warn,error,info};
 
 use crate::core::{
 	desktop::DesktopFile,
@@ -71,15 +71,26 @@ impl ScreenItem {
 
 	pub fn edit(&self) {
 		let path = self.get_path();
-		match Command::new("bash")
-			.arg("-c")
-			.arg(format!("$VISUAL {}", path))
-			.stdin(Stdio::inherit())
-			.stdout(Stdio::inherit())
-			.output() {
-				Ok(_) => (),
-				Err(e) => error!("Could not edit |{}|: |{}|", path, e)
-			}
+		match env::var("VISUAL") {
+			Ok(value) => if value.is_empty() {
+				warn!("Env var |$VISUAL| is empty, using |nano| instead")
+			},
+			Err(_) => warn!("Could not found env var |$VISUAL|, using |nano| instead")
+		}
+		match Command::new("sh")
+		.arg("-c")
+		.arg(format!("${{VISUAL:-nano}} {}", path))
+		.stdin(Stdio::inherit())
+		.stdout(Stdio::inherit())
+		.output() {
+			Ok(output) => {
+				match output.status.success() {
+					true => info!("File |{}| edited succesfully", path),
+					false => error!("Could not edit |{}|, error: |{}|", path, String::from_utf8(output.stderr).unwrap())
+				}
+			},
+			Err(e) => error!("Could not edit |{}|, error: |{}|", path, e)	
+		}
 	}
 
 	pub fn apply(&self, global_config: &mut GlobalConfig, desktop_config: &mut Option<DesktopConfig>) {

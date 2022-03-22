@@ -2,8 +2,9 @@ pub mod clilogger;
 pub mod commands;
 
 use std::collections::HashMap;
+use std::env;
 use clap::ArgMatches;
-use log::{LevelFilter, error, warn, Level};
+use log::{LevelFilter, error, warn, info, Level};
 use colored::*;
 use term_grid::{Grid, GridOptions, Direction, Filling};
 // use terminal_size::terminal_size;
@@ -480,13 +481,25 @@ fn get_desktop(desktop_opt: Option<&str>) -> Option<DesktopFile> {
 }
 
 fn edit_file(path: &str) {
-	match Command::new("nano")
-	.arg(path)
+	match env::var("VISUAL") {
+		Ok(value) => if value.is_empty() {
+			warn!("Env var |$VISUAL| is empty, using |nano| instead")
+		},
+		Err(_) => warn!("Could not found env var |$VISUAL|, using |nano| instead")
+	}
+	match Command::new("sh")
+	.arg("-c")
+	.arg(format!("${{VISUAL:-nano}} {}", path))
 	.stdin(Stdio::inherit())
 	.stdout(Stdio::inherit())
 	.output() {
-		Ok(_) => (),
-		Err(e) => error!("Could not edit |{}|: |{}|", path, e)	
+		Ok(output) => {
+			match output.status.success() {
+				true => info!("File |{}| edited succesfully", path),
+				false => error!("Could not edit |{}|, error: |{}|", path, String::from_utf8(output.stderr).unwrap())
+			}
+		},
+		Err(e) => error!("Could not edit |{}|, error: |{}|", path, e)	
 	}
 }
 
