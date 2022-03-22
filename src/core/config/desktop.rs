@@ -161,6 +161,10 @@ impl DesktopConfig{
 	pub fn get_mut_default_theme(&mut self) -> &mut Option<ThemeFile> {
 		&mut self.default_theme
 	}
+	pub fn set_default_theme(&mut self,theme:&ThemeFile){
+		info!("Setting default theme |{}| to desktop |{}|",theme.get_name(),self.desktop.get_name());
+		self.default_theme = Some(theme.clone());
+	}
 	pub fn get_actived(&self) -> &HashMap<String, bool> {
 		&self.actived
 	}

@@ -151,14 +151,14 @@ super + ctrl + {Left,Down,Up,Right}
  
 # Custom move/resize
 alt + super + {Left,Down,Up,Right}
-    /home/david/.config/bspwm/scripts/bspwm_resize {west,south,north,east}
+    ~/.config/bspwm/scripts/bspwm_resize {west,south,north,east}
 
 #----------------------
 #   SYSTEM
 #----------------------
 
 XF86Audio{Raise,Lower}Volume
-    /home/david/.config/sxhkd/scripts/manageVolume.sh {--increase,--decrease}
+    ~/.config/sxhkd/scripts/manageVolume.sh {--increase,--decrease}
 
 XF86AudioMute
 	pamixer --toggle-mute
