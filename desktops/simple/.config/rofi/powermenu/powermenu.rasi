@@ -7,7 +7,6 @@
 
 
 configuration {
-    font:							"FiraCode Nerd Font Medium 14";
     show-icons:                     false;
     icon-theme: 					"Papirus";
     drun-display-format:            "{name}";

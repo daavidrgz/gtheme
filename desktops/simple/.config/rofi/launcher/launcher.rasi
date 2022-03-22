@@ -7,7 +7,6 @@
 
 
 configuration {
-    font: 							"FiraCode Nerd Font Medium 10";
     fixed-num-lines: 				true;
     show-icons: 					false;
     icon-theme:                     "Papirus";

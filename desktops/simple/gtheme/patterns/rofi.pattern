@@ -2,6 +2,7 @@
 // <[theme-name]>
 
 * {
+  font:       "<[default-font|FiraCode Nerd Font]> Medium 11";
   bg:         #<[background]>;
   fg:         #<[foreground]>;
   se:         #<[selection-background]>;

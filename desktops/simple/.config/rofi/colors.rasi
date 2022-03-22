@@ -1,6 +1,7 @@
 // Snazzy
 
 * {
+  font:       "FiraCode Nerd Font Medium 11";
   bg:         #112031;
   fg:         #F1F1F0;
   se:         #FFFACD;

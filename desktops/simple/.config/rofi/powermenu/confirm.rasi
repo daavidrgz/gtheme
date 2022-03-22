@@ -3,7 +3,6 @@
 * {
   background-color:       @bg;
   text-color:             @fg;
-  font:				 						"FiraCode Nerd Font Medium 11";
 }
 
 window {

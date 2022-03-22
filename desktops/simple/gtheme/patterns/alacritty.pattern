@@ -9,11 +9,11 @@ window:
 
 font:
   normal:
-    family: <[default-font]>
+    family: <[default-font|DejaVuSansMono Nerd Font]>
   bold:
-    family: <[default-font]> 
+    family: <[default-font|DejaVuSansMono Nerd Font]>
   italic:
-    family: <[default-font]>
+    family: <[default-font|DejaVuSansMono Nerd Font]>
   size: 8
   offset:
     x: 0

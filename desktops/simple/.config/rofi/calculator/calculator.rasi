@@ -7,7 +7,6 @@
 
 
 configuration {
-    font: 							"FiraCode Nerd Font Medium 11";
     fixed-num-lines: 				true;
     show-icons: 					false;
     icon-theme:                     "Papirus";
@@ -41,7 +40,6 @@ prompt {
 }
 
 textbox-prompt-colon {
-    font:                           "FiraCode Nerd Font Medium 14";
     expand: 						false;
     str: 							" ";
     margin:							0px 4px 0px 0px;
@@ -49,7 +47,6 @@ textbox-prompt-colon {
 }
 
 entry {
-    font:                           "FiraCode Nerd Font Medium 14";
     spacing:    					0;
     text-color: 					@fg;
 }

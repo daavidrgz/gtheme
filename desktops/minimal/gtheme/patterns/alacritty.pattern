@@ -9,11 +9,11 @@ window:
 
 font:
   normal:
-    family: Iosevka Nerd Font Mono
+    family: <[default-font|Iosevka Nerd Font Mono]>
   bold:
-    family: Iosevka Nerd Font Mono
+    family: <[default-font|Iosevka Nerd Font Mono]>
   italic:
-    family: Iosevka Nerd Font Mono
+    family: <[default-font|Iosevka Nerd Font Mono]>
   size: 8.5
   offset:
     x: 0

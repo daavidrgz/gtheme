@@ -282,7 +282,7 @@ module-margin-right = 0
 
 ;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
 
-font-0 = "FiraCode Nerd Font:style=Medium:pixelsize=11;3"
+font-0 = "<[default-font|FiraCode Nerd Font]>:style=Medium:pixelsize=11;3"
 
 modules-left = launcher network system-cpu system-bluetooth
 modules-center = workspaces

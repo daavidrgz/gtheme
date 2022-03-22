@@ -9,11 +9,11 @@ window:
   
 font:
   normal:
-    family: CaskaydiaCove Nerd Font Mono
+    family: <[default-font|CaskaydiaCove Nerd Font Mono]>
   bold:
-    family: CaskaydiaCove Nerd Font Mono 
+    family: <[default-font|CaskaydiaCove Nerd Font Mono]> 
   italic:
-    family: CaskaydiaCove Nerd Font Mono
+    family: <[default-font|CaskaydiaCove Nerd Font Mono]>
   size: 8
   offset:
     x: 0

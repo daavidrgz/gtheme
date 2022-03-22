@@ -2,6 +2,7 @@
 // <[theme-name]>
 
 * {
+	font:		  "<[default-font|CaskaydiaCove Nerd Font Mono]> Bold 10";
   bg:				#<[background]>;
   fg:				#<[foreground]>;
   accent:		#<[magenta]>;
