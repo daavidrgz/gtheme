@@ -19,21 +19,14 @@ with Pulse() as pulse:
       except StopIteration: raise StopIteration("No default sink was found.")
 
     try:
-      sinks = {s.index:s for s in pulse.sink_list()}
-      if len(sys.argv) > 1:
-        # Sink index from command line argument if provided
-        sink_index = int(sys.argv[1])
-        if not sink_index in sinks:
-          raise KeyError(f"Sink index {sink_index} not found in list of sinks.")
-      else:
-        # Automatic determination of default sink otherwise
+      while True:
+        sinks = {s.index:s for s in pulse.sink_list()}
         sink_index = get_default_sink_idx()
 
-      pulse.event_mask_set('sink')
-      pulse.event_callback_set(callback)
-      last_value, last_mute = current_status(sinks[sink_index])
+        pulse.event_mask_set('sink')
+        pulse.event_callback_set(callback)
+        last_value, last_mute = current_status(sinks[sink_index])
 
-      while True:
         pulse.event_listen()
         sinks = {s.index:s for s in pulse.sink_list()}
         value, mute = current_status(sinks[sink_index])
