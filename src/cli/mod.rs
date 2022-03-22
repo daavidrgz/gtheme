@@ -7,6 +7,7 @@ use log::{LevelFilter, error, warn, Level};
 use colored::*;
 use term_grid::{Grid, GridOptions, Direction, Filling};
 // use terminal_size::terminal_size;
+use std::process::{Command, Stdio};
 
 use clilogger::CliLogger;
 use crate::app;
@@ -58,12 +59,14 @@ pub fn start_cli() {
 
 		Some(("theme", sub_matches)) => match sub_matches.subcommand() {
 			Some(("list", _)) => list_themes(),
+			Some(("edit", sub_sub_matches)) => edit_theme(sub_sub_matches),
 			Some(("apply", sub_sub_matches)) => apply_theme(sub_sub_matches),
 			_ => ()
 		}
 
 		Some(("pattern", sub_matches)) => match sub_matches.subcommand() {
 			Some(("list", sub_sub_matches)) => list_patterns(Some(sub_sub_matches)),
+			Some(("edit", sub_sub_matches)) => edit_pattern(sub_sub_matches),
 			Some(("enable", sub_sub_matches)) => manage_patterns(sub_sub_matches, Action::Enable),
 			Some(("disable", sub_sub_matches)) => manage_patterns(sub_sub_matches, Action::Disable),
 			Some(("toggle", sub_sub_matches)) => manage_patterns(sub_sub_matches, Action::Toggle),
@@ -73,6 +76,7 @@ pub fn start_cli() {
 
 		Some(("extra", sub_matches)) => match sub_matches.subcommand() {
 			Some(("list", sub_sub_matches)) => list_extras(Some(sub_sub_matches)),
+			Some(("edit", sub_sub_matches)) => edit_extra(sub_sub_matches),
 			Some(("enable", sub_sub_matches)) => manage_extras(sub_sub_matches, Action::Enable),
 			Some(("disable", sub_sub_matches)) => manage_extras(sub_sub_matches, Action::Disable),
 			Some(("toggle", sub_sub_matches)) => manage_extras(sub_sub_matches, Action::Toggle),
@@ -473,4 +477,47 @@ fn get_desktop(desktop_opt: Option<&str>) -> Option<DesktopFile> {
 			}
 		}
 	}
+}
+
+fn edit_file(path: &str) {
+	match Command::new("nano")
+	.arg(path)
+	.stdin(Stdio::inherit())
+	.stdout(Stdio::inherit())
+	.output() {
+		Ok(_) => (),
+		Err(e) => error!("Could not edit |{}|: |{}|", path, e)	
+	}
+}
+
+fn edit_theme(matches: &ArgMatches) {
+	let theme = match Theme::get_by_name(matches.value_of("theme").unwrap()) {
+		Some(t) => t,
+		None => return
+	};
+	edit_file(theme.get_path());
+}
+
+fn edit_pattern(matches: &ArgMatches) {
+	let desktop = match get_desktop(matches.value_of("desktop")) {
+		Some(d) => d,
+		None => return
+	};
+	let pattern = match Pattern::get_by_name(&desktop, matches.value_of("pattern").unwrap()) {
+		Some(t) => t,
+		None => return
+	};
+	edit_file(pattern.get_path());
+}
+
+fn edit_extra(matches: &ArgMatches) {
+	let desktop = match get_desktop(matches.value_of("desktop")) {
+		Some(d) => d,
+		None => return
+	};
+	let extra = match PostScript::get_extra_by_name(&desktop, matches.value_of("extra").unwrap()) {
+		Some(t) => t,
+		None => return
+	};
+	edit_file(extra.get_path());
 }

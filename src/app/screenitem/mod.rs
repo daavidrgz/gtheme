@@ -1,5 +1,5 @@
-use std::process::Command;
-use log::warn;
+use std::process::{Command, Stdio};
+use log::{warn,error};
 
 use crate::core::{
 	desktop::DesktopFile,
@@ -24,6 +24,16 @@ impl ScreenItem {
 			ScreenItem::Theme(t) => t.get_name(),
 			ScreenItem::Pattern(p) => p.get_name(),
 			ScreenItem::Extra(e) => e.get_name(),
+			ScreenItem::Help(s) => &s,
+		}
+	}
+
+	pub fn get_path(&self) -> &str {
+		match self {
+			ScreenItem::Desktop(d) => d.get_path(),
+			ScreenItem::Theme(t) => t.get_path(),
+			ScreenItem::Pattern(p) => p.get_path(),
+			ScreenItem::Extra(e) => e.get_path(),
 			ScreenItem::Help(s) => &s,
 		}
 	}
@@ -60,13 +70,16 @@ impl ScreenItem {
 	}
 
 	pub fn edit(&self) {
-		match self {
-			ScreenItem::Pattern(p) => {Command::new("nano").arg(p.get_path()).output()
-				.expect(&format!("Could not edit file:{}", p.get_path()));},
-			ScreenItem::Extra(e) => {Command::new("nano").arg(e.get_path()).output()
-				.expect(&format!("Could not edit file:{}", e.get_path()));},
-			_ => {}
-		}
+		let path = self.get_path();
+		match Command::new("bash")
+			.arg("-c")
+			.arg(format!("$VISUAL {}", path))
+			.stdin(Stdio::inherit())
+			.stdout(Stdio::inherit())
+			.output() {
+				Ok(_) => (),
+				Err(e) => error!("Could not edit |{}|: |{}|", path, e)
+			}
 	}
 
 	pub fn apply(&self, global_config: &mut GlobalConfig, desktop_config: &mut Option<DesktopConfig>) {

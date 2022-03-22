@@ -21,6 +21,7 @@ use crossterm::{
 
 use crate::core::config::GlobalConfig;
 use crate::app::{
+	screenitem::ScreenItem,
 	widgets::{ListWidget, LogoWidget, HelpWidget, LoggerWidget},
 	appstate::{AppState, Screen, Popup}
 };
@@ -64,16 +65,17 @@ impl Ui {
 
 		loop {
 			self.terminal.draw(|f| Ui::draw_ui(f, &mut app_state)).unwrap();
-			if !Ui::manage_input(&mut app_state) {break}
+			if !self.manage_input(&mut app_state) {break}
 		}
+		self.terminal.flush().unwrap();
 
 		app_state.get_global_config().save();
-		if let Some(desktop_config) = app_state.get_desktop_config(){
+		if let Some(desktop_config) = app_state.get_desktop_config() {
 			desktop_config.save();
 		};
 	}
 
-	fn manage_input(app_state: &mut AppState) -> bool {
+	fn manage_input(&mut self, app_state: &mut AppState) -> bool {
 		let (current_screen, screens, current_popup, popups,
 			show_log, global_config, desktop_config) = app_state.get_mut_state();
 		let lists = screens.get_mut(&current_screen).unwrap();
@@ -196,11 +198,16 @@ impl Ui {
 					} 
 				},
 				KeyCode::Char('e') | KeyCode::Char('E') => {
-					match current_popup {
-						Some(Popup::Extras) => popups.get_mut(&Popup::Extras).unwrap().get_selected().unwrap().edit(),
-						Some(_) => {},
-						None => lists[current_list].get_selected().unwrap().edit()
+					let item = match current_popup {
+						Some(popup) => popups.get_mut(popup).unwrap().get_selected().unwrap(),
+						None => lists[current_list].get_selected().unwrap()
+					};
+					match item {
+						ScreenItem::Desktop(_) | ScreenItem::Help(_) => return true,
+						_ => ()
 					}
+					item.edit();
+					self.terminal.clear().unwrap();
 				},
 				KeyCode::Char('l') | KeyCode::Char('L') => *show_log = !*show_log,
 				_ => {}
