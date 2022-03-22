@@ -31,7 +31,7 @@ offset = 15x50
 
 ### Text ###
 
-font = mononoki Nerd Font 11
+font = <[default-font|mononoki Nerd Font]> 11
 line_height = 10
 markup = full
 format = "<b>%s</b>\n%b"

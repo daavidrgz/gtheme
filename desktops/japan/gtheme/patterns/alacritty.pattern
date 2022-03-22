@@ -9,11 +9,11 @@ window:
   
 font:
   normal:
-    family: mononoki Nerd Font Mono
+    family: <[default-font|mononoki Nerd Font Mono]>
   bold:
-    family: mononoki Nerd Font Mono 
+    family: <[default-font|mononoki Nerd Font Mono]> 
   italic:
-    family: mononoki Nerd Font Mono
+    family: <[default-font|mononoki Nerd Font Mono]>
   size: 8
   offset:
     x: 0

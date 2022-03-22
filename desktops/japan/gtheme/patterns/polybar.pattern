@@ -50,10 +50,10 @@ monitor-fallback = <[monitor-fallback]>
 wm-restack = bspwm
 module-margin-left = 1
 
-font-0 = "mononoki Nerd Font:pixelsize=12;0"
-font-1 = "mononoki Nerd Font:size=11;1"
-font-2 = "mononoki Nerd Font:size=10;2"
-font-3 = "mononoki Nerd Font:size=14;3"
+font-0 = "<[default-font|mononoki Nerd Font]>:pixelsize=12;0"
+font-1 = "<[default-font|mononoki Nerd Font]>:size=11;1"
+font-2 = "<[default-font|mononoki Nerd Font]>:size=10;2"
+font-3 = "<[default-font|mononoki Nerd Font]>:size=14;3"
 
 modules-left = bitcoin ethereum cpu_clock gmail newsboat checkupdates
 modules-center = mpd
