@@ -49,10 +49,9 @@ pub fn start_cli() {
 
 	println!("");
 	match matches.subcommand() {
-
-		Some(("status", _)) => show_summary(),
-
 		Some(("desktop", sub_matches)) => match sub_matches.subcommand() {
+			Some(("status", sub_sub_matches)) => show_status(sub_sub_matches),
+			Some(("set-default-theme", sub_sub_matches)) => set_default_theme(sub_sub_matches),
 			Some(("list", _)) => list_desktops(),
 			Some(("apply", sub_sub_matches)) => apply_desktop(sub_sub_matches),
 			_ => ()
@@ -66,7 +65,7 @@ pub fn start_cli() {
 		}
 
 		Some(("pattern", sub_matches)) => match sub_matches.subcommand() {
-			Some(("list", sub_sub_matches)) => list_patterns(Some(sub_sub_matches)),
+			Some(("list", sub_sub_matches)) => list_patterns(sub_sub_matches),
 			Some(("edit", sub_sub_matches)) => edit_pattern(sub_sub_matches),
 			Some(("enable", sub_sub_matches)) => manage_patterns(sub_sub_matches, Action::Enable),
 			Some(("disable", sub_sub_matches)) => manage_patterns(sub_sub_matches, Action::Disable),
@@ -76,7 +75,7 @@ pub fn start_cli() {
 		}
 
 		Some(("extra", sub_matches)) => match sub_matches.subcommand() {
-			Some(("list", sub_sub_matches)) => list_extras(Some(sub_sub_matches)),
+			Some(("list", sub_sub_matches)) => list_extras(sub_sub_matches),
 			Some(("edit", sub_sub_matches)) => edit_extra(sub_sub_matches),
 			Some(("enable", sub_sub_matches)) => manage_extras(sub_sub_matches, Action::Enable),
 			Some(("disable", sub_sub_matches)) => manage_extras(sub_sub_matches, Action::Disable),
@@ -276,32 +275,36 @@ fn manage_fav(matches: &ArgMatches, action: Action) {
 	global_config.save()
 }
 
-fn show_summary() {
+fn show_status(matches: &ArgMatches) {
 	let global_config = GlobalConfig::new();
-	let current_desktop = match global_config.get_current_desktop() {
-		Some(d) => d.get_name(),
-		None => {
-			error!("|There is no desktop installed!|");
-			return
-		}
+	let desktop = match get_desktop(matches.value_of("desktop")) {
+		Some(d) => d,
+		None => return
 	};
 
-	let current_theme = match global_config.get_current_theme() {
+	let desktop_config = DesktopConfig::new(&desktop);
+
+	let default_theme_name = match desktop_config.get_default_theme() {
 		Some(t) => t.get_name(),
-		None => {
-			error!("|There is no theme installed!|");
-			return
-		} 
+		None => ""
 	};
 
-	println!("{}\n", "CURRENT DESKTOP".bold().underline().cyan());
-	println!("{} {}\n", "•".cyan(), current_desktop);
+	println!("{}\n", desktop.get_name().to_uppercase().bold().underline().cyan());
+	println!("{} {}", "• Default theme:".green().bold(), default_theme_name);
 
-	println!("{}\n", "CURRENT THEME".bold().underline().yellow());
-	println!("{} {}\n", "•".yellow(), current_theme);
+	if let Some(d) = global_config.get_current_desktop() {
+		if d.get_name() == desktop.get_name() {
+			let current_theme = match global_config.get_current_theme() {
+				Some(t) => t.get_name(),
+				None => ""
+			};
+			println!("{} {}", "• Current theme:".yellow().bold(), current_theme)
+		}
+	}
+	println!("");
 
-	list_patterns(None);
-	list_extras(None);
+	list_patterns(matches);
+	list_extras(matches);
 }
 
 
@@ -381,12 +384,8 @@ fn list_fav_themes() {
 	println!("");
 }
 
-fn list_patterns(matches: Option<&ArgMatches>) {
-	let desktop_opt = match matches {
-		Some(m) => m.value_of("desktop"),
-		None => None
-	};
-	let desktop = match get_desktop(desktop_opt) {
+fn list_patterns(matches: &ArgMatches) {
+	let desktop = match get_desktop(matches.value_of("desktop")) {
 		Some(d) => d,
 		None => return
 	};
@@ -426,12 +425,8 @@ fn list_patterns(matches: Option<&ArgMatches>) {
 	println!("");
 }
 
-fn list_extras(matches: Option<&ArgMatches>) {
-	let desktop_opt = match matches {
-		Some(m) => m.value_of("desktop"),
-		None => None
-	};
-	let desktop = match get_desktop(desktop_opt) {
+fn list_extras(matches: &ArgMatches) {
+	let desktop = match get_desktop(matches.value_of("desktop")) {
 		Some(d) => d,
 		None => return
 	};
@@ -472,7 +467,7 @@ fn get_desktop(desktop_opt: Option<&str>) -> Option<DesktopFile> {
 			match global_config.get_current_desktop() {
 				Some(d) => Some(d.clone()),
 				None => {
-					warn!("|There is no desktop installed!| Try with -d option instead");
+					error!("|There is no desktop installed!| Try with -d option instead");
 					None
 				}
 			}
@@ -533,4 +528,20 @@ fn edit_extra(matches: &ArgMatches) {
 		None => return
 	};
 	edit_file(extra.get_path());
+}
+
+fn set_default_theme(matches: &ArgMatches) {
+	let desktop = match get_desktop(matches.value_of("desktop")) {
+		Some(d) => d,
+		None => return
+	};
+
+	let theme = match Theme::get_by_name(matches.value_of("theme").unwrap()) {
+		Some(t) => t,
+		None => return
+	};
+
+	let mut desktop_config = DesktopConfig::new(&desktop);
+	desktop_config.set_default_theme(&theme);
+	desktop_config.save()
 }

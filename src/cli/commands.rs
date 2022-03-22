@@ -16,10 +16,6 @@ pub fn build_app() -> Command<'static> {
 			.help("Show more information")
 		);
 
-		app = app.subcommand(Command::new("status")
-			.alias("s")
-			.about("Show current gtheme status"));
-
 		app = app.subcommand(Command::new("theme")
 			.alias("t")
 			.about("Manage themes")
@@ -77,6 +73,31 @@ pub fn build_app() -> Command<'static> {
 			.subcommand(Command::new("list")
 				.alias("l")
 				.about("List all installed desktops")
+			)
+			.subcommand(Command::new("set-default-theme")
+				.alias("sdt")
+				.about("Set default theme of current desktop by default")
+				.args([
+					Arg::new("desktop")
+						.short('d')
+						.long("desktop")
+						.takes_value(true)
+						.help("Set default theme of specified desktop"),
+					Arg::new("theme")
+						.required(true)
+						.takes_value(true)
+						.help("Theme to set as default"),
+				])
+			)
+			.subcommand(Command::new("status")
+				.alias("s")
+				.about("Show desktop status of current desktop by default")
+				.arg(Arg::new("desktop")
+					.short('d')
+					.long("desktop")
+					.takes_value(true)
+					.help("Show status of specified desktop")
+				)
 			)
 			.subcommand(Command::new("apply")
 				.alias("a")
