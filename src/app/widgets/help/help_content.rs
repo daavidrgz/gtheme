@@ -27,7 +27,7 @@ pub const HELP_CONTENT: &str =
 'Enter'  #apply theme
 'f'      #flag/unflag theme as favourite
 'e'      #edit theme's file in $VISUAL env var
-'d'      #set theme as default for the current desktop
+'z'      #set theme as default for the current desktop
 
 •• EXTRAS
 
