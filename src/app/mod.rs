@@ -58,7 +58,7 @@ impl Ui {
 		disable_raw_mode().unwrap();
 		execute!(self.terminal.backend_mut(), LeaveAlternateScreen).unwrap();
 		self.terminal.show_cursor().unwrap();
-		self.terminal.clear().unwrap();
+		// self.terminal.clear().unwrap();
 	}
 
 	fn run_app(&mut self) {
@@ -226,20 +226,13 @@ impl Ui {
 			show_log, global_config, desktop_config) = app_state.get_mut_state();
 
 		let lists = screens.get_mut(&current_screen).unwrap();
-
+		
 		// Colors preview
-		let theme = if *current_screen == Screen::Theme {
-			let selected_theme = match lists.get(0).unwrap().get_selected() {
-				None => None,
-				Some(i) => Some(i.get_theme().unwrap().to_theme())
-			};
-
-			match lists.get(1).unwrap().get_selected() {
-				None => selected_theme,
-				Some(i) => Some(i.get_theme().unwrap().to_theme())
-			}
-		} else {
-			None
+		let current_list = if lists[LEFT_LIST].is_selected() {LEFT_LIST} else {RIGHT_LIST};
+		let item = lists[current_list].get_selected().unwrap();
+		let theme = match item.get_theme() {
+			Some(t) => Some(t.to_theme()),
+			None => None
 		};
 
 		// •• Layout definition ••
@@ -251,7 +244,7 @@ impl Ui {
 
 		let mut logo_container = f.size();
 			logo_container.height = 6;
-			logo_container.width = logo_container.width / 2;
+			// logo_container.width = logo_container.width / 2;
 
 		let mut options_container = f.size();
 			options_container.height = 6;
