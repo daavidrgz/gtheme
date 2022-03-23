@@ -6,7 +6,7 @@ use crate::core;
 use crate::core::pattern::*;
 use crate::core::theme::Theme;
 use crate::core::postscript::PostScript;
-use crate::core::config::UserConfig;
+use crate::core::config::{UserConfig,GlobalConfig};
 
 use log::{info,error};
 
@@ -58,6 +58,10 @@ impl Desktop {
 				None
 			}
 		}
+	}
+
+	pub fn exists(desktop: &str) -> bool{
+		Desktop::get_desktops().iter().any(|desktop_file|desktop_file.get_name().to_lowercase() == desktop.to_lowercase())
 	}
 
 	pub fn get_desktops() -> Vec<DesktopFile> {
@@ -252,8 +256,7 @@ impl Desktop {
 		vec
 	}
 
-	pub fn install(from: &Path){
-
+	pub fn add(from: &Path){
 		let md = match metadata(from){
 			Ok(md)=>md,
 			Err(err)=> {
@@ -261,7 +264,7 @@ impl Desktop {
 				return;
 			}
 		};
-
+		
 		if !md.is_dir(){
 			error!("|{}| is not a directory",from.to_str().unwrap());
 			return;
@@ -272,7 +275,13 @@ impl Desktop {
 				error!("Could not get directory name from path |{}|",from.to_str().unwrap());
 				return;
 			}
+
 		};
+		if Desktop::exists(desktop_name){
+			error!("Desktop |{}| already exists",desktop_name);
+			return
+		}
+
 		let gtheme_home:String = core::expand_path(core::GTHEME_HOME);
 		let desktops_dir = gtheme_home + &format!("/desktops");
 
@@ -288,7 +297,31 @@ impl Desktop {
 				return
 			}
 		}
-		
+	}
+
+	// WARNING: After uninstalling a desktop, you SHOULD NOT use a DesktopFile or a Desktop 
+	// that references this desktop. Behaviour is undefined.
+	pub fn remove(&self){
+		let global_config = GlobalConfig::new();
+
+		match global_config.get_current_desktop(){
+			Some(current_desktop) =>{
+				let current_desktop_name = current_desktop.get_name();
+				if current_desktop_name == self.get_name(){
+					error!("Cannot uninstall current desktop |({})|",self.get_name());
+					return;
+				}
+			}
+			None=>{}
+		}
+
+		let path = self.get_path();
+
+		match fs_extra::dir::remove(&path) {
+			Ok(_) => (),
+			Err(e) => error!("Could not remove desktop |{}|: |{}|",self.get_name(),e)
+		}
+
 	}
 }
 
@@ -314,7 +347,7 @@ mod tests{
 	use super::*;
 	
 	#[test]
-	fn test_install() {
+	fn test_add() {
 		let desktops = Desktop::get_desktops();
 		let desktop = desktops.into_iter().find(|desktop |desktop.get_name()=="jorge" ).unwrap().to_desktop();
 		let desktops = Desktop::get_desktops();
@@ -353,5 +386,16 @@ mod tests{
 		}
 		let desktop = desktops[4].to_desktop();
 		println!("Patterns in {}: {:?}",desktop.get_name(),desktop.get_patterns())
+	}
+
+	#[test]
+	fn test_desktop_add(){
+		Desktop::add(Path::new("/home/jorge/tmp/test"));
+	}
+
+	#[test]
+	fn test_desktop_remove(){
+		let desktop = Desktop::get_by_name("test").unwrap().to_desktop();
+		desktop.remove();
 	}
 }
