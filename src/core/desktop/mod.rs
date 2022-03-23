@@ -257,6 +257,9 @@ impl Desktop {
 	}
 
 	pub fn add(from: &Path){
+
+		info!("Adding desktop from |{}|...",from.to_str().unwrap());
+
 		let md = match metadata(from){
 			Ok(md)=>md,
 			Err(err)=> {
@@ -269,17 +272,18 @@ impl Desktop {
 			error!("|{}| is not a directory",from.to_str().unwrap());
 			return;
 		}
+
 		let desktop_name = match from.file_name(){
 			Some(name)=>name.to_str().unwrap(),
 			None=>{
 				error!("Could not get directory name from path |{}|",from.to_str().unwrap());
 				return;
 			}
-
 		};
+
 		if Desktop::exists(desktop_name){
 			error!("Desktop |{}| already exists",desktop_name);
-			return
+			return;
 		}
 
 		let gtheme_home:String = core::expand_path(core::GTHEME_HOME);
@@ -294,13 +298,10 @@ impl Desktop {
 			Ok(_) => (),
 			Err(e) => {
 				error!("Error while copying to |{}|: |{}|", &to.to_str().unwrap(), e);
-				return
+				return;
 			}
 		}
-	}
-
-	
-
+		info!("Successfully added desktop |{}|",desktop_name);
 	}
 }
 
@@ -322,8 +323,9 @@ impl DesktopFile{
 	// WARNING: After uninstalling a desktop, you SHOULD NOT use a DesktopFile or a Desktop 
 	// that references this desktop. Behaviour is undefined.
 	pub fn remove(&self){
-		let global_config = GlobalConfig::new();
+		info!("Removing desktop |{}| from |{}|",self.get_name(),self.path);
 
+		let global_config = GlobalConfig::new();
 		match global_config.get_current_desktop(){
 			Some(current_desktop) =>{
 				let current_desktop_name = current_desktop.get_name();
@@ -339,8 +341,11 @@ impl DesktopFile{
 
 		match fs_extra::dir::remove(&path) {
 			Ok(_) => (),
-			Err(e) => error!("Could not remove desktop |{}|: |{}|",self.get_name(),e)
+			Err(e) => error!("Could not remove desktop |{}| from |{}|: |{}|",self.get_name(),self.get_path(),e)
 		}
+		
+		info!("Successfully removed desktop |{}|",self.get_name());
+	}
 }
 
 #[cfg(test)]
@@ -396,7 +401,7 @@ mod tests{
 
 	#[test]
 	fn test_desktop_remove(){
-		let desktop = Desktop::get_by_name("test").unwrap().to_desktop();
+		let desktop = Desktop::get_by_name("test").unwrap();
 		desktop.remove();
 	}
 }
