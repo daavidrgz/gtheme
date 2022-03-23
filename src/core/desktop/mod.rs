@@ -104,7 +104,7 @@ impl Desktop {
 		vec
 	}
 
-	pub fn apply(&self, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>,dry_run: bool) {
+	pub fn apply_theme(&self, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>,dry_run: bool) {
 		//parameter HashMap(pattern_name,bool) in order to implement inverted themes
 		
 		if dry_run{
@@ -163,7 +163,7 @@ impl Desktop {
 	}
 
 	// TODO: Integrate desktopConfig inside Desktop to have direct access to active and inverted
-	pub fn install(&self, previous: &Option<Desktop>, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>,dry_run:bool) {
+	pub fn apply(&self, previous: &Option<Desktop>, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>,dry_run:bool) {
 		let config_home = core::expand_path(core::CONFIG_HOME);
 
 		if dry_run{
@@ -209,7 +209,7 @@ impl Desktop {
 			}
 		}
 
-		self.apply(theme, actived, inverted,dry_run);
+		self.apply_theme(theme, actived, inverted,dry_run);
 
 		if let Some(previous_desktop) =  previous {
 				//Exit postcript from previous desktop
@@ -294,7 +294,7 @@ mod tests{
 		let mut inverted = HashMap::new();
 		inverted.insert(String::from("polybar"), true);
 
-		desktop.install(&Some(previous),&theme,&actived,&inverted,false);
+		desktop.apply(&Some(previous),&theme,&actived,&inverted,false);
 	}
 
 	#[test]

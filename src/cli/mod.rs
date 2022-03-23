@@ -143,7 +143,7 @@ fn apply_theme(matches: &ArgMatches) {
 
 	let dry_run = matches.is_present("dry-run");
 
-	current_desktop.apply(&theme.to_theme(), &actived, &inverted, dry_run);
+	current_desktop.apply_theme(&theme.to_theme(), &actived, &inverted, dry_run);
 
 	if !dry_run {
 		*global_config.get_mut_current_theme() = Some(theme);
@@ -190,7 +190,7 @@ fn apply_desktop(matches: &ArgMatches) {
 		global_config.save();
 	}
 
-	desktop.to_desktop().install(&previous, &default_theme.to_theme(), desktop_config.get_actived(), desktop_config.get_inverted(), dry_run);
+	desktop.to_desktop().apply(&previous, &default_theme.to_theme(), desktop_config.get_actived(), desktop_config.get_inverted(), dry_run);
 }
 
 fn manage_patterns(matches: &ArgMatches, action:Action) {
