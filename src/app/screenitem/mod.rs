@@ -103,7 +103,31 @@ impl ScreenItem {
 		}
 	}
 
-	pub fn invert(&self, desktop_config: &mut DesktopConfig) {
+	pub fn set_default_theme(&self, desktop_config_opt: &mut Option<DesktopConfig>) {
+		let desktop_config = match desktop_config_opt {
+			Some(c) => c,
+			None => {
+				error!("|There is no desktop installed|, cannot set default theme!");
+				return
+			}
+		};
+		match self {
+			ScreenItem::Theme(t) => {
+				desktop_config.set_default_theme(t);
+				desktop_config.save()
+			},
+			_ => {}
+		}
+	}
+
+	pub fn invert(&self, desktop_config_opt: &mut Option<DesktopConfig>) {
+		let desktop_config = match desktop_config_opt {
+			Some(c) => c,
+			None => {
+				error!("|There is no desktop installed|, cannot invert pattern!");
+				return
+			}
+		};
 		match self {
 			ScreenItem::Pattern(p) => {
 				desktop_config.toggle_invert_pattern(p);

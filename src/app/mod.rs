@@ -192,10 +192,7 @@ impl Ui {
 						Some(i) => i,
 						None => return true
 					};
-					//Dont invert if desktop not installed
-					if let Some(d_config) = desktop_config{
-						item.invert(d_config);
-					} 
+					item.invert(desktop_config);
 				},
 				KeyCode::Char('e') | KeyCode::Char('E') => {
 					let item = match current_popup {
@@ -208,6 +205,13 @@ impl Ui {
 					}
 					item.edit();
 					self.terminal.clear().unwrap();
+				},
+				KeyCode::Char('z') | KeyCode::Char('Z') => {
+					let item = match lists[current_list].get_selected() {
+						Some(i) => i,
+						None => return true
+					};
+					item.set_default_theme(desktop_config);
 				},
 				KeyCode::Char('l') | KeyCode::Char('L') => *show_log = !*show_log,
 				_ => {}

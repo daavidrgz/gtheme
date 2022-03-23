@@ -25,10 +25,12 @@ pub const HELP_CONTENT: &str =
 •• THEMES
 
 'Enter'  #apply theme
-'f'      #flag/unflag as favourite
-'e'      #edit pattern's file in $VISUAL env var
+'f'      #flag/unflag theme as favourite
+'e'      #edit theme's file in $VISUAL env var
+'d'      #set theme as default for the current desktop
 
 •• EXTRAS
 
 'o'      #show/hide extras popup
-'Enter'  #enable/disable extra";
+'Enter'  #enable/disable extra
+'e'      #edit extra's file in $VISUAL env var";
