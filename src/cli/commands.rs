@@ -138,10 +138,26 @@ pub fn build_app() -> Command<'static> {
 						.takes_value(true)
 						.help("Apply specified theme after installing the desktop"),
 
+					Arg::new("pattern")
+						.short('p')
+						.long("pattern")
+						.takes_value(true)
+						.multiple_values(true)
+						.value_name("pattern")
+						.help("Apply theme only in specified patterns after installing the desktop. As some patterns may be necessary for the desktop to work this option is not recommeded"),
+
+					Arg::new("invert")
+						.short('i')
+						.long("invert")
+						.takes_value(true)
+						.multiple_values(true)
+						.value_name("pattern")
+						.help("Invert specified patterns when applying the theme after installing the desktop"),
+
 					Arg::new("dry-run")
 						.long("dry-run")
 						.takes_value(false)
-						.help("See possible errors when applying the desktop without changing disk files. It does not effectively change desktop.")
+						.help("See possible errors when applying the desktop without changing disk files. It does not effectively change desktop")
 				])
 			)
 		);

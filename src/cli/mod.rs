@@ -3,7 +3,7 @@ pub mod commands;
 
 use std::collections::HashMap;
 use std::env;
-use clap::ArgMatches;
+use clap::{ArgMatches,Values};
 use log::{LevelFilter, error, warn, info, Level};
 use colored::*;
 use term_grid::{Grid, GridOptions, Direction, Filling};
@@ -98,6 +98,60 @@ pub fn start_cli() {
 	}
 }
 
+// Aux functions
+fn get_desktop(desktop_opt: Option<&str>) -> Option<DesktopFile> {
+	match desktop_opt {
+		Some(desktop_str) => {
+			match Desktop::get_by_name(desktop_str) {
+				Some(d) => Some(d),
+				None => None
+			}
+		},
+		None => {
+			let global_config = GlobalConfig::new();
+			match global_config.get_current_desktop() {
+				Some(d) => Some(d.clone()),
+				None => {
+					error!("|There is no desktop installed!| Try with -d option instead");
+					None
+				}
+			}
+		}
+	}
+}
+
+fn get_actived(values_opt: Option<Values>, current_desktop: &DesktopFile, desktop_config: &DesktopConfig) -> HashMap<String,bool> {
+	let mut actived: HashMap<String,bool> = HashMap::new();
+	match values_opt {
+		Some(patterns) => {
+			for p in patterns {
+				match Pattern::get_by_name(current_desktop, p) {
+					Some(_) => actived.insert(p.to_string(), true),
+					None => continue
+				};
+			}
+		},
+		None => actived = desktop_config.get_actived().clone()
+	}
+	actived
+}
+
+fn get_inverted(values_opt: Option<Values>, current_desktop: &DesktopFile, desktop_config: &DesktopConfig) -> HashMap<String,bool> {
+	let mut inverted: HashMap<String,bool> = HashMap::new();
+	match values_opt {
+		Some(patterns) => {
+			for p in patterns {
+				match Pattern::get_by_name(current_desktop, p) {
+					Some(_) => inverted.insert(p.to_string(), true),
+					None => continue
+				};
+			}
+		},
+		None => inverted = desktop_config.get_inverted().clone()
+	}
+	inverted
+}
+
 fn apply_theme(matches: &ArgMatches) {
 	let theme_name = matches.value_of("theme").unwrap();
 
@@ -108,45 +162,30 @@ fn apply_theme(matches: &ArgMatches) {
 
 	let mut global_config = GlobalConfig::new();
 
-	let current_desktop_file = match global_config.get_current_desktop() {
+	let current_desktop = match global_config.get_current_desktop() {
 		Some(d) => d,
 		None => {
 			error!("|There is no desktop installed!|");
 			return
 		}
 	};
-	let current_desktop = current_desktop_file.to_desktop();
-	let desktop_config = DesktopConfig::new(current_desktop_file);
+	let desktop_config = DesktopConfig::new(current_desktop);
 
-	let mut actived: HashMap<String,bool> = HashMap::new();
-	if matches.is_present("pattern") {
-		let patterns = matches.values_of("pattern").unwrap();
-		for p in patterns {
-			match Pattern::get_by_name(current_desktop_file, p) {
-				Some(_) => actived.insert(p.to_string(), true),
-				None => continue
-			};
-		}
-	} else {
-		actived = desktop_config.get_actived().clone()
-	}
+	let actived = get_actived(
+		matches.values_of("pattern"),
+		current_desktop,
+		&desktop_config
+	);
 
-	let mut inverted: HashMap<String,bool> = HashMap::new();
-	if matches.is_present("invert") {
-		let patterns = matches.values_of("invert").unwrap();
-		for p in patterns {
-			match Pattern::get_by_name(current_desktop_file, p) {
-				Some(_) => inverted.insert(p.to_string(), true),
-				None => continue
-			};
-		}
-	} else {
-		inverted = desktop_config.get_inverted().clone()
-	}
+	let inverted = get_inverted(
+		matches.values_of("invert"),
+		current_desktop,
+		&desktop_config
+	);
 
 	let dry_run = matches.is_present("dry-run");
 
-	current_desktop.apply_theme(&theme.to_theme(), &actived, &inverted, dry_run);
+	current_desktop.to_desktop().apply_theme(&theme.to_theme(), &actived, &inverted, dry_run);
 
 	if !dry_run {
 		*global_config.get_mut_current_theme() = Some(theme);
@@ -157,18 +196,18 @@ fn apply_theme(matches: &ArgMatches) {
 fn apply_desktop(matches: &ArgMatches) {
 	let desktop_name = matches.value_of("desktop").unwrap();
 
-	let desktop = match Desktop::get_by_name(desktop_name) {
+	let current_desktop = match Desktop::get_by_name(desktop_name) {
 		Some(d) => d,
 		None => return
 	};
 
 	let mut global_config = GlobalConfig::new();
-	let previous = match global_config.get_current_desktop() {
+	let previous_desktop = match global_config.get_current_desktop() {
 		Some(d) => Some(d.to_desktop()),
 		None => None
 	};
 
-	let desktop_config = DesktopConfig::new(&desktop);
+	let desktop_config = DesktopConfig::new(&current_desktop);
 
 	let default_theme: ThemeFile = match matches.value_of("theme") {
 		Some(theme_name) => {
@@ -181,22 +220,34 @@ fn apply_desktop(matches: &ArgMatches) {
 			match desktop_config.get_default_theme() {
 				Some(t) => t.clone(),
 				None => {
-					error!("There is no |default theme| specified in desktop |{}|. Try with -t option instead", desktop.get_name());
+					error!("There is no |default theme| specified in desktop |{}|. Try with -t option instead", current_desktop.get_name());
 					return
 				}
 			}
 		}
 	};
 
+	let actived = get_actived(
+		matches.values_of("pattern"),
+		&current_desktop,
+		&desktop_config
+	);
+
+	let inverted = get_inverted(
+		matches.values_of("invert"),
+		&current_desktop,
+		&desktop_config
+	);
+
 	let dry_run = matches.is_present("dry-run");
 
 	if !dry_run {
-		*global_config.get_mut_current_desktop() = Some(desktop.clone());
+		*global_config.get_mut_current_desktop() = Some(current_desktop.clone());
 		*global_config.get_mut_current_theme() = Some(default_theme.clone());
 		global_config.save();
 	}
 
-	desktop.to_desktop().apply(&previous, &default_theme.to_theme(), desktop_config.get_actived(), desktop_config.get_inverted(), dry_run);
+	current_desktop.to_desktop().apply(&previous_desktop, &default_theme.to_theme(), &actived, &inverted, dry_run);
 }
 
 fn manage_patterns(matches: &ArgMatches, action:Action) {
@@ -460,27 +511,6 @@ fn list_extras(matches: &ArgMatches) {
 	println!("");
 }
 
-fn get_desktop(desktop_opt: Option<&str>) -> Option<DesktopFile> {
-	match desktop_opt {
-		Some(desktop_str) => {
-			match Desktop::get_by_name(desktop_str) {
-				Some(d) => Some(d),
-				None => None
-			}
-		},
-		None => {
-			let global_config = GlobalConfig::new();
-			match global_config.get_current_desktop() {
-				Some(d) => Some(d.clone()),
-				None => {
-					error!("|There is no desktop installed!| Try with -d option instead");
-					None
-				}
-			}
-		}
-	}
-}
-
 fn edit_file(path: &str) {
 	match env::var("VISUAL") {
 		Ok(value) => if value.is_empty() {
@@ -488,6 +518,7 @@ fn edit_file(path: &str) {
 		},
 		Err(_) => warn!("Could not found env var |$VISUAL|, using |nano| instead")
 	}
+	
 	match Command::new("sh")
 	.arg("-c")
 	.arg(format!("${{VISUAL:-nano}} {}", path))
