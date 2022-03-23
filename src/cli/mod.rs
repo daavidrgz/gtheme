@@ -9,6 +9,7 @@ use colored::*;
 use term_grid::{Grid, GridOptions, Direction, Filling};
 // use terminal_size::terminal_size;
 use std::process::{Command, Stdio};
+use std::path::Path;
 
 use clilogger::CliLogger;
 use crate::app;
@@ -51,6 +52,9 @@ pub fn start_cli() {
 	match matches.subcommand() {
 		Some(("desktop", sub_matches)) => match sub_matches.subcommand() {
 			Some(("status", sub_sub_matches)) => show_status(sub_sub_matches),
+			Some(("new-skeleton", sub_sub_matches)) => create_desktop(sub_sub_matches),
+			Some(("add", sub_sub_matches)) => add_desktop(sub_sub_matches),
+			Some(("remove", sub_sub_matches)) => remove_desktop(sub_sub_matches),
 			Some(("set-default-theme", sub_sub_matches)) => set_default_theme(sub_sub_matches),
 			Some(("list", _)) => list_desktops(),
 			Some(("apply", sub_sub_matches)) => apply_desktop(sub_sub_matches),
@@ -544,4 +548,29 @@ fn set_default_theme(matches: &ArgMatches) {
 	let mut desktop_config = DesktopConfig::new(&desktop);
 	desktop_config.set_default_theme(&theme);
 	desktop_config.save()
+}
+
+fn create_desktop(matches: &ArgMatches) {
+	let desktop_name = matches.value_of("name").unwrap();
+}
+
+fn add_desktop(matches: &ArgMatches) {
+	let path_str = matches.value_of("path").unwrap();
+	let path = match Path::new(path_str).canonicalize() {
+		Ok(p) => p,
+		Err(e) => {
+			error!("Error while converting path to its aboslute form: |{}|", e);
+			return
+		}
+	};
+	Desktop::add(&path);
+}
+
+fn remove_desktop(matches: &ArgMatches) {
+	let desktop_str = matches.value_of("desktop").unwrap();
+	let desktop = match Desktop::get_by_name(desktop_str) {
+		Some(d) => d,
+		None => return
+	};
+	desktop.remove();
 }
