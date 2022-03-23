@@ -21,7 +21,6 @@ use crate::core::{
 	config::{GlobalConfig, DesktopConfig}
 };
 
-const DEFAULT_THEME: &str = "Nord";
 enum Action{
 	Enable,
 	Disable,
@@ -181,7 +180,10 @@ fn apply_desktop(matches: &ArgMatches) {
 		None => {
 			match desktop_config.get_default_theme() {
 				Some(t) => t.clone(),
-				None => Theme::get_by_name(DEFAULT_THEME).unwrap()
+				None => {
+					error!("There is no |default theme| specified in desktop |{}|. Try with -t option instead", desktop.get_name());
+					return
+				}
 			}
 		}
 	};
@@ -556,14 +558,7 @@ fn create_desktop(matches: &ArgMatches) {
 
 fn add_desktop(matches: &ArgMatches) {
 	let path_str = matches.value_of("path").unwrap();
-	let path = match Path::new(path_str).canonicalize() {
-		Ok(p) => p,
-		Err(e) => {
-			error!("Error while converting path to its aboslute form: |{}|", e);
-			return
-		}
-	};
-	Desktop::add(&path);
+	Desktop::add(Path::new(path_str));
 }
 
 fn remove_desktop(matches: &ArgMatches) {

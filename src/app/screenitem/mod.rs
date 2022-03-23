@@ -3,7 +3,7 @@ use log::{warn,error,info};
 
 use crate::core::{
 	desktop::DesktopFile,
-	theme::{ThemeFile, Theme},
+	theme::ThemeFile,
 	pattern::PatternFile,
 	postscript::PostScript,
 	config::{GlobalConfig, DesktopConfig}
@@ -200,14 +200,14 @@ impl ScreenItem {
 		let current_desktop = match global_config.get_current_desktop() {
 			Some(d) => d.to_desktop(),
 			None => {
-				warn!("Cannot apply a theme, |there is no desktop installed!|");
+				error!("Cannot apply a theme, |there is no desktop installed!|");
 				return
 			}
 		};
 		let desktop_config = match desktop_config_opt {
 			Some(config) => config,
 			None => {
-				warn!("Cannot apply a theme, |there is no desktop installed!|");
+				error!("Cannot apply a theme, |there is no desktop installed!|");
 				return
 			}
 		};
@@ -228,11 +228,15 @@ impl ScreenItem {
 			Some(d) => Some(d.to_desktop()),
 			None => None
 		};
-		
-		let aux_theme = Theme::get_by_name("Nord").unwrap(); 
 
 		let next_desktop_config = DesktopConfig::new(&next_desktop);
-		let theme = next_desktop_config.get_default_theme().as_ref().unwrap_or(&aux_theme);
+		let theme = match next_desktop_config.get_default_theme() {
+			Some(t) => t.clone(),
+			None => {
+				error!("There is no |default theme| specified in desktop |{}|", next_desktop.get_name());
+				return
+			}
+		};
 
 		*global_config.get_mut_current_desktop() = Some(next_desktop.clone());
 		*global_config.get_mut_current_theme() = Some(theme.clone());
