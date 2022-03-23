@@ -1,5 +1,6 @@
-use std::fs::{self, DirEntry};
+use std::fs::{self, DirEntry,metadata};
 use std::collections::HashMap;
+use std::path::Path;
 
 use crate::core;
 use crate::core::pattern::*;
@@ -249,6 +250,45 @@ impl Desktop {
 			vec.push(entry);
 		}
 		vec
+	}
+
+	pub fn install(from: &Path){
+
+		let md = match metadata(from){
+			Ok(md)=>md,
+			Err(err)=> {
+				error!("Could not read metadata from |{}|: |{}|", from.to_str().unwrap(), err);
+				return;
+			}
+		};
+
+		if !md.is_dir(){
+			error!("|{}| is not a directory",from.to_str().unwrap());
+			return;
+		}
+		let desktop_name = match from.file_name(){
+			Some(name)=>name.to_str().unwrap(),
+			None=>{
+				error!("Could not get directory name from path |{}|",from.to_str().unwrap());
+				return;
+			}
+		};
+		let gtheme_home:String = core::expand_path(core::GTHEME_HOME);
+		let desktops_dir = gtheme_home + &format!("/desktops");
+
+		let to =  Path::new(&desktops_dir).join(desktop_name);
+		let mut options = fs_extra::dir::CopyOptions::new();
+		options.overwrite = true;
+		options.copy_inside = true;
+
+		match fs_extra::dir::copy(from, &to, &options) {
+			Ok(_) => (),
+			Err(e) => {
+				error!("Error while copying to |{}|: |{}|", &to.to_str().unwrap(), e);
+				return
+			}
+		}
+		
 	}
 }
 
