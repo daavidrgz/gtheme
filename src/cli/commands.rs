@@ -144,7 +144,7 @@ pub fn build_app() -> Command<'static> {
 						.takes_value(true)
 						.multiple_values(true)
 						.value_name("pattern")
-						.help("Apply theme only in specified patterns after installing the desktop. As some patterns may be necessary for the desktop to work this option is not recommeded"),
+						.help("Apply theme only in specified patterns after installing the desktop. As some patterns may be necessary for a desktop to work this option is not recommeded"),
 
 					Arg::new("invert")
 						.short('i')
