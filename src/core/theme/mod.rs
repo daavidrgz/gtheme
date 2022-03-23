@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::fs::{self,File};
 use std::io::prelude::*;
 use serde::{Serialize,Deserialize};
-use log::{error};
+use log::{warn,error};
 
 use crate::core;
 
@@ -32,7 +32,8 @@ impl Theme {
 			Ok(_) => (),
 			Err(e) => {
 				error!("Error reading theme file |{}|: |{}|", theme.get_path(), e);
-				panic!("Could not read theme file")
+				warn!("Using default theme");
+				return Theme::default(theme.get_name());
 			}
 		}
 
@@ -40,8 +41,43 @@ impl Theme {
 			Ok(t) => t,
 			Err(e) => {
 				error!("Error while deserializing theme file |{}|: |{}|", theme.get_path(), e);
-				panic!("Could not deserialize theme file")
+				warn!("Using default theme colors");
+				return Theme::default(theme.get_name());
 			}
+		}
+	}
+	fn default(name:&str) -> Self{
+
+		//Nord theme colors by default
+		let mut colors = HashMap::new();
+
+		let pairs = vec![
+			("selection-foreground", "2e3440"),
+			("black", "3b4252"),
+			("black-hg", "4c566a"),
+			("red", "bf616a"),
+			("red-hg", "bf616a"),
+			("green", "a3be8c"),
+			("green-hg", "a3be8c"),
+			("yellow", "ebcb8b"),
+			("yellow-hg", "ebcb8b"),
+			("blue", "81a1c1"),
+			("blue-hg", "81a1c1"),
+			("magenta", "b48ead"),
+			("magenta-hg", "b48ead"),
+			("cyan", "88c0d0"),
+			("cyan-hg", "8fbcbb"),
+			("white", "e5e8f0"),
+			("white-hg", "eceff4")
+		];
+
+		colors.extend(pairs.into_iter().map(|(key,value)| (key.to_string(), value.to_string())));
+
+		let extras = HashMap::new();
+		Theme{
+			name: name.to_string(),
+			colors,
+			extras
 		}
 	}
 	pub fn get_by_name(name: &str)-> Option<ThemeFile>{
@@ -102,7 +138,9 @@ impl Theme {
 		vec.sort_by(|a,b| a.get_name().to_lowercase().cmp(&b.get_name().to_lowercase()));
 		vec
 	}
+	
 }
+
 
 #[derive(Debug,Clone)]
 pub struct ThemeFile {
