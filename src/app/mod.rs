@@ -229,9 +229,13 @@ impl Ui {
 		
 		// Colors preview
 		let current_list = if lists[LEFT_LIST].is_selected() {LEFT_LIST} else {RIGHT_LIST};
-		let item = lists[current_list].get_selected().unwrap();
-		let theme = match item.get_theme() {
-			Some(t) => Some(t.to_theme()),
+		let theme = match lists[current_list].get_selected() {
+			Some(item) => {
+				match item.get_theme() {
+					Some(t) => Some(t.to_theme()),
+					None => None
+				} 
+			},
 			None => None
 		};
 
