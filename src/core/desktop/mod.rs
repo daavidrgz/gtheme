@@ -147,7 +147,7 @@ impl Desktop {
 		}
 	}
 
-	pub fn uninstall(&self) {
+	pub fn clean_files(&self) {
 		let config_home = core::expand_path(core::CONFIG_HOME);
 		
 		let files_to_uninstall:Vec<String> = self.get_config_files().iter()
@@ -172,12 +172,12 @@ impl Desktop {
 		if let Some(previous_desktop) = previous{
 			info!("Uninstalling desktop |{}|...", previous_desktop.get_name());
 			if !dry_run {
-				previous_desktop.uninstall();
+				previous_desktop.clean_files();
 			}
 		};
 		if !dry_run{
 			// Clean files to install
-			self.uninstall();
+			self.clean_files();
 		}
 
 
