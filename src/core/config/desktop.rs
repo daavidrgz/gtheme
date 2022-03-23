@@ -103,7 +103,7 @@ impl DesktopConfigDto {
 
 	fn save(&self, desktop: &DesktopFile) {
 
-		let content = serde_json::to_string(self).unwrap();
+		let content = serde_json::to_string_pretty(self).unwrap();
 		let path = format!("{}/desktop_config.json",desktop.get_path());
 
 		let mut file = match OpenOptions::new().create(true).write(true).truncate(true).open(&path) {

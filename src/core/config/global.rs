@@ -72,7 +72,7 @@ impl GlobalConfigDto {
 	}
 
 	fn save(&self) {
-		let content = serde_json::to_string(self).unwrap();
+		let content = serde_json::to_string_pretty(self).unwrap();
 		let path = format!("{}/global_config.json",core::expand_path(core::GTHEME_HOME));
 		let mut file = match OpenOptions::new().create(true).write(true).truncate(true).open(&path) {
 			Ok(f) => f,
