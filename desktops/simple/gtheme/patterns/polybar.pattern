@@ -21,11 +21,10 @@ foreground = #<[background]>
 
 [module/system-cpu]
 type = custom/script
-exec = sudo ~/.config/polybar/scripts/cpu-freq.sh
+exec = ~/.config/polybar/scripts/cpu-freq.sh
 interval = 1
 format-prefix = "﬙  "
 format-padding = 2
-click-left = sudo ~/.config/polybar/scripts/cpu-pstate.sh
 cursor-click = pointer
 
 [module/system-bluetooth]

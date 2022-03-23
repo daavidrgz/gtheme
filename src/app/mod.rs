@@ -56,8 +56,9 @@ impl Ui {
 
 	fn exit_ui(&mut self) {
 		disable_raw_mode().unwrap();
-		execute!(self.terminal.backend_mut(), LeaveAlternateScreen,).unwrap();
+		execute!(self.terminal.backend_mut(), LeaveAlternateScreen).unwrap();
 		self.terminal.show_cursor().unwrap();
+		self.terminal.clear().unwrap();
 	}
 
 	fn run_app(&mut self) {
@@ -67,7 +68,6 @@ impl Ui {
 			self.terminal.draw(|f| Ui::draw_ui(f, &mut app_state)).unwrap();
 			if !self.manage_input(&mut app_state) {break}
 		}
-		self.terminal.flush().unwrap();
 
 		app_state.get_global_config().save();
 		if let Some(desktop_config) = app_state.get_desktop_config() {

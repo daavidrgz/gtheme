@@ -1,12 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 
-CORES=8
-FREQ_SUM="$(sudo cpupower monitor -m "Mperf" | awk -F '|' '{s+=$NF} END {print s}')"
+c=0;t=0
 
-echo "scale=2; $FREQ_SUM / $CORES / 1000" | bc | awk '{printf "%.2f GHz", $0}'
-
-# if [ "$(cpupower frequency-info | grep "The governor \"powersave\"")" == "" ]; then
-#   printf " ()"
-# else
-# 	printf " ()"
-# fi
+awk '/MHz/ {print $4}' < /proc/cpuinfo | (while read -r i
+do
+    t=$( echo "$t + $i" | bc )
+    c=$((c+1))
+done
+echo "scale=2; $t / $c / 1000" | bc | awk '{print $1" GHz"}')
