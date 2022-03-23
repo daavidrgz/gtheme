@@ -299,6 +299,26 @@ impl Desktop {
 		}
 	}
 
+	
+
+	}
+}
+
+#[derive(Debug,Clone)]
+pub struct DesktopFile {
+	name: String,
+	path: String,
+}
+impl DesktopFile{
+	pub fn to_desktop(&self) -> Desktop {
+		Desktop::from(self)
+	}
+	pub fn get_name(&self) -> &String {
+		&self.name
+	}
+	pub fn get_path(&self) -> &String {
+		&self.path
+	}
 	// WARNING: After uninstalling a desktop, you SHOULD NOT use a DesktopFile or a Desktop 
 	// that references this desktop. Behaviour is undefined.
 	pub fn remove(&self){
@@ -321,25 +341,6 @@ impl Desktop {
 			Ok(_) => (),
 			Err(e) => error!("Could not remove desktop |{}|: |{}|",self.get_name(),e)
 		}
-
-	}
-}
-
-#[derive(Debug,Clone)]
-pub struct DesktopFile {
-	name: String,
-	path: String,
-}
-impl DesktopFile{
-	pub fn to_desktop(&self) -> Desktop {
-		Desktop::from(self)
-	}
-	pub fn get_name(&self) -> &String {
-		&self.name
-	}
-	pub fn get_path(&self) -> &String {
-		&self.path
-	}
 }
 
 #[cfg(test)]
