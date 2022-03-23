@@ -52,6 +52,10 @@ impl Theme {
 		let mut colors = HashMap::new();
 
 		let pairs = vec![
+			("background", "2e3440"),
+			("foreground", "d8dee9"),
+			("cursor", "d8dee9"),
+			("selection-background", "e5e8f0"),
 			("selection-foreground", "2e3440"),
 			("black", "3b4252"),
 			("black-hg", "4c566a"),
