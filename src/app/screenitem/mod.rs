@@ -102,6 +102,21 @@ impl ScreenItem {
 			ScreenItem::Help(_) => ()
 		}
 	}
+	
+	pub fn is_default_theme(&self, desktop_config_opt: &Option<DesktopConfig>) -> bool {
+		let desktop_config = match desktop_config_opt {
+			Some(c) => c,
+			None => return false
+		};
+
+		match self {
+			ScreenItem::Theme(theme) => match desktop_config.get_default_theme() {
+				Some(t) => theme.get_name() == t.get_name(),
+				None => false
+			},
+			_ => false
+		}
+	}
 
 	pub fn set_default_theme(&self, desktop_config_opt: &mut Option<DesktopConfig>) {
 		let desktop_config = match desktop_config_opt {

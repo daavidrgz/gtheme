@@ -1,6 +1,6 @@
 use tui::{
 	widgets::{Block, Borders, BorderType, List, ListItem},
-	style::{Modifier, Style},
+	style::{Modifier, Style, Color},
 	text::{Span, Spans},
 };
 
@@ -22,6 +22,9 @@ impl<'a> ListWidget<'a> {
 		let default_active_style = Style::default().add_modifier(Modifier::BOLD).add_modifier(Modifier::DIM);
 		let highlight_active_style = Style::default().add_modifier(Modifier::BOLD);
 
+		let default_theme_style = Style::default().add_modifier(Modifier::BOLD).add_modifier(Modifier::DIM).fg(Color::Yellow);
+		let highlight_default_theme_style = Style::default().add_modifier(Modifier::BOLD).fg(Color::Yellow);
+
 		let items: Vec<ListItem> = stateful_list
 			.get_items().iter().enumerate()
 			.map(|(it, screen_item)| {
@@ -31,19 +34,21 @@ impl<'a> ListWidget<'a> {
 					_ => color 
 				};
 
-				let (name_style, active_style) = match stateful_list.get_state().selected() {
+				let (name_style, active_style, default_theme_style) = match stateful_list.get_state().selected() {
 					Some(idx) => if idx == it {
-						(highlight_name_stlye, highlight_active_style.fg(state_color))
+						(highlight_name_stlye, highlight_active_style.fg(state_color), highlight_default_theme_style)
 					} else {
-						(default_name_style, default_active_style.fg(state_color))
+						(default_name_style, default_active_style.fg(state_color), default_theme_style)
 					},
-					None => (default_name_style, default_active_style.fg(state_color))
+					None => (default_name_style, default_active_style.fg(state_color), default_theme_style)
 				};
 
-				let (name, active_text, arrows) = Self::get_item_text(it, screen_item, stateful_list, global_config, desktop_config);
+				let (name, default_theme, active_text, arrows) = 
+					Self::get_item_text(it, screen_item, stateful_list, global_config, desktop_config);
 
 				ListItem::new(Spans::from(vec![
 					Span::styled(name, name_style),
+					Span::styled(default_theme, default_theme_style),
 					Span::styled(active_text, active_style), 
 					Span::styled(arrows, name_style),
 				]))
@@ -74,7 +79,7 @@ impl<'a> ListWidget<'a> {
 		ListWidget { widget }
 	}	
 
-	fn get_item_text(it: usize, screen_item: &ScreenItem, stateful_list: &StatefulList<ScreenItem>, global_config: &GlobalConfig, desktop_config: &Option<DesktopConfig>) -> (String, String, String) {
+	fn get_item_text(it: usize, screen_item: &ScreenItem, stateful_list: &StatefulList<ScreenItem>, global_config: &GlobalConfig, desktop_config: &Option<DesktopConfig>) -> (String, String, String, String) {
 		let name_str = screen_item.get_name();
 
 		let mut arrows = String::new();
@@ -91,6 +96,11 @@ impl<'a> ListWidget<'a> {
 			},
 			None => ()
 		};
+
+		let mut default_theme = String::new();
+		if screen_item.is_default_theme(desktop_config) {
+			default_theme = "• Default ".to_string();
+		}
 	
 		let mut active_text = if screen_item.is_active(global_config, desktop_config) {
 			stateful_list.get_active_text().clone()
@@ -102,7 +112,7 @@ impl<'a> ListWidget<'a> {
 			active_text = format!("{} (Inverted) ", active_text.trim());
 		}
 
-		(name, active_text, arrows)
+		(name, default_theme, active_text, arrows)
 	}
 
 	pub fn get_widget(self) -> List<'a> {

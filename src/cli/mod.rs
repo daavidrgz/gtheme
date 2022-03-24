@@ -36,7 +36,6 @@ pub fn start_cli() {
 	}
 
 	// Logger init
-	
 	log::set_max_level(LevelFilter::Info);
 	if matches.is_present("verbose") {
 		static CLI_LOGGER: CliLogger = CliLogger{level: Level::Info};
