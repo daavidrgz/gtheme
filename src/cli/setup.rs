@@ -33,7 +33,7 @@ impl Section {
 		}
 	}
 
-	fn process_input(elements: &Vec<String>) -> Option<String> {
+	fn process_input(elements: &Vec<(String, String)>) -> Option<String> {
 		let length = elements.len();
 
 		if length == 0 {
@@ -41,8 +41,8 @@ impl Section {
 			return None
 		}
 
-		elements.iter().enumerate().for_each(|(i, e)| {
-			println!("{} {}", format!("{})", i+1).bold().green(), e.bold())
+		elements.iter().enumerate().for_each(|(i, (e,desc))| {
+			println!("{} {} {}", format!("{})", i+1).bold().green(), e.bold(), desc.bold())
 		});
 		println!("{} {}", format!("{})", length+1).bold().green(), "[None]".bold());
 		println!("");
@@ -68,7 +68,10 @@ impl Section {
 			match option_str.parse::<usize>() {
 				Ok(i) => {
 					if i > 0 && i <= length + 1 {
-						return Some(elements.get(i-1).unwrap_or(&String::new()).to_string());
+						return match elements.get(i-1) {
+							Some((e,_)) => Some(e.clone()),
+							None => Some(String::new())
+						}
 					}
 				}
 				Err(_) => ()
@@ -82,7 +85,7 @@ impl Section {
 		println!("\n{}", format!("-> {}:", question).magenta().bold());
 	}
 
-	fn awk(content: String, sep: char, index: usize) -> Vec<String> {
+	fn awk(content: &String, sep: char, index: usize) -> Vec<String> {
 		let mut connected = vec![];
 		for line in content.trim().split(sep) {
 			let words: Vec<&str> = line.split(' ').collect();
@@ -93,40 +96,59 @@ impl Section {
 		connected
 	}
 
+	fn pipeline(commands: &Vec<(&str, Vec<&str>)>) -> String {
+		if commands.len() == 0 { return String::new() }
+
+		let mut stdin = Stdio::inherit();
+		for (command, args) in commands.iter().take(commands.len()-1) {
+			let mut program = Command::new(command).args(args)
+				.stdin(stdin)
+				.stdout(Stdio::piped()).spawn().unwrap();
+
+			stdin = Stdio::from(program.stdout.take().unwrap());
+		}
+
+		let (last_command, last_args) = commands.last().unwrap();
+		let last_program = Command::new(last_command).args(last_args)
+			.stdin(stdin).output().unwrap();
+
+		String::from_utf8(last_program.stdout).unwrap()
+	}
+
 	fn monitor_section(user_config: &mut UserConfig) {
-		Self::show_question("Select main monitor output");
-
-		let mut xrandr = Command::new("xrandr")
-			.stdout(Stdio::piped()).spawn().unwrap();
-		let grep_connected = Command::new("grep").arg(" connected")
-			.stdin(xrandr.stdout.take().unwrap()).output().unwrap();
-
-		let connected_content = String::from_utf8(grep_connected.stdout).unwrap();
-		let connected = Self::awk(connected_content, '\n', 0);
-		println!("{:?}", connected);
+		let connected_cmd = vec![
+			("xrandr", vec![]),
+			("grep", vec![" connected"])
+		];
+		let connected_content = Self::pipeline(&connected_cmd);
+		let connected = Self::awk(&connected_content, '\n', 0);
 		
-		let mut xrandr = Command::new("xrandr")
-			.stdout(Stdio::piped()).spawn().unwrap();
-		let grep_disconnected = Command::new("grep").arg(" disconnected")
-		.stdin(xrandr.stdout.take().unwrap()).output().unwrap();
+		let disconnected_cmd = vec![
+			("xrandr", vec![]),
+			("grep", vec![" disconnected"])
+		];
+		let disconnected_content = Self::pipeline(&disconnected_cmd);
+		let disconnected = Self::awk(&disconnected_content, '\n', 0);
 
-		let disconnected_content = String::from_utf8(grep_disconnected.stdout).unwrap();
-		let disconnected = Self::awk(disconnected_content, '\n', 0);
-		println!("{:?}", disconnected);
+		let outputs: Vec<(String,String)> = connected.into_iter()
+			.map(|item| (item,"(connected)".to_string()))
+			.chain(disconnected.into_iter().map(|item| (item,"".to_string())))
+			.collect();
 
-		let selection = Self::process_input(&vec!["one".to_string(), "two".to_string()]);
+		Self::show_question("Select main monitor output");
+		let selection = Self::process_input(&outputs);
 		if let Some(value) = selection {
 			user_config.set_property("monitor", &value);
 		}
 
 		Self::show_question("Select monitor fallback output");
-		let selection = Self::process_input(&vec!["one".to_string(), "two".to_string()]);
+		let selection = Self::process_input(&outputs);
 		if let Some(value) = selection {
 			user_config.set_property("monitor-fallback", &value);
 		}
 		
 		Self::show_question("Select backlight card for brightness control");
-		let selection = Self::process_input(&vec!["one".to_string(), "two".to_string()]);
+		let selection = Self::process_input(&vec![]);
 		if let Some(value) = selection {
 			user_config.set_property("backlight-card", &value);
 		}
@@ -134,14 +156,14 @@ impl Section {
 
 	fn battery_section(user_config: &mut UserConfig) {
 		Self::show_question("Select battery");
-		let selection = Self::process_input(&vec!["one".to_string(), "two".to_string()]);
+		let selection = Self::process_input(&vec![]);
 		
 		if let Some(value) = selection {
 			user_config.set_property("battery", &value);
 		}
 
 		Self::show_question("Select battery adapter");
-		let selection = Self::process_input(&vec!["one".to_string(), "two".to_string()]);
+		let selection = Self::process_input(&vec![]);
 		if let Some(value) = selection {
 			user_config.set_property("battery-adapter", &value);
 		}
@@ -149,7 +171,7 @@ impl Section {
 
 	fn network_section(user_config: &mut UserConfig) {
 		Self::show_question("Select main network interface");
-		let selection = Self::process_input(&vec!["one".to_string(), "two".to_string()]);
+		let selection = Self::process_input(&vec![]);
 		
 		if let Some(value) = selection {
 			user_config.set_property("network-if", &value);
@@ -158,13 +180,13 @@ impl Section {
 
 	fn keyboard_section(user_config: &mut UserConfig) {
 		Self::show_question("Select keyboard layout");
-		let selection = Self::process_input(&vec!["one".to_string(), "two".to_string()]);
+		let selection = Self::process_input(&vec![]);
 		if let Some(value) = selection {
 			user_config.set_property("keyboard-layout", &value);
 		}
 
 		Self::show_question("Select keyboard layout variant");
-		let selection = Self::process_input(&vec!["one".to_string(), "two".to_string()]);
+		let selection = Self::process_input(&vec![]);
 		if let Some(value) = selection {
 			user_config.set_property("keyboard-variant", &value);
 		}
@@ -172,19 +194,19 @@ impl Section {
 
 	fn other_section(user_config: &mut UserConfig) {
 		Self::show_question("Select default terminal emulator");
-		let selection = Self::process_input(&vec!["one".to_string(), "two".to_string()]);
+		let selection = Self::process_input(&vec![]);
 		if let Some(value) = selection {
 			user_config.set_property("terminal", &value);
 		}
 		Self::show_question("Select default font family (this will overwrite specific desktop fonts)");
-		let selection = Self::process_input(&vec!["one".to_string(), "two".to_string()]);
+		let selection = Self::process_input(&vec![]);
 		
 		if let Some(value) = selection {
 			user_config.set_property("default-font", &value);
 		}
 
 		Self::show_question("Select default font size");
-		let selection = Self::process_input(&vec!["one".to_string(), "two".to_string()]);
+		let selection = Self::process_input(&vec![]);
 		if let Some(value) = selection {
 			user_config.set_property("default-font-size", &value);
 		}
