@@ -1,5 +1,6 @@
 pub mod clilogger;
 pub mod commands;
+pub mod setup;
 
 use std::collections::HashMap;
 use std::env;
@@ -48,6 +49,8 @@ pub fn start_cli() {
 
 	println!("");
 	match matches.subcommand() {
+		Some(("setup", _)) => setup::start(),
+
 		Some(("desktop", sub_matches)) => match sub_matches.subcommand() {
 			Some(("status", sub_sub_matches)) => show_status(sub_sub_matches),
 			Some(("new-skeleton", sub_sub_matches)) => create_desktop(sub_sub_matches),

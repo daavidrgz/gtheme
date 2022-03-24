@@ -16,6 +16,10 @@ pub fn build_app() -> Command<'static> {
 			.help("Show more information")
 		);
 
+		app = app.subcommand(Command::new("setup")
+			.about("Configure global system variables in order to work properly")
+		);
+
 		app = app.subcommand(Command::new("theme")
 			.alias("t")
 			.about("Manage themes")

@@ -3,6 +3,7 @@ pub mod screenitem;
 pub mod appstate;
 pub mod statefullist;
 
+use std::{process::{Command, Stdio}};
 use std::io;
 use std::time::Duration;
 use log::LevelFilter;
@@ -58,7 +59,13 @@ impl Ui {
 		disable_raw_mode().unwrap();
 		execute!(self.terminal.backend_mut(), LeaveAlternateScreen).unwrap();
 		self.terminal.show_cursor().unwrap();
-		// self.terminal.clear().unwrap();
+
+		match Command::new("clear")
+		.stdout(Stdio::inherit())
+		.output() {
+			Ok(_) => (),
+			Err(e) => println!("ERROR Error while clearing terminal: {}", e)
+		};
 	}
 
 	fn run_app(&mut self) {
