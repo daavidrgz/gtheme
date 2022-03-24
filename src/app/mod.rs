@@ -3,7 +3,7 @@ pub mod screenitem;
 pub mod appstate;
 pub mod statefullist;
 
-use std::{process::{Command, Stdio}};
+use std::process::{Command, Stdio};
 use std::io;
 use std::time::Duration;
 use log::LevelFilter;

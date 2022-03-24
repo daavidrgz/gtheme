@@ -82,8 +82,38 @@ impl Section {
 		println!("\n{}", format!("-> {}:", question).magenta().bold());
 	}
 
+	fn awk(content: String, sep: char, index: usize) -> Vec<String> {
+		let mut connected = vec![];
+		for line in content.trim().split(sep) {
+			let words: Vec<&str> = line.split(' ').collect();
+			if let Some(display) = words.get(index) {
+				connected.push(display.to_string());
+			}
+		}
+		connected
+	}
+
 	fn monitor_section(user_config: &mut UserConfig) {
 		Self::show_question("Select main monitor output");
+
+		let mut xrandr = Command::new("xrandr")
+			.stdout(Stdio::piped()).spawn().unwrap();
+		let grep_connected = Command::new("grep").arg(" connected")
+			.stdin(xrandr.stdout.take().unwrap()).output().unwrap();
+
+		let connected_content = String::from_utf8(grep_connected.stdout).unwrap();
+		let connected = Self::awk(connected_content, '\n', 0);
+		println!("{:?}", connected);
+		
+		let mut xrandr = Command::new("xrandr")
+			.stdout(Stdio::piped()).spawn().unwrap();
+		let grep_disconnected = Command::new("grep").arg(" disconnected")
+		.stdin(xrandr.stdout.take().unwrap()).output().unwrap();
+
+		let disconnected_content = String::from_utf8(grep_disconnected.stdout).unwrap();
+		let disconnected = Self::awk(disconnected_content, '\n', 0);
+		println!("{:?}", disconnected);
+
 		let selection = Self::process_input(&vec!["one".to_string(), "two".to_string()]);
 		if let Some(value) = selection {
 			user_config.set_property("monitor", &value);
@@ -214,19 +244,20 @@ impl Setup {
 }
 
 pub fn start() {
-	let setup = Setup::new();
-	if UserConfig::exists(){
+	if UserConfig::exists() {
 		let mut option_str = String::new();
-		print!("{} already exists. Want to {}?[y/N]: ","User config".bold().yellow(),"override it".bold().yellow());
+		print!("{} already exists. Want to {}? [y/N]: ", "User config".bold().yellow(), "override it".bold().yellow());
 		io::stdout().flush().unwrap();
 		match io::stdin().read_line(&mut option_str) {
 			Ok(_) => (),
 			Err(e) => println!("\n{} {}\n", "Error while reading input: ".red().bold(), e)
 		}
-		match option_str.trim(){
-			"y"|"yes" => (),
-			_=>return
+		match option_str.trim() {
+			"y" | "yes" => (),
+			_ => return
 		}
 	}
-	setup.run_setup()
+
+	let setup = Setup::new();
+	setup.run_setup();
 }
