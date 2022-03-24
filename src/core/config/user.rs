@@ -3,8 +3,9 @@ use std::fs::{File, OpenOptions};
 use std::io::prelude::*;
 use serde::{Serialize,Deserialize};
 use toml;
-use crate::core::{self};
 use log::{info,warn,error};
+use std::path::Path;
+use crate::core;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct UserConfigDto {
@@ -72,6 +73,8 @@ impl UserConfigDto {
 		}	
 	}
 
+	
+
 }
 
 impl Default for UserConfigDto {
@@ -102,6 +105,10 @@ impl UserConfig {
 	}
 	pub fn get_properties(&self) -> &HashMap<String,String>{
 		&self.properties
+	}
+	pub fn exists() -> bool {
+		let path = format!("{}/user_settings.toml",core::expand_path(core::GTHEME_HOME));
+		Path::new(&path).exists()
 	}
 }
 

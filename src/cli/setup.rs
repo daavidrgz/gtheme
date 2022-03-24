@@ -215,6 +215,18 @@ impl Setup {
 
 pub fn start() {
 	let setup = Setup::new();
-	// Check if there is already an user config file (para Jorge)
+	if UserConfig::exists(){
+		let mut option_str = String::new();
+		print!("{} already exists. Want to {}?[y/N]: ","User config".bold().yellow(),"override it".bold().yellow());
+		io::stdout().flush().unwrap();
+		match io::stdin().read_line(&mut option_str) {
+			Ok(_) => (),
+			Err(e) => println!("\n{} {}\n", "Error while reading input: ".red().bold(), e)
+		}
+		match option_str.trim(){
+			"y"|"yes" => (),
+			_=>return
+		}
+	}
 	setup.run_setup()
 }
