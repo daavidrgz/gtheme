@@ -1,4 +1,4 @@
-use std::fs::{File};
+use std::fs::{File, OpenOptions};
 use serde::{Serialize,Deserialize};
 use toml;
 use log::{info,warn,error};
@@ -45,6 +45,27 @@ impl DesktopInfo {
 				return Self::default()
 			}
 		}
+	}
+	pub fn save(&self, desktop: &DesktopFile) {
+
+		let content = toml::to_string_pretty(self).unwrap();
+		let path = format!("{}/desktop_info.json",desktop.get_path());
+
+		let mut file = match OpenOptions::new().create(true).write(true).truncate(true).open(&path) {
+			Ok(f) => f,
+			Err(e) => {
+				error!("Could not open |{}| with write permissions: |{}|",&path,e);
+				return;
+			}
+		};
+
+   		match file.write_all(&content.as_bytes()) {
+			Err(e) => error!("Could not write desktop info in |{}|: |{}|",&path,e),
+			_ => info!("Saving desktop info...")
+		}
+	}
+	pub fn create_default(desktop: &DesktopFile){
+		Self::default().save(desktop);
 	}
 	pub fn get_author(&self) ->&String{
 		&self.author

@@ -334,7 +334,10 @@ impl Desktop {
 		}
 
 		match Desktop::get_by_name(desktop_name){
-			Some(desktop_file) => core::config::DesktopConfig::create_default(&desktop_file),
+			Some(desktop_file) =>{
+				core::config::DesktopConfig::create_default(&desktop_file);
+				core::config::DesktopInfo::create_default(&desktop_file);
+			} 
 			None =>{
 				error!("Could not get desktop |{}|",desktop_name);
 				return;
