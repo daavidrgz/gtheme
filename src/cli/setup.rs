@@ -33,11 +33,16 @@ impl Section {
 		}
 	}
 
-	fn process_input(elements: &Vec<(String, String)>) -> Option<String> {
+	fn process_select_input(elements: &Vec<(String, String)>) -> Option<String> {
 		let length = elements.len();
 
 		if length == 0 {
-			println!("• Could not find any option, skipping...");
+			print!("\n{} Press enter to continue... ", "Could not find any option.".yellow());
+			io::stdout().flush().unwrap();
+			match io::stdin().read_line(&mut String::new()) {
+				Ok(_) => (),
+				Err(e) => println!("\n{} {}\n", "Error while reading input: ".red().bold(), e)
+			}
 			return None
 		}
 
@@ -57,10 +62,10 @@ impl Section {
 			}
 			option_str = option_str.trim().to_string();
 
-			if option_str == "q" || option_str == "Q" {
-				println!("\n{}\n", "Exiting...".red().bold());
-				exit(0);
-			}
+			// if option_str == "q" || option_str == "Q" {
+			// 	println!("\n{}\n", "Exiting...".red().bold());
+			// 	exit(0);
+			// }
 			
 			match option_str.parse::<usize>() {
 				Ok(i) => {
@@ -78,10 +83,42 @@ impl Section {
 		}
 	}
 
+	fn process_type_input(default_value: Option<String>, validate: fn(&String) -> Result<(), String>) -> Option<String> {
+		println!("{} {}\n", "Default option:".bold().green(), default_value.clone().unwrap_or("[None]".to_string()).bold());
+
+		print!("Type (leave empty to use default): ");
+		loop {
+			let mut input_str = String::new();
+			io::stdout().flush().unwrap();
+			match io::stdin().read_line(&mut input_str) {
+				Ok(_) => (),
+				Err(e) => println!("\n{} {}\n", "Error while reading input: ".red().bold(), e)
+			}
+			input_str = input_str.trim().to_string();
+
+			if input_str.is_empty() { return default_value }
+
+			match validate(&input_str) {
+				Ok(_) => return Some(input_str),
+				Err(e) => print!("{}, try again: ", e.red().bold())
+			}
+		}
+	}
+
 	fn select_question(question: &str, elements: &Vec<(String,String)>, key: &str, user_config: &mut UserConfig) {
 		println!("\n{}", format!("-> {}:", question).magenta().bold());
-		let selection = Self::process_input(elements);
+		let selection = Self::process_select_input(elements);
 		if let Some(value) = selection {
+			user_config.set_property(key, &value);
+		}
+	}
+
+	fn type_question(question: &str, default_value: Option<String>, validate: fn(&String) -> Result<(), String>,
+		key: &str, user_config: &mut UserConfig) {
+
+		println!("\n{}", format!("-> {}:", question).magenta().bold());
+		let input_opt = Self::process_type_input(default_value, validate);
+		if let Some(value) = input_opt {
 			user_config.set_property(key, &value);
 		}
 	}
@@ -89,7 +126,7 @@ impl Section {
 	fn awk(content: &String, index: usize) -> Vec<String> {
 		let mut connected = vec![];
 		for line in content.trim().split('\n') {
-			let words: Vec<&str> = line.split(' ').collect();
+			let words: Vec<&str> = line.split_whitespace().collect();
 			if let Some(display) = words.get(index) {
 				connected.push(display.to_string());
 			}
@@ -97,8 +134,8 @@ impl Section {
 		connected
 	}
 
-	fn pipeline(commands: &Vec<(&str, Vec<&str>)>) -> String {
-		if commands.len() == 0 { return String::new() }
+	fn pipeline(commands: &Vec<(&str, Vec<&str>)>) -> (Option<i32>, String) {
+		if commands.len() == 0 { return (None, String::new()) }
 
 		let mut stdin = Stdio::inherit();
 		for (command, args) in commands.iter().take(commands.len()-1) {
@@ -113,7 +150,9 @@ impl Section {
 		let last_output = Command::new(last_command).args(last_args)
 			.stdin(stdin).output().unwrap();
 
-		String::from_utf8(last_output.stdout).unwrap()
+		let output_str = String::from_utf8(last_output.stdout).unwrap();
+		let error_code = last_output.status.code();
+		(error_code, output_str)
 	}
 
 	fn monitor_section(user_config: &mut UserConfig) {
@@ -122,14 +161,14 @@ impl Section {
 			("xrandr", vec![]),
 			("grep", vec![" connected"])
 		];
-		let connected_content = Self::pipeline(&connected_cmd);
+		let (_, connected_content) = Self::pipeline(&connected_cmd);
 		let connected = Self::awk(&connected_content, 0);
 		
 		let disconnected_cmd = vec![
 			("xrandr", vec![]),
 			("grep", vec![" disconnected"])
 		];
-		let disconnected_content = Self::pipeline(&disconnected_cmd);
+		let (_, disconnected_content) = Self::pipeline(&disconnected_cmd);
 		let disconnected = Self::awk(&disconnected_content, 0);
 
 		let monitors_print: Vec<(String,String)> = connected.into_iter()
@@ -155,7 +194,7 @@ impl Section {
 		let backlight_cmd = vec![
 			("ls", vec!["/sys/class/backlight", "-1"])
 		];
-		let backlight_content = Self::pipeline(&backlight_cmd);
+		let (_, backlight_content) = Self::pipeline(&backlight_cmd);
 		let backlight_cards = Self::awk(&backlight_content,  0);
 		let backlight_print: Vec<(String,String)> = backlight_cards.into_iter().map(|i| (i, "".to_string())).collect();
 		
@@ -168,13 +207,13 @@ impl Section {
 	}
 
 	fn battery_section(user_config: &mut UserConfig) {
-
 		let power_path = "/sys/class/power_supply";
+
 		// BATTERY ID
 		let power_cmd = vec![
 			("ls", vec![power_path, "-1"]),
 		];
-		let power_content = Self::pipeline(&power_cmd);
+		let (_, power_content) = Self::pipeline(&power_cmd);
 		let power = Self::awk(&power_content,  0);
 
 		let mut batteries = vec![];
@@ -183,16 +222,16 @@ impl Section {
 		for power_item in power{
 			let type_path = format!("{}/{}/type",power_path,power_item);
 			let type_cmd = vec![
-				("cat",vec![type_path.as_str()])
+				("cat", vec![type_path.as_str()])
 			];
-			let power_item_type = Self::pipeline(&type_cmd).trim().to_string();
-			if power_item_type == "Battery"{
+			let (_, mut power_item_type) = Self::pipeline(&type_cmd);
+			power_item_type = power_item_type.trim().to_string();
+			if power_item_type == "Battery" {
 				batteries.push(power_item);
-			}else if power_item_type == "Mains"{
+			} else if power_item_type == "Mains" {
 				adapters.push(power_item);
 			}
 		}
-
 
 		let battery_print: Vec<(String,String)> = batteries.into_iter().map(|i| (i, "".to_string())).collect();
 
@@ -204,7 +243,6 @@ impl Section {
 		);
 
 		// BATTERY ADAPTER
-
 		let battery_adp_print: Vec<(String,String)> = adapters.into_iter().map(|i| (i, "".to_string())).collect();
 
 		Self::select_question(
@@ -216,14 +254,14 @@ impl Section {
 	}
 
 	fn network_section(user_config: &mut UserConfig) {
+		// NETWORK INTERFACE
 		let ifs_cmd = vec![
 			("ls", vec!["/sys/class/net", "-1"])
 		];
-		let ifs_content = Self::pipeline(&ifs_cmd);
+		let (_, ifs_content) = Self::pipeline(&ifs_cmd);
 		let ifs = Self::awk(&ifs_content,  0);
 		let ifs_print: Vec<(String,String)> = ifs.into_iter().map(|i| (i, "".to_string())).collect();
 		
-		// NETWORK INTERFACE
 		Self::select_question(
 			"Select main network interface",
 			&ifs_print,
@@ -233,9 +271,34 @@ impl Section {
 	}
 
 	fn keyboard_section(user_config: &mut UserConfig) {
-		Self::select_question(
+		// KEYBOARD LAYOUT
+		fn validate_layout(layout: &String) -> Result<(),String> {
+			let layout_cmd = vec![
+				("localectl", vec!["list-x11-keymap-layouts"]),
+				("grep", vec!["-x", &layout])
+			];
+			let (exit_code, _) = Section::pipeline(&layout_cmd);
+			return match exit_code {
+				Some(c) => if c == 0 { Ok(()) } else { Err("Invalid layout".to_string()) },
+				None => Err("Could not retrieve layouts".to_string())
+			}
+		}
+
+		let query_cmd = vec![
+			("setxkbmap", vec!["-query"]),
+			("grep", vec!["layout"])
+		];
+		let (_, query_output) = Self::pipeline(&query_cmd);
+		let query_awk = Self::awk(&query_output, 1);
+		let mut current_layout: Option<String> = None;
+		if query_awk.len() == 1 {
+			current_layout = Some(query_awk[0].clone());
+		}
+
+		Self::type_question(
 			"Select keyboard layout",
-			&vec![],
+			current_layout,
+			validate_layout,
 			"keyboard-layout",
 			user_config
 		);

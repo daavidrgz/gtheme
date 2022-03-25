@@ -7,7 +7,6 @@ pub const HELP_CONTENT: &str =
 'Left'   #focus left panel
 'Right'  #focus right panel
 'l'      #show/hide logs
-'c'      #toggle colors preview
 'q'      #quit
 'h'      #show/hide this popup
 

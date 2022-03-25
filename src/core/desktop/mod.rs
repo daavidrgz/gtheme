@@ -185,7 +185,6 @@ impl Desktop {
 			self.clean_files();
 		}
 
-
 		let files_to_install = self.get_config_files();
 
 		info!("Installing desktop |{}|...", self.get_name());
@@ -306,6 +305,7 @@ impl Desktop {
 	pub fn new_skeleton(desktop_name:&str){
 		if Desktop::exists(desktop_name){
 			error!("Desktop |{}| already exists",desktop_name);
+			return;
 		}
 
 		let desktop_path = format!("{}/desktops/{}",core::expand_path(core::GTHEME_HOME),desktop_name);
