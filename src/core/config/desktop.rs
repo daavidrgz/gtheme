@@ -138,6 +138,7 @@ impl DesktopConfigDto {
 			inverted
 		}
 	}
+	
 }
 
 impl DesktopConfig{
@@ -263,5 +264,8 @@ impl DesktopConfig{
 			true => self.disable_extra(extra),
 			false => self.enable_extra(extra)
 		}
+	}
+	pub fn create_default(desktop: &DesktopFile){
+		DesktopConfigDto::default(desktop).save(desktop);
 	}
 }

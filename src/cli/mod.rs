@@ -587,18 +587,24 @@ fn set_default_theme(matches: &ArgMatches) {
 
 fn create_desktop(matches: &ArgMatches) {
 	let desktop_name = matches.value_of("name").unwrap();
+	Desktop::new_skeleton(desktop_name);
 }
 
 fn add_desktop(matches: &ArgMatches) {
-	let path_str = matches.value_of("path").unwrap();
-	Desktop::add(Path::new(path_str));
+	let desktops = matches.values_of("path").unwrap();
+	for desktop in desktops{
+		Desktop::add(Path::new(desktop));
+	}
 }
 
 fn remove_desktop(matches: &ArgMatches) {
-	let desktop_str = matches.value_of("desktop").unwrap();
-	let desktop = match Desktop::get_by_name(desktop_str) {
-		Some(d) => d,
-		None => return
-	};
-	desktop.remove();
+	let desktops = matches.values_of("desktop").unwrap();
+
+	for desktop in desktops{
+		let desktop_file = match Desktop::get_by_name(desktop) {
+			Some(d) => d,
+			None => continue
+		};
+		desktop_file.remove();
+	}
 }

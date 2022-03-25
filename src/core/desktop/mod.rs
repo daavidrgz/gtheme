@@ -303,6 +303,45 @@ impl Desktop {
 		}
 		info!("Successfully added desktop |{}|",desktop_name);
 	}
+	pub fn new_skeleton(desktop_name:&str){
+		if Desktop::exists(desktop_name){
+			error!("Desktop |{}| already exists",desktop_name);
+		}
+
+		let desktop_path = format!("{}/desktops/{}",core::expand_path(core::GTHEME_HOME),desktop_name);
+
+		match fs::create_dir_all(&desktop_path){
+			Ok(_) => info!("Created directory |{}|", &desktop_path),
+			Err(e) => {
+				error!("Error while creating directory |{}|: |{}|", &desktop_path,e);
+				return;
+			}
+		}
+
+		let directories = vec![
+			".config","gtheme","gtheme/extras","gtheme/patterns","gtheme/post-scripts",
+		];
+
+		for directory in directories {
+			let target_path = format!("{}/{}",desktop_path,directory);
+			match fs::create_dir_all(&target_path){
+				Ok(_) => info!("Created directory |{}|", &target_path),
+				Err(e) => {
+					error!("Error while creating directory |{}|: |{}|", &target_path,e);
+					return;
+				}
+			}
+		}
+
+		match Desktop::get_by_name(desktop_name){
+			Some(desktop_file) => core::config::DesktopConfig::create_default(&desktop_file),
+			None =>{
+				error!("Could not get desktop |{}|",desktop_name);
+				return;
+			}
+		};		
+		info!("Successfully created desktop |{}|",desktop_name);
+	}
 }
 
 #[derive(Debug,Clone)]
@@ -345,12 +384,6 @@ impl DesktopFile{
 		}
 		
 		info!("Successfully removed desktop |{}|",self.get_name());
-	}
-
-	pub fn new_skeleton(desktop_name:&str){
-		if Desktop::exists(desktop_name){
-			error!("Desktop |{}| already exists",desktop_name);
-		}
 	}
 }
 
