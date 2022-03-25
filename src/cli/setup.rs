@@ -29,7 +29,7 @@ impl Section {
 			Section::Battery => Self::battery_section(user_config),
 			Section::Network => Self::network_section(user_config),
 			Section::Keyboard => Self::keyboard_section(user_config),
-			Section::Others => Self::other_section(user_config)
+			Section::Others => Self::others_section(user_config)
 		}
 	}
 
@@ -47,17 +47,14 @@ impl Section {
 		println!("{} {}", format!("{})", length+1).bold().green(), "[None]".bold());
 		println!("");
 
-		print!("Select one option: ");
+		print!("Select one option (q to exit): ");
 		loop {
 			let mut option_str = String::new();
-
-			
 			io::stdout().flush().unwrap();
 			match io::stdin().read_line(&mut option_str) {
 				Ok(_) => (),
 				Err(e) => println!("\n{} {}\n", "Error while reading input: ".red().bold(), e)
 			}
-
 			option_str = option_str.trim().to_string();
 
 			if option_str == "q" || option_str == "Q" {
@@ -70,7 +67,7 @@ impl Section {
 					if i > 0 && i <= length + 1 {
 						return match elements.get(i-1) {
 							Some((e,_)) => Some(e.clone()),
-							None => Some(String::new())
+							None => None
 						}
 					}
 				}
@@ -81,13 +78,17 @@ impl Section {
 		}
 	}
 
-	fn show_question(question: &str) {
+	fn select_question(question: &str, elements: &Vec<(String,String)>, key: &str, user_config: &mut UserConfig) {
 		println!("\n{}", format!("-> {}:", question).magenta().bold());
+		let selection = Self::process_input(elements);
+		if let Some(value) = selection {
+			user_config.set_property(key, &value);
+		}
 	}
 
-	fn awk(content: &String, sep: char, index: usize) -> Vec<String> {
+	fn awk(content: &String, index: usize) -> Vec<String> {
 		let mut connected = vec![];
-		for line in content.trim().split(sep) {
+		for line in content.trim().split('\n') {
 			let words: Vec<&str> = line.split(' ').collect();
 			if let Some(display) = words.get(index) {
 				connected.push(display.to_string());
@@ -101,115 +102,152 @@ impl Section {
 
 		let mut stdin = Stdio::inherit();
 		for (command, args) in commands.iter().take(commands.len()-1) {
-			let mut program = Command::new(command).args(args)
+			let mut output = Command::new(command).args(args)
 				.stdin(stdin)
 				.stdout(Stdio::piped()).spawn().unwrap();
 
-			stdin = Stdio::from(program.stdout.take().unwrap());
+			stdin = Stdio::from(output.stdout.take().unwrap());
 		}
 
 		let (last_command, last_args) = commands.last().unwrap();
-		let last_program = Command::new(last_command).args(last_args)
+		let last_output = Command::new(last_command).args(last_args)
 			.stdin(stdin).output().unwrap();
 
-		String::from_utf8(last_program.stdout).unwrap()
+		String::from_utf8(last_output.stdout).unwrap()
 	}
 
 	fn monitor_section(user_config: &mut UserConfig) {
+		// MONITORS
 		let connected_cmd = vec![
 			("xrandr", vec![]),
 			("grep", vec![" connected"])
 		];
 		let connected_content = Self::pipeline(&connected_cmd);
-		let connected = Self::awk(&connected_content, '\n', 0);
+		let connected = Self::awk(&connected_content, 0);
 		
 		let disconnected_cmd = vec![
 			("xrandr", vec![]),
 			("grep", vec![" disconnected"])
 		];
 		let disconnected_content = Self::pipeline(&disconnected_cmd);
-		let disconnected = Self::awk(&disconnected_content, '\n', 0);
+		let disconnected = Self::awk(&disconnected_content, 0);
 
-		let outputs: Vec<(String,String)> = connected.into_iter()
-			.map(|item| (item,"(connected)".to_string()))
-			.chain(disconnected.into_iter().map(|item| (item,"".to_string())))
+		let monitors_print: Vec<(String,String)> = connected.into_iter()
+			.map(|i| (i, "(connected)".to_string()))
+			.chain(disconnected.into_iter().map(|i| (i, "".to_string())))
 			.collect();
 
-		Self::show_question("Select main monitor output");
-		let selection = Self::process_input(&outputs);
-		if let Some(value) = selection {
-			user_config.set_property("monitor", &value);
-		}
+		Self::select_question(
+			"Select main monitor output (for more info see 'xrandr')",
+			&monitors_print,
+			"monitor",
+			user_config
+		);
 
-		Self::show_question("Select monitor fallback output");
-		let selection = Self::process_input(&outputs);
-		if let Some(value) = selection {
-			user_config.set_property("monitor-fallback", &value);
-		}
+		Self::select_question(
+			"Select monitor fallback output",
+			&monitors_print,
+			"monitor-fallback",
+			user_config
+		);
+
+		// BACKLIGHT
+		let backlight_cmd = vec![
+			("ls", vec!["/sys/class/backlight", "-1"])
+		];
+		let backlight_content = Self::pipeline(&backlight_cmd);
+		let backlight_cards = Self::awk(&backlight_content,  0);
+		let backlight_print: Vec<(String,String)> = backlight_cards.into_iter().map(|i| (i, "".to_string())).collect();
 		
-		Self::show_question("Select backlight card for brightness control");
-		let selection = Self::process_input(&vec![]);
-		if let Some(value) = selection {
-			user_config.set_property("backlight-card", &value);
-		}
+		Self::select_question(
+			"Select backlight card for brightness control (for more info see 'brightnessctl')",
+			&backlight_print,
+			"backlight-card",
+			user_config
+		);
 	}
 
 	fn battery_section(user_config: &mut UserConfig) {
-		Self::show_question("Select battery");
-		let selection = Self::process_input(&vec![]);
-		
-		if let Some(value) = selection {
-			user_config.set_property("battery", &value);
-		}
+		// BATTERY ID
+		let battery_cmd = vec![
+			("ls", vec!["/sys/class/power_supply", "-1"]),
+			("grep", vec!["-i", "BAT*"])
+		];
+		let battery_content = Self::pipeline(&battery_cmd);
+		let battery = Self::awk(&battery_content,  0);
+		let battery_print: Vec<(String,String)> = battery.into_iter().map(|i| (i, "".to_string())).collect();
 
-		Self::show_question("Select battery adapter");
-		let selection = Self::process_input(&vec![]);
-		if let Some(value) = selection {
-			user_config.set_property("battery-adapter", &value);
-		}
+		Self::select_question(
+			"Select battery",
+			&battery_print,
+			"battery",
+			user_config
+		);
+
+		// BATTERY ADAPTER
+		let battery_adp_cmd = vec![
+			("ls", vec!["/sys/class/power_supply", "-1"]),
+			("grep", vec!["-i", "ADP*"])
+		];
+		let battery_adp_content = Self::pipeline(&battery_adp_cmd);
+		let battery_adp = Self::awk(&battery_adp_content,  0);
+		let battery_adp_print: Vec<(String,String)> = battery_adp.into_iter().map(|i| (i, "".to_string())).collect();
+
+		Self::select_question(
+			"Select battery adapter",
+			&battery_adp_print,
+			"battery-adapter",
+			user_config
+		);
 	}
 
 	fn network_section(user_config: &mut UserConfig) {
-		Self::show_question("Select main network interface");
-		let selection = Self::process_input(&vec![]);
-		
-		if let Some(value) = selection {
-			user_config.set_property("network-if", &value);
-		}
+		// NETWORK INTERFACE
+		Self::select_question(
+			"Select main network interface",
+			&vec![],
+			"network-if",
+			user_config
+		);
 	}
 
 	fn keyboard_section(user_config: &mut UserConfig) {
-		Self::show_question("Select keyboard layout");
-		let selection = Self::process_input(&vec![]);
-		if let Some(value) = selection {
-			user_config.set_property("keyboard-layout", &value);
-		}
+		Self::select_question(
+			"Select keyboard layout",
+			&vec![],
+			"keyboard-layout",
+			user_config
+		);
 
-		Self::show_question("Select keyboard layout variant");
-		let selection = Self::process_input(&vec![]);
-		if let Some(value) = selection {
-			user_config.set_property("keyboard-variant", &value);
-		}
+		Self::select_question(
+			"Select keyboard layout variant",
+			&vec![],
+			"keyboard-variant",
+			user_config
+		);
 	}
 
-	fn other_section(user_config: &mut UserConfig) {
-		Self::show_question("Select default terminal emulator");
-		let selection = Self::process_input(&vec![]);
-		if let Some(value) = selection {
-			user_config.set_property("terminal", &value);
-		}
-		Self::show_question("Select default font family (this will overwrite specific desktop fonts)");
-		let selection = Self::process_input(&vec![]);
-		
-		if let Some(value) = selection {
-			user_config.set_property("default-font", &value);
-		}
+	fn others_section(user_config: &mut UserConfig) {
+		Self::select_question(
+			"Select default terminal emulator",
+			&vec![],
+			"terminal",
+			user_config
+		);
 
-		Self::show_question("Select default font size");
-		let selection = Self::process_input(&vec![]);
-		if let Some(value) = selection {
-			user_config.set_property("default-font-size", &value);
-		}
+		Self::select_question(
+			"Select default font family (this will overwrite specific desktop fonts)",
+			&vec![],
+			"default-font",
+			user_config
+		);
+
+		Self::select_question(
+			"Select default font size",
+			&vec![],
+			"default-font-size",
+			user_config
+		);
 	}
 }
 
