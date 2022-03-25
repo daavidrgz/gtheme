@@ -214,6 +214,6 @@ mod tests{
 		*config.get_mut_current_desktop() = None;
 		*config.get_mut_fav_themes()=vec![];
 
-		config.save();
+		//config.save();
 	}
 }
