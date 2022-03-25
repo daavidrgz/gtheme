@@ -1,4 +1,4 @@
 author="david"
 description="desktop"
 dependencies=["bspwm","polybar"]
-credits="htpp://github.com:daavidrgz"
+credits="http://github.com:daavidrgz"
