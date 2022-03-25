@@ -18,7 +18,7 @@ pub struct DesktopInfo {
  
 impl DesktopInfo {
 	pub fn new(desktop: &DesktopFile) -> Self {
-		let path = format!("{}/info.toml",desktop.get_path());
+		let path = format!("{}/desktop_info.toml",desktop.get_path());
 
 		let mut file = match File::open(&path) {
 			Ok(file) => file,
