@@ -1,7 +1,4 @@
 author="david"
 description="desktop"
-dependencies=[
-	"bspwm",
-	"polybar"
-]
+dependencies=["bspwm","polybar"]
 credits="htpp://github.com:daavidrgz"
