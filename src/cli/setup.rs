@@ -216,10 +216,17 @@ impl Section {
 	}
 
 	fn network_section(user_config: &mut UserConfig) {
+		let ifs_cmd = vec![
+			("ls", vec!["/sys/class/net", "-1"])
+		];
+		let ifs_content = Self::pipeline(&ifs_cmd);
+		let ifs = Self::awk(&ifs_content,  0);
+		let ifs_print: Vec<(String,String)> = ifs.into_iter().map(|i| (i, "".to_string())).collect();
+		
 		// NETWORK INTERFACE
 		Self::select_question(
 			"Select main network interface",
-			&vec![],
+			&ifs_print,
 			"network-if",
 			user_config
 		);
