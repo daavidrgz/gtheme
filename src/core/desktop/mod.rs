@@ -346,6 +346,12 @@ impl DesktopFile{
 		
 		info!("Successfully removed desktop |{}|",self.get_name());
 	}
+
+	pub fn new_skeleton(desktop_name:&str){
+		if Desktop::exists(desktop_name){
+			error!("Desktop |{}| already exists",desktop_name);
+		}
+	}
 }
 
 #[cfg(test)]

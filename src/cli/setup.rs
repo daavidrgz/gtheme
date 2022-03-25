@@ -168,14 +168,33 @@ impl Section {
 	}
 
 	fn battery_section(user_config: &mut UserConfig) {
+
+		let power_path = "/sys/class/power_supply";
 		// BATTERY ID
-		let battery_cmd = vec![
-			("ls", vec!["/sys/class/power_supply", "-1"]),
-			("grep", vec!["-i", "BAT*"])
+		let power_cmd = vec![
+			("ls", vec![power_path, "-1"]),
 		];
-		let battery_content = Self::pipeline(&battery_cmd);
-		let battery = Self::awk(&battery_content,  0);
-		let battery_print: Vec<(String,String)> = battery.into_iter().map(|i| (i, "".to_string())).collect();
+		let power_content = Self::pipeline(&power_cmd);
+		let power = Self::awk(&power_content,  0);
+
+		let mut batteries = vec![];
+		let mut adapters = vec![];
+
+		for power_item in power{
+			let type_path = format!("{}/{}/type",power_path,power_item);
+			let type_cmd = vec![
+				("cat",vec![type_path.as_str()])
+			];
+			let power_item_type = Self::pipeline(&type_cmd).trim().to_string();
+			if power_item_type == "Battery"{
+				batteries.push(power_item);
+			}else if power_item_type == "Mains"{
+				adapters.push(power_item);
+			}
+		}
+
+
+		let battery_print: Vec<(String,String)> = batteries.into_iter().map(|i| (i, "".to_string())).collect();
 
 		Self::select_question(
 			"Select battery",
@@ -185,13 +204,8 @@ impl Section {
 		);
 
 		// BATTERY ADAPTER
-		let battery_adp_cmd = vec![
-			("ls", vec!["/sys/class/power_supply", "-1"]),
-			("grep", vec!["-i", "ADP*"])
-		];
-		let battery_adp_content = Self::pipeline(&battery_adp_cmd);
-		let battery_adp = Self::awk(&battery_adp_content,  0);
-		let battery_adp_print: Vec<(String,String)> = battery_adp.into_iter().map(|i| (i, "".to_string())).collect();
+
+		let battery_adp_print: Vec<(String,String)> = adapters.into_iter().map(|i| (i, "".to_string())).collect();
 
 		Self::select_question(
 			"Select battery adapter",
