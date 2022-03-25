@@ -208,7 +208,7 @@ impl Section {
 		let battery_adp_print: Vec<(String,String)> = adapters.into_iter().map(|i| (i, "".to_string())).collect();
 
 		Self::select_question(
-			"Select battery adapter (for more info see 'upower -d')",
+			"Select battery adapter",
 			&battery_adp_print,
 			"battery-adapter",
 			user_config
