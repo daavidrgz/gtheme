@@ -197,7 +197,7 @@ impl Section {
 		let battery_print: Vec<(String,String)> = batteries.into_iter().map(|i| (i, "".to_string())).collect();
 
 		Self::select_question(
-			"Select battery",
+			"Select battery (for more info see 'upower -d')",
 			&battery_print,
 			"battery",
 			user_config
