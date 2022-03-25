@@ -1,5 +1,5 @@
 use colored::*;
-use std::{process::{exit,Command, Stdio}, io::{self, Write}};
+use std::{process::{Command, Stdio}, io::{self, Write}};
 
 use crate::core::config::UserConfig;
 
