@@ -49,7 +49,7 @@ impl DesktopInfo {
 	pub fn save(&self, desktop: &DesktopFile) {
 
 		let content = toml::to_string_pretty(self).unwrap();
-		let path = format!("{}/desktop_info.json",desktop.get_path());
+		let path = format!("{}/desktop_info.toml",desktop.get_path());
 
 		let mut file = match OpenOptions::new().create(true).write(true).truncate(true).open(&path) {
 			Ok(f) => f,
