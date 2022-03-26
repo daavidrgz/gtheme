@@ -85,7 +85,7 @@ pub fn build_app() -> Command<'static> {
 						.short('d')
 						.long("desktop")
 						.takes_value(true)
-						.help("Desktop of which show info"),
+						.help("Desktop to show info"),
 					Arg::new("deps")
 						.long("deps")
 						.help("Show only desktop dependencies")
