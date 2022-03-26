@@ -412,7 +412,7 @@ impl Setup {
 	pub fn run_setup(&self) {
 		Self::clear_screen();
 
-		let mut user_config = UserConfig::new();
+		let mut user_config = UserConfig::default();
 
 		let length = self.sections.len();
 		self.sections.iter().enumerate().for_each(|(idx, section)| {

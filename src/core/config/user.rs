@@ -59,6 +59,15 @@ impl UserConfigDto {
 
 	fn save(&self) {
 		let content = toml::to_string_pretty(self).unwrap();
+		let mut splitted:Vec<&str> = content.trim().split("\n").collect();
+
+		let mut to_order:Vec<&str> = splitted.drain(1..).collect();
+		to_order.sort_by(|a,b| a.cmp(b));
+
+		let content = splitted.into_iter().chain(to_order.into_iter())
+			.map(|e|e.to_string()).collect::<Vec<String>>().join("\n");
+
+
 		let path = format!("{}/user_settings.toml",core::expand_path(core::GTHEME_HOME));
 		let mut file = match OpenOptions::new().create(true).write(true).truncate(true).open(&path) {
 			Ok(f) => f,
@@ -109,6 +118,13 @@ impl UserConfig {
 	pub fn exists() -> bool {
 		let path = format!("{}/user_settings.toml",core::expand_path(core::GTHEME_HOME));
 		Path::new(&path).exists()
+	}
+}
+impl Default for UserConfig{
+	fn default() -> Self{
+		UserConfig{
+			properties:HashMap::new(),
+		}
 	}
 }
 
