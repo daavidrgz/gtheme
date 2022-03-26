@@ -40,16 +40,14 @@ impl<'a> InfoWidget<'a> {
 			};
 			let bar_span = Span::styled(bar, Style::default().fg(Color::Green).add_modifier(Modifier::BOLD));
 
-			
-			// Its a section entry
-			if line.starts_with("•"){
-				let entry_key = Span::styled(format!("  {}",line.to_string()), entry_value_style);
+			if line.starts_with("•") {
+				let entry_key = Span::styled(format!("  {}", line.to_string()), entry_value_style);
 				ListItem::new(Spans::from(vec![bar_span, entry_key]))
-			}else{
+			} else {
 				let words: Vec<&str> = line.splitn(2,':').collect();
 				let key = words.get(0).unwrap_or(&"").clone();
 				let value = words.get(1).unwrap_or(&"").clone();
-				let entry_key = Span::styled(format!("{}:",key.to_string()), entry_key_style);
+				let entry_key = Span::styled(format!("{}:", key.to_string()), entry_key_style);
 				let entry_value = Span::styled(value.to_string(), entry_value_style);
 				ListItem::new(Spans::from(vec![bar_span, entry_key, entry_value]))
 			}
