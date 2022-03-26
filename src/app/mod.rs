@@ -20,10 +20,10 @@ use crossterm::{
 	terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 
-use crate::core::config::GlobalConfig;
+use crate::core::config::{GlobalConfig};
 use crate::app::{
 	screenitem::ScreenItem,
-	widgets::{ListWidget, LogoWidget, HelpWidget, LoggerWidget},
+	widgets::{ListWidget, LogoWidget, HelpWidget, LoggerWidget, InfoWidget},
 	appstate::{AppState, Screen, Popup}
 };
 
@@ -195,11 +195,32 @@ impl Ui {
 					}
 				},
 				KeyCode::Char('i') | KeyCode::Char('I') => {
-					let item = match lists[current_list].get_selected() {
-						Some(i) => i,
-						None => return true
-					};
-					item.invert(desktop_config);
+					match current_popup {
+						Some(Popup::Info) => {
+							lists[LEFT_LIST].next();
+							*current_popup = None
+						},
+						Some(_) => (),
+						None => {
+							let item = match lists[current_list].get_selected() {
+								Some(i) => i,
+								None => return true
+							};
+							match item {
+								ScreenItem::Pattern(_) => item.invert(desktop_config),
+								ScreenItem::Desktop(_) => {
+									let info_list = popups.get_mut(&Popup::Info).unwrap();
+									item.create_desktop_info(info_list);
+		
+									lists[LEFT_LIST].unselect();
+									lists[RIGHT_LIST].unselect();
+									info_list.next();
+									*current_popup = Some(Popup::Info)
+								}
+								_ => ()
+							}
+						}
+					}
 				},
 				KeyCode::Char('e') | KeyCode::Char('E') => {
 					let item = match current_popup {
@@ -300,7 +321,7 @@ impl Ui {
 			let help_list = popups.get_mut(&Popup::Help).unwrap();
 			let help_widget = HelpWidget::new(help_list);
 			let area = Self::centered_rect(60, 70, f.size());
-			f.render_widget(Clear, area); //this clears out the background
+			f.render_widget(Clear, area);
 			f.render_stateful_widget(help_widget.get_widget(), area, help_list.get_mut_state());
 		}
 
@@ -309,8 +330,17 @@ impl Ui {
 			let extras_list = popups.get_mut(&Popup::Extras).unwrap();
 			let extras_widget = ListWidget::new(extras_list, global_config, desktop_config);
 			let area = Self::centered_rect(60, 70, f.size());
-			f.render_widget(Clear, area); //this clears out the background
+			f.render_widget(Clear, area);
 			f.render_stateful_widget(extras_widget.get_widget(), area, extras_list.get_mut_state());
+		}
+
+		// Info popup
+		if *current_popup == Some(Popup::Info) {
+			let info_list = popups.get_mut(&Popup::Info).unwrap();
+			let info_widget = InfoWidget::new(info_list);
+			let area = Self::centered_rect(60, 70, f.size());
+			f.render_widget(Clear, area);
+			f.render_stateful_widget(info_widget.get_widget(), area, info_list.get_mut_state());
 		}
 	}
 

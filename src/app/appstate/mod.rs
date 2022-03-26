@@ -20,7 +20,8 @@ pub enum Screen {
 #[derive(Eq, PartialEq, Hash)]
 pub enum Popup {
 	Help,
-	Extras
+	Extras,
+	Info
 }
 
 pub struct AppState {
@@ -116,6 +117,7 @@ impl AppState {
 		let mut popups = HashMap::new();
 		popups.insert(Popup::Extras, Self::create_extras_list(global_config));
 		popups.insert(Popup::Help, Self::create_help_list());
+		popups.insert(Popup::Info, StatefulList::with_items(vec![]));
 		popups
 	}
 

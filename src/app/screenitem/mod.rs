@@ -1,12 +1,14 @@
 use std::{process::{Command, Stdio}, env};
 use log::{warn,error,info};
+use tui::style::Color;
 
+use crate::app::statefullist::StatefulList;
 use crate::core::{
 	desktop::DesktopFile,
 	theme::ThemeFile,
 	pattern::PatternFile,
 	postscript::PostScript,
-	config::{GlobalConfig, DesktopConfig}
+	config::{GlobalConfig, DesktopConfig, DesktopInfo}
 };
 
 #[derive(Clone)]
@@ -16,6 +18,7 @@ pub enum ScreenItem {
 	Pattern(PatternFile),
 	Extra(PostScript),
 	Help(String),
+	Info(String)
 }
 impl ScreenItem {
 	pub fn get_name(&self) -> &str {
@@ -25,6 +28,7 @@ impl ScreenItem {
 			ScreenItem::Pattern(p) => p.get_name(),
 			ScreenItem::Extra(e) => e.get_name(),
 			ScreenItem::Help(s) => &s,
+			ScreenItem::Info(s) => &s
 		}
 	}
 
@@ -35,6 +39,7 @@ impl ScreenItem {
 			ScreenItem::Pattern(p) => p.get_path(),
 			ScreenItem::Extra(e) => e.get_path(),
 			ScreenItem::Help(s) => &s,
+			ScreenItem::Info(s) => &s
 		}
 	}
 
@@ -99,7 +104,7 @@ impl ScreenItem {
 			ScreenItem::Theme(t) => Self::apply_theme(t, global_config, desktop_config),
 			ScreenItem::Pattern(_) => Self::toggle_active(self, desktop_config),
 			ScreenItem::Extra(_) => Self::toggle_active(self, desktop_config),
-			ScreenItem::Help(_) => ()
+			ScreenItem::Help(_) | ScreenItem::Info(_) => ()
 		}
 	}
 	
@@ -133,6 +138,36 @@ impl ScreenItem {
 			},
 			_ => {}
 		}
+	}
+
+	pub fn create_desktop_info(&self, stateful_list: &mut StatefulList<ScreenItem>) {
+		match self {
+			ScreenItem::Desktop(d) => {
+				let desktop_info = DesktopInfo::new(&d);
+
+				let mut lines: Vec<ScreenItem> = vec![];
+				let name_str = format!("Name: {}", d.get_name());
+				let author_str = format!("Author: {}", desktop_info.get_author());
+				let credits_str = format!("Credits: {}", desktop_info.get_credits());
+				let description_str = format!("Description: {}", desktop_info.get_description());
+				let dependencies_str = format!("Dependencies:");
+		
+				lines.push(ScreenItem::Info(name_str));
+				lines.push(ScreenItem::Info(author_str));
+				lines.push(ScreenItem::Info(credits_str));
+				lines.push(ScreenItem::Info(description_str));
+				lines.push(ScreenItem::Info(dependencies_str));
+
+		    for dependency in desktop_info.get_dependencies(){
+					lines.push(ScreenItem::Info(format!("• {}",dependency)));
+				}
+				*stateful_list = StatefulList::with_items(lines)
+					.color(Color::Green)
+					.title("INFO ")
+			},
+			_ => ()
+		}
+
 	}
 
 	pub fn invert(&self, desktop_config_opt: &mut Option<DesktopConfig>) {
@@ -190,7 +225,7 @@ impl ScreenItem {
 					None => false
 				}
 			},
-			ScreenItem::Help(_) => false
+			ScreenItem::Help(_) | ScreenItem::Info(_) => false
 		}
 	}
 

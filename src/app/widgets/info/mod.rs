@@ -1,6 +1,3 @@
-mod help_content;
-pub use help_content::HELP_CONTENT;
-
 use tui::{
 	widgets::{Block, Borders, BorderType, List, ListItem},
 	style::{Color, Modifier, Style},
@@ -10,12 +7,13 @@ use tui::{
 use crate::app::statefullist::StatefulList;
 use crate::app::screenitem::ScreenItem;
 
-pub struct HelpWidget<'a> {
+pub struct InfoWidget<'a> {
 	widget: List<'a>
 }
-impl<'a> HelpWidget<'a> {
-	pub fn new(stateful_list: &StatefulList<ScreenItem>) -> HelpWidget<'a> {
-		let items = Self::create_help(stateful_list);
+
+impl<'a> InfoWidget<'a> {
+	pub fn new(stateful_list: &StatefulList<ScreenItem>) -> InfoWidget<'a> {
+		let items = Self::create_info(stateful_list);
 
 		let title_style = Style::default().fg(*stateful_list.get_color()).add_modifier(Modifier::BOLD).add_modifier(Modifier::REVERSED);
 		let block = Block::default()
@@ -26,16 +24,11 @@ impl<'a> HelpWidget<'a> {
 
 		let list = List::new(items).block(block);
 
-		HelpWidget {
-			widget: list
-		}
+		InfoWidget { widget: list }
 	}
 
-	fn create_help(stateful_list: &StatefulList<ScreenItem>) -> Vec<ListItem<'a>> {
-		let title_style = Style::default().fg(Color::Blue)
-			.add_modifier(Modifier::BOLD)
-			.add_modifier(Modifier::ITALIC);
-		let entry_key_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
+	fn create_info(stateful_list: &StatefulList<ScreenItem>) -> Vec<ListItem<'a>> {
+		let entry_key_style = Style::default().fg(Color::Green).add_modifier(Modifier::BOLD);
 		let entry_value_style = Style::default().add_modifier(Modifier::BOLD);
 
 		let items: Vec<ListItem> = stateful_list.get_items().iter().enumerate().map(|(it, item)| {
@@ -45,19 +38,21 @@ impl<'a> HelpWidget<'a> {
 				Some(idx) => if idx == it {" ┃ "} else {"   "},
 				None => "   "
 			};
-			let bar_span = Span::styled(bar, Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD));
+			let bar_span = Span::styled(bar, Style::default().fg(Color::Green).add_modifier(Modifier::BOLD));
 
-			let words: Vec<&str> = line.split('#').collect();
 			
-			// Its a section title
-			if words.len() == 1 {
-				return ListItem::new(Spans::from(vec![bar_span, Span::styled(String::from(words[0]), title_style)]));
-			}
-
 			// Its a section entry
-			let entry_key = Span::styled(String::from(words[0]), entry_key_style);
-			let entry_value = Span::styled(String::from(words[1]), entry_value_style);
-			ListItem::new(Spans::from(vec![bar_span, entry_key, entry_value]))
+			if line.starts_with("•"){
+				let entry_key = Span::styled(format!("  {}",line.to_string()), entry_value_style);
+				ListItem::new(Spans::from(vec![bar_span, entry_key]))
+			}else{
+				let words: Vec<&str> = line.splitn(2,':').collect();
+				let key = words.get(0).unwrap_or(&"").clone();
+				let value = words.get(1).unwrap_or(&"").clone();
+				let entry_key = Span::styled(format!("{}:",key.to_string()), entry_key_style);
+				let entry_value = Span::styled(value.to_string(), entry_value_style);
+				ListItem::new(Spans::from(vec![bar_span, entry_key, entry_value]))
+			}
 		}).collect();
 		items
 	}
