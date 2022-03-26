@@ -301,10 +301,7 @@ impl Section {
 		];
 		let (_, query_output) = Self::pipeline(&query_cmd);
 		let query_awk = Self::awk(&query_output, 1);
-		let mut current_layout = None;
-		if query_awk.len() == 1 {
-			current_layout = Some(query_awk[0].clone());
-		}
+		let current_layout= query_awk.get(0).cloned();
 
 		Self::type_question(
 			"Select keyboard layout",
@@ -320,11 +317,8 @@ impl Section {
 		];
 		let (_, query_variant_output) = Self::pipeline(&query_variant_cmd);
 		let query_variant_awk = Self::awk(&query_variant_output, 1);
-		let mut current_variant= None;
-		if query_variant_awk.len() == 1 {
-			current_variant = Some(query_variant_awk[0].clone());
-		}
-
+		let current_variant= query_variant_awk.get(0).cloned();
+		
 		Self::type_question(
 			"Select keyboard layout variant",
 			current_variant,
@@ -413,7 +407,7 @@ impl Setup {
 pub fn start() {
 	if UserConfig::exists() {
 		let mut option_str = String::new();
-		print!("{} already exists. Want to {}? [y/N]: ", "User config".bold().yellow(), "override it".bold().yellow());
+		print!("{} already exists. Want to {}? [y/N]: ", "User config".bold().yellow(), "overwrites it".bold().yellow());
 		io::stdout().flush().unwrap();
 		match io::stdin().read_line(&mut option_str) {
 			Ok(_) => (),
