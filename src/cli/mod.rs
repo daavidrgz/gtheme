@@ -628,12 +628,10 @@ fn show_desktop_info(matches: &ArgMatches) {
 		println!("{}", "Dependecies:".green().bold());
 
 		for dep in dependencies {
-			println!("- {}", dep)
+			println!(" - {}", dep)
 		}
 	} else {
 		for dep in dependencies { println!("{}", dep) }
 	}
-
-
-
+	println!("");
 }

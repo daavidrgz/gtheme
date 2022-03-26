@@ -1,7 +1,8 @@
 author="David Rodríguez (@daavidrgz)"
 description="desktop"
-credits="http://github.com:daavidrgz"
+credits="https://github.com/mdnght-4/dotfiles"
 dependencies=[
+	"https://github.com/wmutils/opt (Tool to have double borders)",
 	"bspwm",
 	"sxhkd",
 	"picom",
@@ -13,12 +14,8 @@ dependencies=[
 	"feh",
 	"brightnessctl",
 	"playerctl",
-	"cava",
 	"flameshot (Optional)",
 	"alacritty (Optional)",
 	"better-discord (Optional)",
 	"spicetify (Optional)",
-	"bottom (Optional)",
-	"cmus (Optional)",
-	"neofetch (Optional)",
 ]

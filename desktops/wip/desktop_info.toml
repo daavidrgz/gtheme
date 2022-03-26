@@ -1,24 +1,23 @@
 author="David Rodríguez (@daavidrgz)"
 description="desktop"
-credits="http://github.com:daavidrgz"
+credits="https://github.com/joni22u/dotfiles"
 dependencies=[
+	"pulsectl (pip)",
 	"bspwm",
 	"sxhkd",
 	"picom",
 	"rofi",
-	"polybar",
 	"dunst",
 	"pulseaudio",
 	"pamixer",
 	"feh",
 	"brightnessctl",
 	"playerctl",
-	"cava",
+	"xob",
+	"tint2",
 	"flameshot (Optional)",
 	"alacritty (Optional)",
 	"better-discord (Optional)",
 	"spicetify (Optional)",
 	"bottom (Optional)",
-	"cmus (Optional)",
-	"neofetch (Optional)",
 ]

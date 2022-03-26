@@ -103,7 +103,7 @@ globalkeys = gears.table.join(
     awful.key({ modkey, Alt       }, "q", awesome.quit,
               {description = "quit awesome", group = "awesome"}),
 
-    awful.key({ }, "Print", function () awful.spawn.easy_async_with_shell("flameshot full -c -p /home/david/pictures/screenshots") end, 
+    awful.key({ }, "Print", function () awful.spawn.easy_async_with_shell("flameshot full -c -p ~/pictures/screenshots") end, 
               {description = "take screenshot", group = "screen"}),
 
     awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)          end,

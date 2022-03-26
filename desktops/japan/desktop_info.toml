@@ -1,24 +1,24 @@
 author="David Rodríguez (@daavidrgz)"
 description="desktop"
-credits="http://github.com:daavidrgz"
+credits="https://github.com/jollycampio/dotfiles"
 dependencies=[
+	"paperview (https://github.com/glouw/paperview)",
 	"bspwm",
 	"sxhkd",
-	"picom",
 	"rofi",
 	"polybar",
 	"dunst",
 	"pulseaudio",
 	"pamixer",
 	"feh",
+	"dunstify",
 	"brightnessctl",
 	"playerctl",
-	"cava",
+	"mpd",
+	"newsboat (Optional)",
+	"mpd-notification (Optional)",
 	"flameshot (Optional)",
 	"alacritty (Optional)",
 	"better-discord (Optional)",
 	"spicetify (Optional)",
-	"bottom (Optional)",
-	"cmus (Optional)",
-	"neofetch (Optional)",
 ]
