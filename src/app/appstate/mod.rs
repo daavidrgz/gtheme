@@ -128,7 +128,7 @@ impl AppState {
 		}
 		StatefulList::with_items(lines)
 			.color(Color::Yellow)
-			.title("HELP ")
+			.title("HELP ﬤ")
 	}
 
 	fn create_extras_list(global_config: &GlobalConfig) -> StatefulList<ScreenItem> {

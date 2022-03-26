@@ -40,8 +40,8 @@ impl<'a> InfoWidget<'a> {
 			};
 			let bar_span = Span::styled(bar, Style::default().fg(Color::Green).add_modifier(Modifier::BOLD));
 
-			if line.starts_with("•") {
-				let entry_key = Span::styled(format!("  {}", line.to_string()), entry_value_style);
+			if line.starts_with("-") {
+				let entry_key = Span::styled(format!(" {}", line.to_string()), entry_value_style);
 				ListItem::new(Spans::from(vec![bar_span, entry_key]))
 			} else {
 				let words: Vec<&str> = line.splitn(2,':').collect();

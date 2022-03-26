@@ -159,7 +159,7 @@ impl ScreenItem {
 				lines.push(ScreenItem::Info(dependencies_str));
 
 		    for dependency in desktop_info.get_dependencies(){
-					lines.push(ScreenItem::Info(format!("• {}",dependency)));
+					lines.push(ScreenItem::Info(format!("- {}",dependency)));
 				}
 				*stateful_list = StatefulList::with_items(lines)
 					.color(Color::Green)
