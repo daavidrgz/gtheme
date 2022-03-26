@@ -283,6 +283,17 @@ impl Section {
 				None => Err("Could not retrieve layouts".to_string())
 			}
 		}
+		fn validate_variant(variant: &String) -> Result<(),String> {
+			let variant_cmd = vec![
+				("localectl", vec!["list-x11-keymap-variants"]),
+				("grep", vec!["-x", &variant])
+			];
+			let (exit_code, _) = Section::pipeline(&variant_cmd);
+			return match exit_code {
+				Some(c) => if c == 0 { Ok(()) } else { Err("Invalid variant".to_string()) },
+				None => Err("Could not retrieve variants".to_string())
+			}
+		}
 
 		let query_cmd = vec![
 			("setxkbmap", vec!["-query"]),
@@ -290,7 +301,7 @@ impl Section {
 		];
 		let (_, query_output) = Self::pipeline(&query_cmd);
 		let query_awk = Self::awk(&query_output, 1);
-		let mut current_layout: Option<String> = None;
+		let mut current_layout = None;
 		if query_awk.len() == 1 {
 			current_layout = Some(query_awk[0].clone());
 		}
@@ -303,9 +314,21 @@ impl Section {
 			user_config
 		);
 
-		Self::select_question(
+		let query_variant_cmd = vec![
+			("setxkbmap", vec!["-query"]),
+			("grep", vec!["variant"])
+		];
+		let (_, query_variant_output) = Self::pipeline(&query_variant_cmd);
+		let query_variant_awk = Self::awk(&query_variant_output, 1);
+		let mut current_variant= None;
+		if query_variant_awk.len() == 1 {
+			current_variant = Some(query_variant_awk[0].clone());
+		}
+
+		Self::type_question(
 			"Select keyboard layout variant",
-			&vec![],
+			current_variant,
+			validate_variant,
 			"keyboard-variant",
 			user_config
 		);
