@@ -19,7 +19,7 @@ use crate::core::{
 	theme::{Theme, ThemeFile},
 	pattern::Pattern,
 	postscript::PostScript,
-	config::{GlobalConfig, DesktopConfig}
+	config::{GlobalConfig, DesktopConfig, DesktopInfo}
 };
 
 enum Action{
@@ -53,6 +53,7 @@ pub fn start_cli() {
 
 		Some(("desktop", sub_matches)) => match sub_matches.subcommand() {
 			Some(("status", sub_sub_matches)) => show_status(sub_sub_matches),
+			Some(("info", sub_sub_matches)) => show_desktop_info(sub_sub_matches),
 			Some(("new-skeleton", sub_sub_matches)) => create_desktop(sub_sub_matches),
 			Some(("add", sub_sub_matches)) => add_desktop(sub_sub_matches),
 			Some(("remove", sub_sub_matches)) => remove_desktop(sub_sub_matches),
@@ -607,4 +608,32 @@ fn remove_desktop(matches: &ArgMatches) {
 		};
 		desktop_file.remove();
 	}
+}
+
+fn show_desktop_info(matches: &ArgMatches) {
+	let desktop = match get_desktop(matches.value_of("desktop")) {
+		Some(d) => d,
+		None => return
+	};
+
+	let desktop_info = DesktopInfo::new(&desktop);
+	let dependencies = desktop_info.get_dependencies();
+
+	if !matches.is_present("deps") {
+		println!("{}\n", desktop.get_name().to_uppercase().bold().underline().cyan());
+
+		println!("{} {}", "Author:".green().bold(), desktop_info.get_author());
+		println!("{} {}", "Credits:".green().bold(), desktop_info.get_credits());
+		println!("{} {}", "Description:".green().bold(), desktop_info.get_description());
+		println!("{}", "Dependecies:".green().bold());
+
+		for dep in dependencies {
+			println!("- {}", dep)
+		}
+	} else {
+		for dep in dependencies { println!("{}", dep) }
+	}
+
+
+
 }
