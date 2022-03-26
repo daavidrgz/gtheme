@@ -279,7 +279,7 @@ impl Section {
 			];
 			let (exit_code, _) = Section::pipeline(&layout_cmd);
 			return match exit_code {
-				Some(c) => if c == 0 { Ok(()) } else { Err("Invalid layout".to_string()) },
+				Some(c) => if c == 0 { Ok(()) } else { Err(format!("There is no layout called '{}'", layout)) },
 				None => Err("Could not retrieve layouts".to_string())
 			}
 		}
@@ -290,7 +290,7 @@ impl Section {
 			];
 			let (exit_code, _) = Section::pipeline(&variant_cmd);
 			return match exit_code {
-				Some(c) => if c == 0 { Ok(()) } else { Err("Invalid variant".to_string()) },
+				Some(c) => if c == 0 { Ok(()) } else { Err(format!("There is no variant called '{}'", variant)) },
 				None => Err("Could not retrieve variants".to_string())
 			}
 		}
@@ -329,9 +329,21 @@ impl Section {
 	}
 
 	fn others_section(user_config: &mut UserConfig) {
-		Self::select_question(
-			"Select default terminal emulator",
-			&vec![],
+		fn validate_terminal(terminal: &String) -> Result<(),String> {
+			let terminal_cmd = vec![
+				("command", vec!["-v", terminal.as_str()])
+			];
+			let (exit_code, _) = Section::pipeline(&terminal_cmd);
+			return match exit_code {
+				Some(c) => if c == 0 { Ok(()) } else { Err(format!("There is no program called '{}'", terminal)) },
+				None => Err("Could not validate program".to_string())
+			}
+		}
+
+		Self::type_question(
+			"Select default termina emulator",
+			None,
+			validate_terminal,
 			"terminal",
 			user_config
 		);

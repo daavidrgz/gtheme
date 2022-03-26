@@ -25,7 +25,7 @@ bspc config normal_border_color '#<[black]>'
 bspc config presel_feedback_color '#<[yellow]>'
 
 # •• Keymap
-setxkbmap -layout <[keyboard-layout]> -variant <[keyboard-variant]>
+setxkbmap -layout <[keyboard-layout]> -variant <[keyboard-variant|]>
 
 # •• Compositor
 # Disable compositor in order to make paperview to work

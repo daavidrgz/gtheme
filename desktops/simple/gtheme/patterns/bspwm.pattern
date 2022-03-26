@@ -29,7 +29,7 @@ bspc config gapless_monocle      true
 bspc rule -a Zathura state=tiled
 
 # •• Keymap
-setxkbmap -layout <[keyboard-layout]> -variant <[keyboard-variant]>
+setxkbmap -layout <[keyboard-layout]> -variant <[keyboard-variant|]>
 
 # •• Compositor
 picom --experimental-backends &
