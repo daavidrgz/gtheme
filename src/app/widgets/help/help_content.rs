@@ -20,6 +20,7 @@ pub const HELP_CONTENT: &str =
 •• DESKTOPS
 
 'Enter'  #apply desktop
+'i'      #show/hide desktop info popup
 
 •• THEMES
 
@@ -30,6 +31,6 @@ pub const HELP_CONTENT: &str =
 
 •• EXTRAS
 
-'o'      #show/hide extras popup
 'Enter'  #enable/disable extra
+'o'      #show/hide extras popup
 'e'      #edit extra's file in $VISUAL env var";
