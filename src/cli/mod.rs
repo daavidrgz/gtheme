@@ -620,8 +620,7 @@ fn show_desktop_info(matches: &ArgMatches) {
 	let dependencies = desktop_info.get_dependencies();
 
 	if !matches.is_present("deps") {
-		println!("{}\n", desktop.get_name().to_uppercase().bold().underline().cyan());
-
+		println!("{} {}", "Name:".green().bold(), desktop.get_name());
 		println!("{} {}", "Author:".green().bold(), desktop_info.get_author());
 		println!("{} {}", "Credits:".green().bold(), desktop_info.get_credits());
 		println!("{} {}", "Description:".green().bold(), desktop_info.get_description());
