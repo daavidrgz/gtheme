@@ -2,9 +2,9 @@
 
 Gtheme is a dotfile and global theme manager for *NIX systems. It is aimed to make your ricing life much better. 
 
-You can write some patterns with generic attributes, and then Gtheme will fill those values with the appropriate values following the selected theme/settings.
+You can write some patterns with generic attributes, and then Gtheme will fill those values with the appropriate ones following the selected theme/settings.
 
-The final result you got is that you can change between any desktop of your choice with a single command, and change the theme of all applications in centralized and automatized way. Moreover, you can also
+The final result you got is that you can change between any desktop of your choice with a single command, and change the theme of all applications in a centralized and automatized way. Moreover, you can also
 install desktops from other people who had already adapted their dotfiles to gtheme and everything will work just fine.
 
 ## Installation
@@ -29,7 +29,7 @@ Here are some examples:
 - `gtheme desktop list`: will show all the desktops you've installed.
 - `gtheme desktop add <path/to/desktop>`: will install the specified desktop on `~/.config/gtheme/desktops/<desktop>`.
 - `gtheme theme list`: will show all the themes installed.
-- `gtheme desktop set-default <theme> -d <desktop>`: will set a default theme for the specified desktop.
+- `gtheme desktop set-default-theme <theme> -d <desktop>`: will set a default theme for the specified desktop.
 - `gtheme desktop apply <desktop>`:  will apply the specified desktop and copy desktop's dotfiles to your `~/.config` folder.
 - `gtheme theme apply <theme>`: will apply the specified theme for the current desktop.
 
