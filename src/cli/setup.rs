@@ -331,7 +331,7 @@ impl Section {
 	fn others_section(user_config: &mut UserConfig) {
 		fn validate_terminal(terminal: &String) -> Result<(),String> {
 			let terminal_cmd = vec![
-				("command", vec!["-v", terminal.as_str()])
+				("which", vec![terminal.as_str()])
 			];
 			let (exit_code, _) = Section::pipeline(&terminal_cmd);
 			return match exit_code {
@@ -339,25 +339,43 @@ impl Section {
 				None => Err("Could not validate program".to_string())
 			}
 		}
+		fn validate_font(font: &String)-> Result<(),String> {
+			let font_cmd = vec![
+				("fc-list", vec!["-q", &font])
+			];
+			let (exit_code, _) = Section::pipeline(&font_cmd);
+			return match exit_code {
+				Some(c) => if c == 0 { Ok(()) } else { Err(format!("There is no font called '{}'", font)) },
+				None => Err("Could not validate font".to_string())
+			}
+		}
+		fn validate_font_size(font_size: &String) -> Result<(),String>{
+			match font_size.parse::<u32>(){
+				Ok(_)=>Ok(()),
+				Err(e)=>Err(format!("Invalid font size: {}", e	))
+			}
+		}
 
 		Self::type_question(
-			"Select default termina emulator",
+			"Select default terminal emulator",
 			None,
 			validate_terminal,
 			"terminal",
 			user_config
 		);
 
-		Self::select_question(
+		Self::type_question(
 			"Select default font family (this will overwrite specific desktop fonts)",
-			&vec![],
+			None,
+			validate_font,
 			"default-font",
 			user_config
 		);
 
-		Self::select_question(
+		Self::type_question(
 			"Select default font size",
-			&vec![],
+			None,
+			validate_font_size,
 			"default-font-size",
 			user_config
 		);
@@ -403,7 +421,7 @@ impl Setup {
 			section.run(&mut user_config);
 			Self::clear_screen();
 		});
-		// user_config.save();
+		user_config.save();
 	}
 
 	fn clear_screen() {
