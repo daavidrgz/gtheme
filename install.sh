@@ -10,8 +10,6 @@ C="\e[1;36m"
 W="\e[0m"
 W_B="\e[1m"
 
-BIN_PATH=/usr/bin
-CONFIG_PATH=$HOME/.config
 GTHEME_PATH=$HOME/.config/gtheme
 BACKUP_PATH=/etc/gtheme/backup
 
@@ -94,13 +92,13 @@ function askCopy() {
 
 function askWallpapers() {
 		while true; do
-		echo -en "${B}->${W} Do you want to download gtheme-wallpapers? (~350MB) ${G}(y/[N])${W} "
+		echo -en "${G}->${W} Do you want to download ${G}gtheme-wallpapers${W}? (~350MB) ${G}([Y]/n)${W} "
 		read INPUT
 		case $INPUT in 
-			y | Y)
+			y | Y | "")
 				installWallpapers
 				return 0;;
-			n | N | "")
+			n | N)
 				echo -e "${Y}->${W} Skipping wallpapers download..."
 				return 0;;
 			*)
@@ -135,11 +133,13 @@ function install() {
 	fi
 
 	echo; askWallpapers
-	echo -e "\n${G}-> Done!${W}"
 }
 
 function cleanFiles() {
-	# rm -rf completions; rm -rf manpage; rm -rf target
+	DIRS=("completions" "manpage" "target")
+	for dir in ${DIRS[@]}; do
+		rm -rf $dir && echo -e "${G}->${W} Succesfully removed $dir/" || echo -e "${R}->${W} Error while removing $dir/"
+	done
 	echo -e "${G}-> Done!${W}"
 }
 
