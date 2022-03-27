@@ -56,7 +56,8 @@ function installWallpapers() {
 	fi
 	echo -e "${G}•${W} Cloning gtheme-wallpapers repository. This may take a while..."
 	git clone https://github.com/daavidrgz/gtheme-wallpapers.git $GTHEME_PATH/wallpapers
-	echo -e "${G}•${W} Wallpapers succesfully installed!\n"
+	rm -rf $GTHEME_PATH/wallpapers/.git
+	echo -e "${G}•${W} Wallpapers succesfully installed!"
 }
 
 function askBackup() {
@@ -68,7 +69,7 @@ function askBackup() {
 				backupConfig
 				return 0;;
 			n | N | "")
-				echo -e "\n${Y}•${W} Skipping backup creation...\n"
+				echo -e "\n${Y}•${W} Skipping backup creation..."
 				return 0;;
 			*)
 				echo -e "\n${R}•${W} Incorrect option!\n";;
@@ -87,7 +88,7 @@ function askCopy() {
 				copyFiles
 				return 0;;
 			n | N | "")
-				echo -e "\n${Y}•${W} Skipping files copy...\n"
+				echo -e "\n${Y}•${W} Skipping files copy..."
 				return 0;;
 			*)
 				echo -e "\n${R}•${W} Incorrect option!\n";;

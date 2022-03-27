@@ -437,7 +437,7 @@ impl Setup {
 pub fn start() {
 	if UserConfig::exists() {
 		let mut option_str = String::new();
-		print!("{} already exists. Want to {}? (y/[N]): ", "User config".bold().yellow(), "overwrites it".bold().yellow());
+		print!("{} already exists. Do you want to {}? (y/[N]): ", "User config".bold().yellow(), "overwrite it".bold().yellow());
 		io::stdout().flush().unwrap();
 		match io::stdin().read_line(&mut option_str) {
 			Ok(_) => (),
