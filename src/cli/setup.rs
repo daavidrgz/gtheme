@@ -52,7 +52,7 @@ impl Section {
 		println!("{} {}", format!("{})", length+1).bold().green(), "[None]".bold());
 		println!("");
 
-		print!("Select one option (q to exit): ");
+		print!("Select one option: ");
 		loop {
 			let mut option_str = String::new();
 			io::stdout().flush().unwrap();
