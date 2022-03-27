@@ -1,0 +1,175 @@
+#!/bin/bash
+
+# •• Colors
+R="\e[1;31m"
+G="\e[1;32m"
+Y="\e[1;33m"
+B="\e[1;34m"
+M="\e[1;35m"
+C="\e[1;36m"
+W="\e[0m"
+W_B="\e[1m"
+
+BIN_PATH=/usr/bin
+CONFIG_PATH=$HOME/.config
+GTHEME_PATH=$HOME/.config/gtheme
+BACKUP_PATH=/etc/gtheme/backup
+
+function gthemeLogo() {
+  echo -e "${R} ██████╗ ${G} ████████╗${Y} ██╗  ██╗${B} ███████╗${M} ███╗   ███╗${C} ███████╗${W}"
+  echo -e "${R}██╔════╝ ${G} ╚══██╔══╝${Y} ██║  ██║${B} ██╔════╝${M} ████╗ ████║${C} ██╔════╝${W}"
+  echo -e "${R}██║  ███╗${G}    ██║   ${Y} ███████║${B} █████╗  ${M} ██╔████╔██║${C} █████╗  ${W}"
+  echo -e "${R}██║   ██║${G}    ██║   ${Y} ██╔══██║${B} ██╔══╝  ${M} ██║╚██╔╝██║${C} ██╔══╝  ${W}"
+  echo -e "${R}╚██████╔╝${G}    ██║   ${Y} ██║  ██║${B} ███████╗${M} ██║ ╚═╝ ██║${C} ███████╗${W}"
+  echo -e "${R} ╚═════╝ ${G}    ╚═╝   ${Y} ╚═╝  ╚═╝${B} ╚══════╝${M} ╚═╝     ╚═╝${C} ╚══════╝${W}"
+	echo -e "\n"
+}
+
+function copyFiles() {
+	echo
+	echo -e "${G}•${W} Creating main gtheme folder in ${W_B}$GTHEME_PATH${W}..."
+	mkdir $GTHEME_PATH &>/dev/null
+
+	declare -a GTHEME_FOLDERS=("desktops" "themes")
+	
+	for FOLDER in ${GTHEME_FOLDERS[@]}; do
+		echo -e "${G}•${W} Transfering ${W_B}$FOLDER${W}..."
+		if ! cp -r $FOLDER/ $GTHEME_PATH/$FOLDER; then
+			echo -e "${R}[!]${W} There was an error while transfering ${W_B}$FOLDER/${W}!\n"
+			# rollback
+		fi
+	done
+	echo -e "${G}• Done!${W}\n"	
+}
+
+function backupConfig() {
+	[ ! -e $BACKUP_PATH ] && sudo mkdir -p $BACKUP_PATH
+	echo -e "\n${G}•${W} Copying all your files. This may take a while..."
+	sudo cp -r $HOME/.config $BACKUP_PATH
+	echo -e "${G}• Backup done!${W}"
+}
+
+function installWallpapers() {
+	if [ -e $GTHEME_PATH/wallpapers ]; then
+		echo -e "${Y}•${W} There is already a wallpapers folder in $GTHEME_PATH. Skipping wallpapers download..."
+		return
+	fi
+	echo -e "${G}•${W} Cloning gtheme-wallpapers repository. This may take a while..."
+	git clone https://github.com/daavidrgz/gtheme-wallpapers.git $GTHEME_PATH/wallpapers
+	echo -e "${G}•${W} Wallpapers succesfully installed!\n"
+}
+
+function askBackup() {
+	while true; do
+		echo -en "${B}[!]${W} Do you want to make a backup? All your ${W_B}$HOME/.config${W} folder will be copied to ${W_B}$BACKUP_PATH${W} ${G}(y/[N])${W} "
+		read INPUT
+		case $INPUT in 
+			y | Y) 
+				backupConfig
+				return 0;;
+			n | N | "")
+				echo -e "\n${Y}•${W} Skipping backup creation...\n"
+				return 0;;
+			*)
+				echo -e "\n${R}•${W} Incorrect option!\n";;
+		esac
+	done
+}
+
+function askCopy() {
+	while true; do
+		echo -e "${Y}[!]${W} It looks like you have already installed gtheme. Do you want to reinstall it?"
+		echo -en "(this will potentially override some files in $GTHEME_PATH) ${G}(y/[N])${W} "
+
+		read INPUT
+		case $INPUT in 
+			y | Y)
+				copyFiles
+				return 0;;
+			n | N | "")
+				echo -e "\n${Y}•${W} Skipping files copy...\n"
+				return 0;;
+			*)
+				echo -e "\n${R}•${W} Incorrect option!\n";;
+		esac
+	done
+}
+
+function askWallpapers() {
+		while true; do
+		echo -en "${B}[!]${W} Do you want to download gtheme-wallpapers? (~350MB) ${G}(y/[N])${W} "
+		read INPUT
+		case $INPUT in 
+			y | Y)
+				installWallpapers
+				return 0;;
+			n | N | "")
+				echo -e "\n${Y}•${W} Skipping wallpapers download..."
+				return 0;;
+			*)
+				echo -e "\n${R}•${W} Incorrect option!\n";;
+		esac
+	done
+}
+
+function install() {
+	echo -e "${G}•${W} Compiling program..."
+	cargo build --release
+	
+	clear
+	gthemeLogo
+	echo -e "${G}•${W} Copying binary to ${W_B}/usr/bin${W}..."
+	echo -e "${G}•${W} You must be root to proceed!"
+	if ! sudo cp target/release/gtheme /usr/bin; then
+		echo -e "${R}[!]${W} There was an error while copying script to ${W_B}/usr/bin${W}\n"
+		# rollback
+	fi
+
+	echo -e "${G}•${W} Copying autocompletion scripts..."
+	sudo cp completions/_gtheme /usr/share/zsh/site-functions
+	sudo cp completions/gtheme.bash /usr/share/bash-completion/completions/gtheme
+	sudo cp completions/gtheme.fish /usr/share/fish/vendor_completions.d/
+
+	echo -e "${G}•${W} Copying manpages...\n"
+	sudo cp manpage/gtheme.1 /usr/share/man/man1/
+	sudo mandb &>/dev/null
+
+	if [ -e "$GTHEME_PATH" ]; then
+		askCopy
+	else
+		askBackup
+		copyFiles
+	fi
+
+	askWallpapers
+	echo -e "${G}• Done!${W}"
+}
+
+function cleanFiles() {
+	rm -rf completions
+	rm -rf manpage
+	rm -rf target
+	echo -e "${G}• Done!${W}"
+}
+
+function main() {
+	cd $(realpath $(dirname $0))
+	clear
+	gthemeLogo
+	install
+	
+	/usr/bin/gtheme setup
+
+	clear
+	gthemeLogo
+	echo -e "${G}•${W} Cleaning installation files..."
+	cleanFiles
+
+	echo -e "\n${B}• Installation finished!${W}\n"
+	echo -e "${B}•${W} To get more information about gtheme usage refer to the repo: ${B}https://github.com/daavidrgz/gtheme${W}"
+	echo -e "${B}•${W} Feel free to also check my dotfiles: ${B}https://github.com/daavidrgz/dotfiles${W}\n"
+
+	exit 0
+}
+
+main 

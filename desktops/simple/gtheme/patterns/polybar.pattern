@@ -30,6 +30,7 @@ cursor-click = pointer
 [module/system-bluetooth]
 type = custom/script
 exec = ~/.config/polybar/scripts/system-bluetooth.sh
+interval = 5
 tail = true
 click-left = ~/.config/polybar/scripts/system-bluetooth.sh --toggle &
 click-right = ~/.config/polybar/scripts/system-bluetooth.sh --connect &
