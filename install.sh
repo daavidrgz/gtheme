@@ -31,7 +31,7 @@ function copyFiles() {
 	
 	for FOLDER in ${GTHEME_FOLDERS[@]}; do
 		echo -e "${G}->${W} Transfering ${W_B}$FOLDER${W}..."
-		cp -r $FOLDER/ $GTHEME_PATH/$FOLDER || echo -e "${R}->${W} There was an error while transfering ${W_B}$FOLDER/${W}!\n"
+		cp -r $FOLDER/ $GTHEME_PATH || echo -e "${R}->${W} There was an error while transfering ${W_B}$FOLDER/${W}!\n"
 	done
 	echo -e "${G}-> Done!${W}"	
 }
@@ -152,7 +152,7 @@ function main() {
 
 	clear; gthemeLogo
 	echo -e "${G}->${W} Cleaning installation files..."
-	cleanFiles
+	# cleanFiles
 
 	echo -e "\n${B}-> Installation finished!${W}\n"
 	echo -e "${B}->${W} To get more information about gtheme usage refer to the repo: ${B}https://github.com/daavidrgz/gtheme${W}"

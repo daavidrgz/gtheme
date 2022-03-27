@@ -67,7 +67,6 @@ impl UserConfigDto {
 		let content = splitted.into_iter().chain(to_order.into_iter())
 			.map(|e|e.to_string()).collect::<Vec<String>>().join("\n");
 
-
 		let path = format!("{}/user_settings.toml",core::expand_path(core::GTHEME_HOME));
 		let mut file = match OpenOptions::new().create(true).write(true).truncate(true).open(&path) {
 			Ok(f) => f,
@@ -81,9 +80,6 @@ impl UserConfigDto {
 			_=> info!("Saving user settings...")
 		}	
 	}
-
-	
-
 }
 
 impl Default for UserConfigDto {

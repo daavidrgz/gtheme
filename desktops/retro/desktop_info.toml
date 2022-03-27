@@ -1,16 +1,16 @@
-author="David Rodríguez (@daavidrgz)"
-description="desktop"
-credits="https://github.com/ChocolateBread799/dotfiles"
-dependencies=[
-	"awesome",
-	"picom",
-	"rofi",
-	"pulseaudio",
-	"feh",
-	"brightnessctl",
-	"flameshot (Optional)",
-	"alacritty (Optional)",
-	"better-discord (Optional)",
-	"spicetify (Optional)",
-	"bottom (Optional)",
+author = 'David Rodríguez (@daavidrgz)'
+description = 'desktop'
+credits = 'https://github.com/ChocolateBread799/dotfiles'
+dependencies = [
+	'awesome',
+	'picom',
+	'rofi',
+	'pulseaudio',
+	'feh',
+	'brightnessctl',
+	'flameshot (Optional)',
+	'alacritty (Optional)',
+	'better-discord (Optional)',
+	'spicetify (Optional)',
+	'bottom (Optional)',
 ]

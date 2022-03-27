@@ -1,23 +1,23 @@
-author="David Rodríguez (@daavidrgz)"
-description="desktop"
-credits="https://github.com/joni22u/dotfiles"
-dependencies=[
-	"pulsectl (pip)",
-	"bspwm",
-	"sxhkd",
-	"picom",
-	"rofi",
-	"dunst",
-	"pulseaudio",
-	"pamixer",
-	"feh",
-	"brightnessctl",
-	"playerctl",
-	"xob",
-	"tint2",
-	"flameshot (Optional)",
-	"alacritty (Optional)",
-	"better-discord (Optional)",
-	"spicetify (Optional)",
-	"bottom (Optional)",
+author = 'David Rodríguez (@daavidrgz)'
+description = 'desktop'
+credits = 'https://github.com/joni22u/dotfiles'
+dependencies = [
+	'pulsectl (pip)',
+	'bspwm',
+	'sxhkd',
+	'picom',
+	'rofi',
+	'dunst',
+	'pulseaudio',
+	'pamixer',
+	'feh',
+	'brightnessctl',
+	'playerctl',
+	'xob',
+	'tint2',
+	'flameshot (Optional)',
+	'alacritty (Optional)',
+	'better-discord (Optional)',
+	'spicetify (Optional)',
+	'bottom (Optional)',
 ]

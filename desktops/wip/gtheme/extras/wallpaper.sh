@@ -4,6 +4,8 @@ WALLPAPER_URL="$1"
 WALLPAPER_THEME=/tmp/wallpaper-theme
 IMAGE_THEMING_PATH=$HOME/.config/gtheme/wallpapers
 
+[ -z "$WALLPAPER_URL" ] && exit 1
+
 if [ "$IS_THEMED" == "true" ]; then
 	java -jar $IMAGE_THEMING_PATH/ImageTheming.jar $WALLPAPER_URL -t=$WALLPAPER_THEME -o=$IMAGE_THEMING_PATH
 

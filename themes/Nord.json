@@ -1,6 +1,7 @@
 {
 	"name": "Nord",
 	"extras": {
+		"intellij-idea": ["Nord"],
 		"vscode": ["Nord"],
 		"wallpaper": ["~/.config/gtheme/wallpapers/Nord/caravan.png"]
 	},

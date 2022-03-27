@@ -1,24 +1,24 @@
-author="David Rodríguez (@daavidrgz)"
-description="desktop"
-credits="http://github.com:daavidrgz"
-dependencies=[
-	"bspwm",
-	"sxhkd",
-	"picom",
-	"rofi",
-	"polybar",
-	"dunst",
-	"pulseaudio",
-	"pamixer",
-	"feh",
-	"brightnessctl",
-	"playerctl",
-	"cava",
-	"flameshot (Optional)",
-	"alacritty (Optional)",
-	"better-discord (Optional)",
-	"spicetify (Optional)",
-	"bottom (Optional)",
-	"cmus (Optional)",
-	"neofetch (Optional)",
+author = 'David Rodríguez (@daavidrgz)'
+description = 'desktop'
+credits = 'http://github.com:daavidrgz'
+dependencies = [
+	'bspwm',
+	'sxhkd',
+	'picom',
+	'rofi',
+	'polybar',
+	'dunst',
+	'pulseaudio',
+	'pamixer',
+	'feh',
+	'brightnessctl',
+	'playerctl',
+	'cava',
+	'flameshot (Optional)',
+	'alacritty (Optional)',
+	'better-discord (Optional)',
+	'spicetify (Optional)',
+	'bottom (Optional)',
+	'cmus (Optional)',
+	'neofetch (Optional)',
 ]
