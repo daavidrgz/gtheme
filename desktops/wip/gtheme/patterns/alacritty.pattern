@@ -14,7 +14,7 @@ font:
     family: <[default-font|CaskaydiaCove Nerd Font Mono]> 
   italic:
     family: <[default-font|CaskaydiaCove Nerd Font Mono]>
-  size: 8
+  size: <[default-font-size|8]>
   offset:
     x: 0
     y: 1

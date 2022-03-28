@@ -14,7 +14,7 @@ font:
     family: <[default-font|Iosevka Nerd Font Mono]>
   italic:
     family: <[default-font|Iosevka Nerd Font Mono]>
-  size: 8.5
+  size:  <[default-font-size|8]>
   offset:
     x: 0
     y: 1

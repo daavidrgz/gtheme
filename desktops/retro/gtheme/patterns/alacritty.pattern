@@ -14,7 +14,7 @@ font:
     family: RobotoMono Nerd Font 
   italic:
     family: RobotoMono Nerd Font
-  size: 8
+  size:  <[default-font-size|8]>
   offset:
     x: 0
     y: 1
