@@ -1,5 +1,36 @@
 {
   "default_theme": "Tomorrow-Night-Blue",
-  "actived": {},
-  "inverted": {}
+  "actived": {
+    "intellij-idea": true,
+    "rofi": true,
+    "spotify": true,
+    "dunst": true,
+    "xob": true,
+    "alacritty": true,
+    "bspwm": true,
+    "tint2": true,
+    "wallpaper": true,
+    "discord": true,
+    "wallpaper-theme": false,
+    "firefox-homepage": true,
+    "kitty": true,
+    "firefox": true,
+    "sxhkd": true,
+    "vscode": true
+  },
+  "inverted": {
+    "firefox": false,
+    "sxhkd": false,
+    "discord": false,
+    "spotify": false,
+    "firefox-homepage": false,
+    "xob": false,
+    "alacritty": false,
+    "bspwm": false,
+    "tint2": false,
+    "wallpaper-theme": false,
+    "kitty": false,
+    "rofi": false,
+    "dunst": false
+  }
 }
