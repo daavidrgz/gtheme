@@ -11,7 +11,7 @@ W="\e[0m"
 W_B="\e[1m"
 
 GTHEME_PATH=$HOME/.config/gtheme
-BACKUP_PATH=/etc/gtheme/backup
+BACKUP_PATH=$GTHEME_PATH/backup
 
 function gthemeLogo() {
   echo -e "${R} ██████╗ ${G} ████████╗${Y} ██╗  ██╗${B} ███████╗${M} ███╗   ███╗${C} ███████╗${W}"
@@ -55,8 +55,9 @@ function installWallpapers() {
 }
 
 function askBackup() {
+	declare -r CONFIG_SIZE=$(du -ha -d 0 $HOME/.config | awk '{print $1}') 
 	while true; do
-		echo -en "${B}->${W} Do you want to make a backup? All your ${W_B}$HOME/.config${W} folder will be copied to ${W_B}$BACKUP_PATH${W} ${G}(y/[N])${W} "
+		echo -en "${B}->${W} Do you want to make a backup? All your ${W_B}$HOME/.config${W} folder will be copied to ${W_B}$BACKUP_PATH${W} [~$CONFIG_SIZE] ${G}(y/[N])${W} "
 		read INPUT
 		case $INPUT in 
 			y | Y) 
