@@ -35,7 +35,7 @@ impl Log for CliLogger {
 					_ => ()
 				}
 			}
-			println!("\n");
+			println!("");
 		}
 		
 		let log_path: String = format!("{}/gtheme.log", core::expand_path(core::GTHEME_HOME));
