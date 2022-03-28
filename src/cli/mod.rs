@@ -47,7 +47,6 @@ pub fn start_cli() {
 		log::set_logger(&CLI_LOGGER).unwrap();
 	}
 
-	println!("");
 	match matches.subcommand() {
 		Some(("setup", _)) => setup::start(),
 
@@ -336,6 +335,7 @@ fn manage_fav(matches: &ArgMatches, action: Action) {
 }
 
 fn show_status(matches: &ArgMatches) {
+	println!("");
 	let global_config = GlobalConfig::new();
 	let desktop = match get_desktop(matches.value_of("desktop")) {
 		Some(d) => d,
@@ -369,6 +369,7 @@ fn show_status(matches: &ArgMatches) {
 
 
 fn list_desktops() {
+	println!("");
 	let all_desktops = Desktop::get_desktops();
 	let global_config = GlobalConfig::new();
 	let current_desktop = match global_config.get_current_desktop() {
@@ -389,6 +390,7 @@ fn list_desktops() {
 }
 
 fn list_themes() {
+	println!("");
 	let all_themes = Theme::get_themes();
 	let global_config = GlobalConfig::new();
 	let current_theme = match global_config.get_current_theme() {
@@ -424,6 +426,7 @@ fn list_themes() {
 }
 
 fn list_fav_themes() {
+	println!("");
 	let global_config = GlobalConfig::new();
 	let current_theme = match global_config.get_current_theme() {
 		Some(t) => t.get_name(),
@@ -445,6 +448,7 @@ fn list_fav_themes() {
 }
 
 fn list_patterns(matches: &ArgMatches) {
+	println!("");
 	let desktop = match get_desktop(matches.value_of("desktop")) {
 		Some(d) => d,
 		None => return
@@ -486,6 +490,7 @@ fn list_patterns(matches: &ArgMatches) {
 }
 
 fn list_extras(matches: &ArgMatches) {
+	println!("");
 	let desktop = match get_desktop(matches.value_of("desktop")) {
 		Some(d) => d,
 		None => return
@@ -620,6 +625,7 @@ fn show_desktop_info(matches: &ArgMatches) {
 	let dependencies = desktop_info.get_dependencies();
 
 	if !matches.is_present("deps") {
+		println!("");
 		println!("{} {}", "Name:".green().bold(), desktop.get_name());
 		println!("{} {}", "Author:".green().bold(), desktop_info.get_author());
 		println!("{} {}", "Credits:".green().bold(), desktop_info.get_credits());
@@ -629,8 +635,8 @@ fn show_desktop_info(matches: &ArgMatches) {
 		for dep in dependencies {
 			println!(" • {}", dep)
 		}
+		println!("");
 	} else {
 		for dep in dependencies { println!("{}", dep) }
 	}
-	println!("");
 }
