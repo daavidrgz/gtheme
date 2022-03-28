@@ -47,8 +47,7 @@ impl Theme {
 		}
 	}
 	fn default(name:&str) -> Self{
-
-		//Nord theme colors by default
+		// Nord theme colors by default
 		let mut colors = HashMap::new();
 
 		let pairs = vec![
@@ -78,25 +77,26 @@ impl Theme {
 		colors.extend(pairs.into_iter().map(|(key,value)| (key.to_string(), value.to_string())));
 
 		let extras = HashMap::new();
-		Theme{
+		Theme {
 			name: name.to_string(),
 			colors,
 			extras
 		}
 	}
-	pub fn get_by_name(name: &str)-> Option<ThemeFile>{
+
+	pub fn get_by_name(name: &str) -> Option<ThemeFile> {
 		let all_themes = Theme::get_themes();
-		match all_themes.into_iter().find(|item| item.get_name().to_lowercase() == name.to_lowercase()){
+		match all_themes.into_iter().find(|item| item.get_name().to_lowercase() == name.to_lowercase()) {
 			None => {
 				error!("The theme |{}| does not exist!", name);
 				None
 			}
-			Some(theme)=>Some(theme)
+			Some(theme) => Some(theme)
 		}
 	}
 	
 	pub fn get_themes() -> Vec<ThemeFile> {
-		let gtheme_home:String = core::expand_path(core::GTHEME_HOME);
+		let gtheme_home: String = core::expand_path(core::GTHEME_HOME);
 		let themes_dir = gtheme_home + "/themes";
 
 		let entries = match fs::read_dir(&themes_dir) {
@@ -125,7 +125,7 @@ impl Theme {
 				}
 			};
 			
-			let path = match entry.path().to_str(){
+			let path = match entry.path().to_str() {
 				Some(path) => String::from(path),
 				None => {
 					error!("Error while converting path to String: |Invalid UTF-8 data|");
@@ -142,15 +142,14 @@ impl Theme {
 		vec.sort_by(|a,b| a.get_name().to_lowercase().cmp(&b.get_name().to_lowercase()));
 		vec
 	}
-	
 }
-
 
 #[derive(Debug,Clone)]
 pub struct ThemeFile {
 	name: String,
 	path: String,
 }
+
 impl ThemeFile {
 	pub fn to_theme(&self) -> Theme {
 		Theme::from(self)
@@ -160,18 +159,5 @@ impl ThemeFile {
 	}
 	pub fn get_path(&self) -> &String {
 		&self.path
-	}
-}
-
-#[cfg(test)]
-mod tests{
-	use super::*;
-	#[test]
-	fn test_get_themes() {
-		let themes = Theme::get_themes();
-		for theme in &themes {
-			println!("Theme: {} in {}", theme.get_name(), theme.get_path())
-		}
-
 	}
 }

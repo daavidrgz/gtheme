@@ -24,35 +24,35 @@ impl<'a> ListWidget<'a> {
 
 		let default_theme_style = Style::default().add_modifier(Modifier::BOLD).add_modifier(Modifier::DIM).fg(Color::Yellow);
 		let highlight_default_theme_style = Style::default().add_modifier(Modifier::BOLD).fg(Color::Yellow);
+		
+		let mut items: Vec<ListItem> = vec![];
+		for (it, screen_item) in stateful_list.get_items().iter().enumerate() {
+			let state_color = match (stateful_list.get_active_text_color(), stateful_list.get_inactive_text_color()) {
+				(Some(active), Some(inactive)) => 
+					if screen_item.is_active(global_config, desktop_config) { *active } else { *inactive },
+				_ => color
+			};
 
-		let items: Vec<ListItem> = stateful_list
-			.get_items().iter().enumerate()
-			.map(|(it, screen_item)| {
+			let (name_style, active_style, default_theme_style) = match stateful_list.get_state().selected() {
+				Some(idx) => if idx == it {
+					(highlight_name_stlye, highlight_active_style.fg(state_color), highlight_default_theme_style)
+				} else {
+					(default_name_style, default_active_style.fg(state_color), default_theme_style)
+				},
+				None => (default_name_style, default_active_style.fg(state_color), default_theme_style)
+			};
 
-				let state_color = match (stateful_list.get_active_text_color(), stateful_list.get_inactive_text_color()) {
-					(Some(active), Some(inactive)) => if screen_item.is_active(global_config, desktop_config) { *active } else { *inactive },
-					_ => color 
-				};
+			let (name, default_theme, active_text, arrows) = 
+				Self::get_item_text(it, screen_item, stateful_list, global_config, desktop_config);
 
-				let (name_style, active_style, default_theme_style) = match stateful_list.get_state().selected() {
-					Some(idx) => if idx == it {
-						(highlight_name_stlye, highlight_active_style.fg(state_color), highlight_default_theme_style)
-					} else {
-						(default_name_style, default_active_style.fg(state_color), default_theme_style)
-					},
-					None => (default_name_style, default_active_style.fg(state_color), default_theme_style)
-				};
-
-				let (name, default_theme, active_text, arrows) = 
-					Self::get_item_text(it, screen_item, stateful_list, global_config, desktop_config);
-
-				ListItem::new(Spans::from(vec![
-					Span::styled(name, name_style),
-					Span::styled(default_theme, default_theme_style),
-					Span::styled(active_text, active_style), 
-					Span::styled(arrows, name_style),
-				]))
-			}).collect();
+			let list_item = ListItem::new(Spans::from(vec![
+				Span::styled(name, name_style),
+				Span::styled(default_theme, default_theme_style),
+				Span::styled(active_text, active_style), 
+				Span::styled(arrows, name_style),
+			]));
+			items.push(list_item)
+		}
 		
 		let mut border_style = Style::default().fg(color);
 		border_style = if !stateful_list.is_selected() {

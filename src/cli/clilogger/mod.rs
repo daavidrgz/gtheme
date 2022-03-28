@@ -28,13 +28,13 @@ impl Log for CliLogger {
 	
 			let body = record.args().to_string();
 			let body_split = body.split('|');
-			body_split.into_iter().enumerate().for_each(|(it, strip)| {
+			for (it, strip) in body_split.into_iter().enumerate() {
 				match it % 2 {
 					0 => print!("{}", strip),
 					1 => print!("{}", strip.color(color).bold()),
 					_ => ()
 				}
-			});
+			}
 			println!("\n");
 		}
 		

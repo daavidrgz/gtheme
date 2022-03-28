@@ -46,9 +46,9 @@ impl Section {
 			return None
 		}
 
-		elements.iter().enumerate().for_each(|(i, (e,desc))| {
+		for (i,(e, desc)) in elements.iter().enumerate() {
 			println!("{} {} {}", format!("{})", i+1).bold().green(), e.bold(), desc.bold())
-		});
+		}
 		println!("{} {}", format!("{})", length+1).bold().green(), "[None]".bold());
 		println!("");
 
@@ -62,11 +62,6 @@ impl Section {
 			}
 			option_str = option_str.trim().to_string();
 
-			// if option_str == "q" || option_str == "Q" {
-			// 	println!("\n{}\n", "Exiting...".red().bold());
-			// 	exit(0);
-			// }
-			
 			match option_str.parse::<usize>() {
 				Ok(i) => {
 					if i > 0 && i <= length + 1 {
@@ -339,6 +334,7 @@ impl Section {
 				None => Err("Could not validate program".to_string())
 			}
 		}
+
 		fn validate_font(font: &String)-> Result<(),String> {
 			let font_cmd = vec![
 				("fc-list", vec!["-q", &font])
@@ -349,10 +345,11 @@ impl Section {
 				None => Err("Could not validate font".to_string())
 			}
 		}
-		fn validate_font_size(font_size: &String) -> Result<(),String>{
+
+		fn validate_font_size(font_size: &String) -> Result<(),String> {
 			match font_size.parse::<u32>(){
-				Ok(_)=>Ok(()),
-				Err(e)=>Err(format!("Invalid font size: {}", e	))
+				Ok(_) => Ok(()),
+				Err(e) => Err(format!("Invalid font size: {}", e	))
 			}
 		}
 
@@ -415,12 +412,12 @@ impl Setup {
 		let mut user_config = UserConfig::default();
 
 		let length = self.sections.len();
-		self.sections.iter().enumerate().for_each(|(idx, section)| {
+		for (idx, section) in self.sections.iter().enumerate() {
 			println!("{} {}\n", "GTHEME SETUP".underline().bold(), format!("[{}/{}]", idx+1, length).bold().yellow());
 			self.print_sections(section);
 			section.run(&mut user_config);
 			Self::clear_screen();
-		});
+		}
 		user_config.save();
 	}
 
@@ -449,6 +446,5 @@ pub fn start() {
 		}
 	}
 
-	let setup = Setup::new();
-	setup.run_setup();
+	Setup::new().run_setup();
 }

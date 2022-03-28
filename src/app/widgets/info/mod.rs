@@ -30,8 +30,9 @@ impl<'a> InfoWidget<'a> {
 	fn create_info(stateful_list: &StatefulList<ScreenItem>) -> Vec<ListItem<'a>> {
 		let entry_key_style = Style::default().fg(Color::Green).add_modifier(Modifier::BOLD);
 		let entry_value_style = Style::default().add_modifier(Modifier::BOLD);
-
-		let items: Vec<ListItem> = stateful_list.get_items().iter().enumerate().map(|(it, item)| {
+		
+		let mut items: Vec<ListItem> = vec![];
+		for(it, item) in stateful_list.get_items().iter().enumerate() {
 			let line = item.get_name();
 			
 			let bar = match stateful_list.get_state().selected() {
@@ -40,7 +41,7 @@ impl<'a> InfoWidget<'a> {
 			};
 			let bar_span = Span::styled(bar, Style::default().fg(Color::Green).add_modifier(Modifier::BOLD));
 
-			if line.starts_with("-") {
+			let list_item = if line.starts_with("-") {
 				let entry_key = Span::styled(format!(" {}", line.to_string()), entry_value_style);
 				ListItem::new(Spans::from(vec![bar_span, entry_key]))
 			} else {
@@ -50,8 +51,9 @@ impl<'a> InfoWidget<'a> {
 				let entry_key = Span::styled(format!("{}:", key.to_string()), entry_key_style);
 				let entry_value = Span::styled(value.to_string(), entry_value_style);
 				ListItem::new(Spans::from(vec![bar_span, entry_key, entry_value]))
-			}
-		}).collect();
+			};
+			items.push(list_item);
+		}
 		items
 	}
 

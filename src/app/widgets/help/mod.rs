@@ -38,7 +38,8 @@ impl<'a> HelpWidget<'a> {
 		let entry_key_style = Style::default().fg(Color::Yellow).add_modifier(Modifier::BOLD);
 		let entry_value_style = Style::default().add_modifier(Modifier::BOLD);
 
-		let items: Vec<ListItem> = stateful_list.get_items().iter().enumerate().map(|(it, item)| {
+		let mut items: Vec<ListItem> = vec![];
+		for (it, item) in stateful_list.get_items().iter().enumerate() {
 			let line = item.get_name();
 			
 			let bar = match stateful_list.get_state().selected() {
@@ -51,14 +52,16 @@ impl<'a> HelpWidget<'a> {
 			
 			// Its a section title
 			if words.len() == 1 {
-				return ListItem::new(Spans::from(vec![bar_span, Span::styled(String::from(words[0]), title_style)]));
+				items.push(ListItem::new(Spans::from(vec![bar_span, Span::styled(String::from(words[0]), title_style)])));
+				continue
 			}
 
 			// Its a section entry
 			let entry_key = Span::styled(String::from(words[0]), entry_key_style);
 			let entry_value = Span::styled(String::from(words[1]), entry_value_style);
-			ListItem::new(Spans::from(vec![bar_span, entry_key, entry_value]))
-		}).collect();
+			let list_item = ListItem::new(Spans::from(vec![bar_span, entry_key, entry_value]));
+			items.push(list_item)
+		}
 		items
 	}
 

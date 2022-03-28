@@ -47,7 +47,7 @@ impl<'a> LogoWidget<'a> {
 			let words: Vec<&str> = l.split('$').collect();
 
 			let mut line_spans: Vec<Span> = vec![];
-			for (idx,word) in words.into_iter().enumerate() {
+			for (idx, word) in words.into_iter().enumerate() {
 				line_spans.push(Span::styled(String::from(word), Style::default().fg(colors[idx])));
 			}
 			spans.push(Spans::from(line_spans));
