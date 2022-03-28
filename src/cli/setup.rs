@@ -1,5 +1,6 @@
 use colored::*;
 use std::{process::{Command, Stdio}, io::{self, Write}};
+use log::error;
 
 use crate::core::config::UserConfig;
 
@@ -134,18 +135,36 @@ impl Section {
 
 		let mut stdin = Stdio::inherit();
 		for (command, args) in commands.iter().take(commands.len()-1) {
-			let mut output = Command::new(command).args(args)
+			let mut output = match Command::new(command).args(args)
 				.stdin(stdin)
-				.stdout(Stdio::piped()).spawn().unwrap();
+				.stdout(Stdio::piped()).spawn() {
+					Ok(o) => o,
+					Err(e) => {
+						error!("Could not execute {}: {}", command, e);
+						return (None, String::new())
+					}
+				};
 
 			stdin = Stdio::from(output.stdout.take().unwrap());
 		}
 
 		let (last_command, last_args) = commands.last().unwrap();
-		let last_output = Command::new(last_command).args(last_args)
-			.stdin(stdin).output().unwrap();
+		let last_output = match Command::new(last_command).args(last_args)
+			.stdin(stdin).output() {
+				Ok(o) => o,
+				Err(e) => {
+					error!("Could not execute {}: {}", last_command, e);
+					return (None, String::new())
+				}
+			};
 
-		let output_str = String::from_utf8(last_output.stdout).unwrap();
+		let output_str = match String::from_utf8(last_output.stdout) {
+			Ok(s) => s,
+			Err(e) => {
+				error!("Error while converting stdout content to string: {}", e);
+				return (None, String::new())
+			}
+		};
 		let error_code = last_output.status.code();
 		(error_code, output_str)
 	}
