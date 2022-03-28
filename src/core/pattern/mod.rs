@@ -25,9 +25,9 @@ impl Pattern {
 		let mut content = String::new();
 		file.read_to_string(&mut content).expect(&format!("Error while reading pattern: {}", pattern.get_path()));
 
-		let output_path = match re.captures(&content){
-			Some(capture)=>Some(core::expand_path(&capture[1])),
-			None=>None
+		let output_path = match re.captures(&content) {
+			Some(capture) => Some(core::expand_path(&capture[1])),
+			None => None
 		};
 		content = String::from(re.replace(&content,""));
 
@@ -49,11 +49,11 @@ impl Pattern {
 		&self.output
 	}
 
-	pub fn get_by_name(desktop:&DesktopFile,pattern:&str) -> Option<PatternFile>{
+	pub fn get_by_name(desktop: &DesktopFile, pattern: &str) -> Option<PatternFile> {
 		let all_patterns = Pattern::get_patterns(desktop);
-		match all_patterns.into_iter().find(|item|item.get_name().to_lowercase()==pattern.to_lowercase()){
-			Some(pattern)=>Some(pattern),
-			None=>{
+		match all_patterns.into_iter().find(|item|item.get_name().to_lowercase() == pattern.to_lowercase()) {
+			Some(pattern) => Some(pattern),
+			None => {
 				error!("Pattern |{}| does not exist",pattern);
 				None
 			}
@@ -61,7 +61,6 @@ impl Pattern {
 	}
 
 	pub fn get_patterns(desktop: &DesktopFile) -> Vec<PatternFile> {
-		
 		let patterns_dir = format!("{}/gtheme/patterns", desktop.get_path());
 		let entries = match fs::read_dir(&patterns_dir) {
 			Ok(dir) => dir,
@@ -82,7 +81,7 @@ impl Pattern {
 			};
 
 			let file_name = match entry.file_name().into_string() {
-				Ok(file_name) => file_name,
+				Ok(f) => f,
 				Err(_) => {
 					error!("Error while converting OsString to String: |Invalid unicode data|");
 					continue;
@@ -91,7 +90,7 @@ impl Pattern {
 
 			let path = match entry.path().to_str() {
 				Some(path) => String::from(path),
-				None =>{
+				None => {
 					error!("Error while converting path to String: |Invalid UTF-8 data|");
 					continue;
 				}
@@ -108,27 +107,27 @@ impl Pattern {
 		vec
 	}
 
-	pub fn fill(&self, theme: &Theme, is_inverted: bool, user_config: &UserConfig,dry_run: bool) {
+	pub fn fill(&self, theme: &Theme, is_inverted: bool, user_config: &UserConfig, dry_run: bool) {
 		info!("Filling |{}| pattern with |{}| theme...", self.get_name(), theme.get_name());
 
-		let filled_content = self.fill_values(theme, is_inverted,user_config);
+		let filled_content = self.fill_values(theme, is_inverted, user_config);
 
-		let output_path = match self.get_output(){
-			Some(output_path)=>output_path,
-			None=>{
+		let output_path = match self.get_output() {
+			Some(output_path) => output_path,
+			None => {
 				error!("Pattern |{}| does not have output file specified (hint: <[output-file]>=/path/to/output/file)", self.get_name());
 				return
 			}
 		};
-		//Return if dry_run mode. i.e, dont write content to output path
-		if dry_run{return}
+
+		// Return if dry_run mode. i.e, dont write content to output path
+		if dry_run { return }
 
 		let path = std::path::Path::new(output_path);
-
 		let prefix = path.parent().unwrap();
 		// TODO: error handling
 		fs::create_dir_all(prefix).unwrap();
-		//If cant create output file, returns
+		// If cant create output file, returns
 		let mut output_file = match File::create(output_path) {
 			Ok(file) => file,
 			Err(e) => {
@@ -163,18 +162,17 @@ impl Pattern {
 			let re = Regex::new(&format!(r"<\[{}\]>", real_key)).unwrap();
 			result = re.replace_all(&result, value).into_owned();
 		}
-		// fill theme-name
 
 		let re = Regex::new(r"<\[theme-name\]>").unwrap();
 		result = re.replace_all(&result, theme.get_name()).into_owned();
 
-		//Fill user defined properties
-		for (key,value) in user_config.get_properties(){
+		// Fill user defined properties
+		for (key,value) in user_config.get_properties() {
 			let re = Regex::new(&format!(r"<\[({})(?:\|(.*))?\]>",key)).unwrap();
 			result = re.replace_all(&result, value).into_owned();
 		}
 	
-		//Find not filled properties
+		// Find not filled properties
 		let mut missing_properties = HashSet::new();
 		let mut default_properties = HashSet::new();
 
@@ -182,24 +180,22 @@ impl Pattern {
 
 		let mut default_filled_result = result.clone();
 		for caps in re.captures_iter(&result){
-			let property = match caps.get(1){
+			let property = match caps.get(1) {
 				None => {
 					//This warning should not happen, since property name captured group
 					//is not optional, hence a string <[]> does not match in the regex and 
 					//can't enter in this branch
-					warn!("There is an empty property (<[]>) in pattern |{}|",self.get_name());
+					warn!("There is an empty property (<[]>) in pattern |{}|", self.get_name());
 					continue
 				},
-				Some(value)=> String::from(value.as_str())
+				Some(value) => String::from(value.as_str())
 			};
-			let default =caps.get(2);
-			match default{
-				None => {
-					missing_properties.insert(property);
-				},
-				Some(value) =>{
+			let default = caps.get(2);
+			match default {
+				None => {missing_properties.insert(property);},
+				Some(value) => {
 					let default_value = String::from(value.as_str());
-					//If pair property-default value were not replaced before
+					// If pair property-default value were not replaced before
 					if default_properties.insert((property.clone(),default_value.clone())){
 						let re = Regex::new(&format!(r"<\[{}\|{}\]>", property, default_value)).unwrap();
 						default_filled_result = re.replace_all(&default_filled_result, default_value).into_owned();
@@ -207,10 +203,10 @@ impl Pattern {
 				}
 			};
 		};
-		for missing_property in missing_properties{
-			warn!("Could not fill property |{}| in pattern |{}|", missing_property,self.get_name());
+		for missing_property in missing_properties {
+			warn!("Could not fill property |{}| in pattern |{}|", missing_property, self.get_name());
 		}
-		for (default_property,value) in default_properties{
+		for (default_property,value) in default_properties {
 			info!("Filled property |{}| with default value |{}| in pattern |{}|", default_property, value, self.get_name());
 		}
 		default_filled_result
@@ -229,7 +225,6 @@ impl PatternFile {
 	pub fn get_name(&self) -> &String {
 		&self.name
 	}
-
 	pub fn get_path(&self) -> &String {
 		&self.path
 	}

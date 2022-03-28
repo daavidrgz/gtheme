@@ -15,11 +15,10 @@ pub struct Desktop{
 	name: String,
 	path: String,
 	patterns: Vec<PatternFile>,
-	post_scripts:HashMap<String,PostScript>,
-	extras:Vec<PostScript>
+	post_scripts: HashMap<String,PostScript>,
+	extras: Vec<PostScript>
 }
 impl Desktop {
-	
 	pub fn from(desktop: &DesktopFile) -> Self {
 		let patterns = Pattern::get_patterns(desktop);
 		let post_scripts = PostScript::get_postscripts(desktop);
@@ -48,10 +47,9 @@ impl Desktop {
 		&self.extras
 	}
 	
-
-	pub fn get_by_name(desktop:&str)->Option<DesktopFile>{
+	pub fn get_by_name(desktop:&str) -> Option<DesktopFile> {
 		let all_desktops = Desktop::get_desktops();
-		match all_desktops.into_iter().find(|item|item.get_name().to_lowercase() == desktop.to_lowercase()){
+		match all_desktops.into_iter().find(|item|item.get_name().to_lowercase() == desktop.to_lowercase()) {
 			Some(desktop) => Some(desktop),
 			None => {
 				error!("Desktop |{}| does not exist",desktop);
@@ -60,12 +58,12 @@ impl Desktop {
 		}
 	}
 
-	pub fn exists(desktop: &str) -> bool{
+	pub fn exists(desktop: &str) -> bool {
 		Desktop::get_desktops().iter().any(|desktop_file|desktop_file.get_name().to_lowercase() == desktop.to_lowercase())
 	}
 
 	pub fn get_desktops() -> Vec<DesktopFile> {
-		let gtheme_home:String = core::expand_path(core::GTHEME_HOME);
+		let gtheme_home: String = core::expand_path(core::GTHEME_HOME);
 		let desktops_dir = gtheme_home + &format!("/desktops");
 		let entries = match fs::read_dir(&desktops_dir) {
 			Ok(dir) => dir,
@@ -75,7 +73,6 @@ impl Desktop {
 			}
 		};
 			
-
 		let mut vec = Vec::new();
 		for entry in entries {
 			let entry = match entry {
@@ -87,13 +84,12 @@ impl Desktop {
 			};
 			
 			let file_name = match entry.file_name().into_string() {
-				Ok(file_name) => file_name,
+				Ok(f) => f,
 				Err(_) => {
 					error!("Error while converting OsString to String: |Invalid unicode data|");
 					continue;
 				}
 			};
-			
 
 			let path = match entry.path().to_str() {
 				Some(path) => String::from(path),
@@ -109,10 +105,8 @@ impl Desktop {
 		vec
 	}
 
-	pub fn apply_theme(&self, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>,dry_run: bool) {
-		//parameter HashMap(pattern_name,bool) in order to implement inverted themes
-		
-		if dry_run{
+	pub fn apply_theme(&self, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>, dry_run: bool) {
+		if dry_run {
 			info!("Applying theme in dry-run mode...");
 		}
 
@@ -121,16 +115,15 @@ impl Desktop {
 		let user_config = UserConfig::new();
 		for pattern_file in self.get_patterns(){
 			let pattern = pattern_file.to_pattern();
-			
-			//If not activated,skip pattern
+
 			if !*actived.get(pattern.get_name()).unwrap_or(&false) { continue }
 
-			pattern.fill(theme, *inverted.get(pattern.get_name()).unwrap_or(&false),&user_config,dry_run);
+			pattern.fill(theme, *inverted.get(pattern.get_name()).unwrap_or(&false), &user_config, dry_run);
 			if let Some(postscript) = post_scripts.get(pattern_file.get_name()) {
 				info!("Executing |{}| post-script...", postscript.get_name());
 
 				//Dont execute postscripts on dry-run mode
-				if !dry_run{
+				if !dry_run {
 					let output = pattern.get_output().as_ref().unwrap_or(&"".to_string()).clone();
 					postscript.execute(&vec![output])
 				}
@@ -139,14 +132,14 @@ impl Desktop {
 
 		let args_map = theme.get_extras();
 		for extra_ps in self.get_extras() {
-			if !*actived.get(extra_ps.get_name()).unwrap_or(&false){continue}
+			if !*actived.get(extra_ps.get_name()).unwrap_or(&false) { continue }
 
 			let args = args_map.get(extra_ps.get_name()).unwrap_or(&vec![]).iter()
 				.map(|arg|core::expand_path(arg)).collect();
 			
 			info!("Executing |{}| extra...",extra_ps.get_name());
 
-			if !dry_run{
+			if !dry_run {
 				extra_ps.execute(&args);
 			}
 		}
@@ -162,25 +155,24 @@ impl Desktop {
 			let path = format!("{}/{}", config_home,entry_name);
 			match fs_extra::dir::remove(&path) {
 				Ok(_) => (),
-				Err(e) => error!("Could not remove directory |{}|: |{}|",&path,e)
+				Err(e) => error!("Could not remove directory |{}|: |{}|", &path, e)
 			}
 		}
 	}
 
-	// TODO: Integrate desktopConfig inside Desktop to have direct access to active and inverted
-	pub fn apply(&self, previous: &Option<Desktop>, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>,dry_run:bool) {
-		let config_home = core::expand_path(core::CONFIG_HOME);
-
-		if dry_run{
+	pub fn apply(&self, previous: &Option<Desktop>, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>, dry_run: bool) {
+		if dry_run {
 			info!("Installing desktop in dry-run mode...")
 		}
-		if let Some(previous_desktop) = previous{
+
+		let config_home = core::expand_path(core::CONFIG_HOME);
+		if let Some(previous_desktop) = previous {
 			info!("Uninstalling desktop |{}|...", previous_desktop.get_name());
 			if !dry_run {
 				previous_desktop.clean_files();
 			}
 		};
-		if !dry_run{
+		if !dry_run {
 			// Clean files to install
 			self.clean_files();
 		}
@@ -189,11 +181,9 @@ impl Desktop {
 
 		info!("Installing desktop |{}|...", self.get_name());
 		for entry in files_to_install {
-			//Break loop if dry_run
-			if dry_run {break}
+			if dry_run { break }
 
 			let from = entry.path();
-
 			let file_name = match entry.file_name().into_string() {
 				Ok(file_name) => file_name,
 				Err(_) => {
@@ -202,7 +192,6 @@ impl Desktop {
 				}
 			};
 			let to = format!("{}/{}",config_home,file_name);
-
 
 			let mut options = fs_extra::dir::CopyOptions::new();
 			options.overwrite = true;
@@ -215,14 +204,13 @@ impl Desktop {
 
 		self.apply_theme(theme, actived, inverted,dry_run);
 
-		if let Some(previous_desktop) =  previous {
-				//Exit postcript from previous desktop
+		if let Some(previous_desktop) = previous {
+			// Exit postcript from previous desktop
 			let previous_postscripts = previous_desktop.get_post_scripts();
 			if let Some(ps) = previous_postscripts.get("desktop-exit") {
 				info!("Executing |desktop-exit| post-script");
-				
-				//Dont execute exit postscript if dry-run mode
-				if !dry_run{
+				// Dont execute exit postscript if dry-run mode
+				if !dry_run {
 					ps.execute(&vec![])
 				};
 			}
@@ -249,46 +237,44 @@ impl Desktop {
 					continue;
 				}
 			};
-
 			vec.push(entry);
 		}
 		vec
 	}
 
-	pub fn add(from: &Path){
-
+	pub fn add(from: &Path) {
 		info!("Adding desktop from |{}|...",from.to_str().unwrap());
 
-		let md = match metadata(from){
-			Ok(md)=>md,
-			Err(err)=> {
+		let md = match metadata(from) {
+			Ok(md) => md,
+			Err(err) => {
 				error!("Could not read metadata from |{}|: |{}|", from.to_str().unwrap(), err);
 				return;
 			}
 		};
 		
-		if !md.is_dir(){
-			error!("|{}| is not a directory",from.to_str().unwrap());
+		if !md.is_dir() {
+			error!("|{}| is not a directory", from.to_str().unwrap());
 			return;
 		}
 
-		let desktop_name = match from.file_name(){
-			Some(name)=>name.to_str().unwrap(),
-			None=>{
-				error!("Could not get directory name from path |{}|",from.to_str().unwrap());
+		let desktop_name = match from.file_name() {
+			Some(name) => name.to_str().unwrap(),
+			None => {
+				error!("Could not get directory name from path |{}|", from.to_str().unwrap());
 				return;
 			}
 		};
 
-		if Desktop::exists(desktop_name){
-			error!("Desktop |{}| already exists",desktop_name);
+		if Desktop::exists(desktop_name) {
+			error!("Desktop |{}| already exists", desktop_name);
 			return;
 		}
 
 		let gtheme_home:String = core::expand_path(core::GTHEME_HOME);
 		let desktops_dir = gtheme_home + &format!("/desktops");
 
-		let to =  Path::new(&desktops_dir).join(desktop_name);
+		let to = Path::new(&desktops_dir).join(desktop_name);
 		let mut options = fs_extra::dir::CopyOptions::new();
 		options.overwrite = true;
 		options.copy_inside = true;
@@ -300,20 +286,21 @@ impl Desktop {
 				return;
 			}
 		}
-		info!("Successfully added desktop |{}|",desktop_name);
+		info!("Successfully added desktop |{}|", desktop_name);
 	}
-	pub fn new_skeleton(desktop_name:&str){
-		if Desktop::exists(desktop_name){
-			error!("Desktop |{}| already exists",desktop_name);
+
+	pub fn new_skeleton(desktop_name: &str) {
+		if Desktop::exists(desktop_name) {
+			error!("Desktop |{}| already exists", desktop_name);
 			return;
 		}
 
-		let desktop_path = format!("{}/desktops/{}",core::expand_path(core::GTHEME_HOME),desktop_name);
+		let desktop_path = format!("{}/desktops/{}", core::expand_path(core::GTHEME_HOME), desktop_name);
 
-		match fs::create_dir_all(&desktop_path){
+		match fs::create_dir_all(&desktop_path) {
 			Ok(_) => info!("Created directory |{}|", &desktop_path),
 			Err(e) => {
-				error!("Error while creating directory |{}|: |{}|", &desktop_path,e);
+				error!("Error while creating directory |{}|: |{}|", &desktop_path, e);
 				return;
 			}
 		}
@@ -323,27 +310,27 @@ impl Desktop {
 		];
 
 		for directory in directories {
-			let target_path = format!("{}/{}",desktop_path,directory);
-			match fs::create_dir_all(&target_path){
+			let target_path = format!("{}/{}", desktop_path, directory);
+			match fs::create_dir_all(&target_path) {
 				Ok(_) => info!("Created directory |{}|", &target_path),
 				Err(e) => {
-					error!("Error while creating directory |{}|: |{}|", &target_path,e);
+					error!("Error while creating directory |{}|: |{}|", &target_path, e);
 					return;
 				}
 			}
 		}
 
-		match Desktop::get_by_name(desktop_name){
-			Some(desktop_file) =>{
+		match Desktop::get_by_name(desktop_name) {
+			Some(desktop_file) => {
 				core::config::DesktopConfig::create_default(&desktop_file);
 				core::config::DesktopInfo::create_default(&desktop_file);
 			} 
-			None =>{
-				error!("Could not get desktop |{}|",desktop_name);
+			None => {
+				error!("Could not get desktop |{}|", desktop_name);
 				return;
 			}
 		};		
-		info!("Successfully created desktop |{}|",desktop_name);
+		info!("Successfully created desktop |{}|", desktop_name);
 	}
 }
 
@@ -352,7 +339,7 @@ pub struct DesktopFile {
 	name: String,
 	path: String,
 }
-impl DesktopFile{
+impl DesktopFile {
 	pub fn to_desktop(&self) -> Desktop {
 		Desktop::from(self)
 	}
@@ -364,19 +351,19 @@ impl DesktopFile{
 	}
 	// WARNING: After uninstalling a desktop, you SHOULD NOT use a DesktopFile or a Desktop 
 	// that references this desktop. Behaviour is undefined.
-	pub fn remove(&self){
-		info!("Removing desktop |{}| from |{}|",self.get_name(),self.path);
+	pub fn remove(&self) {
+		info!("Removing desktop |{}| from |{}|", self.get_name(), self.path);
 
 		let global_config = GlobalConfig::new();
-		match global_config.get_current_desktop(){
-			Some(current_desktop) =>{
+		match global_config.get_current_desktop() {
+			Some(current_desktop) => {
 				let current_desktop_name = current_desktop.get_name();
-				if current_desktop_name == self.get_name(){
+				if current_desktop_name == self.get_name() {
 					error!("Cannot uninstall current desktop |({})|",self.get_name());
 					return;
 				}
 			}
-			None=>{}
+			None => ()
 		}
 
 		let path = self.get_path();
@@ -385,7 +372,6 @@ impl DesktopFile{
 			Ok(_) => (),
 			Err(e) => error!("Could not remove desktop |{}| from |{}|: |{}|",self.get_name(),self.get_path(),e)
 		}
-		
 		info!("Successfully removed desktop |{}|",self.get_name());
 	}
 }

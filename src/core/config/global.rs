@@ -62,7 +62,8 @@ impl GlobalConfigDto {
 			Some(theme) => Some(String::from(theme.get_name())),
 		};
 
-		let fav_themes = config.get_fav_themes().iter().map(|theme| String::from(theme.get_name())).collect();
+		let fav_themes = config.get_fav_themes().iter()
+			.map(|theme| String::from(theme.get_name())).collect();
 
 		GlobalConfigDto {
 			current_desktop,
@@ -81,9 +82,9 @@ impl GlobalConfigDto {
 				return;
 			}
 		};
-		match file.write_all(&content.as_bytes()){
-			Err(e) => error!("Could not write global config in |{}|: |{}|", &path, e),
-			_=> info!("Saving global config...")
+		match file.write_all(&content.as_bytes()) {
+			Ok(_) => info!("Saving global config..."),
+			Err(e) => error!("Could not write global config in |{}|: |{}|", &path, e)
 		}	
 	}
 
@@ -125,7 +126,8 @@ impl GlobalConfig {
 			Some(theme) => themes.clone().into_iter().find(|item| item.get_name() == theme)		
 		};
 
-		let fav_themes = themes.into_iter().filter(|item| fav_themes_string.contains(item.get_name())).collect();
+		let fav_themes = themes.into_iter()
+			.filter(|item| fav_themes_string.contains(item.get_name())).collect();
 
 		GlobalConfig {
 			current_desktop,
@@ -137,14 +139,13 @@ impl GlobalConfig {
 	pub fn save(&self) {
 		GlobalConfigDto::from(self).save()
 	}
-
 	pub fn get_current_desktop(&self) -> &Option<DesktopFile> {
 		&self.current_desktop
 	}
 	pub fn get_mut_current_desktop(&mut self) -> &mut Option<DesktopFile> {
 		&mut self.current_desktop
 	}
-	pub fn set_current_desktop(&mut self,desktop:DesktopFile){
+	pub fn set_current_desktop(&mut self, desktop: DesktopFile) {
 		self.current_desktop = Some(desktop)
 	}
 
@@ -164,56 +165,33 @@ impl GlobalConfig {
 	pub fn get_mut_fav_themes(&mut self) -> &mut Vec<ThemeFile> {
 		&mut self.fav_themes
 	}
-	pub fn toggle_fav_theme(&mut self,theme:&ThemeFile){
+
+	pub fn toggle_fav_theme(&mut self, theme: &ThemeFile) {
 		let theme_name = theme.get_name().to_lowercase();
-		match self.fav_themes.binary_search_by(|item| item.get_name().to_lowercase().cmp(&theme_name)){
-			Ok(_)=>{
-				self.remove_fav_theme(theme);
-			},
-			Err(_)=> {
-				self.add_fav_theme(theme);
-			}
+		match self.fav_themes.binary_search_by(|item| item.get_name().to_lowercase().cmp(&theme_name)) {
+			Ok(_) => self.remove_fav_theme(theme),
+			Err(_) => self.add_fav_theme(theme)
 		}
 	}
 	pub fn add_fav_theme(&mut self, theme: &ThemeFile) {
 		let theme_name = theme.get_name().to_lowercase();
-		match self.fav_themes.binary_search_by(|item| item.get_name().to_lowercase().cmp(&theme_name)){
-			Ok(_)=>{
-				warn!("Theme |{}| was already on fav themes list", theme.get_name());
-			},
-			Err(pos)=> {
+		match self.fav_themes.binary_search_by(|item| item.get_name().to_lowercase().cmp(&theme_name)) {
+			Ok(_) => warn!("Theme |{}| was already on fav themes list", theme.get_name()),
+			Err(pos) => {
 				self.fav_themes.insert(pos,theme.clone());
 				info!("Theme |{}| successfuly added to the fav themes list!", theme.get_name());
 			}
 		}
 	}
-	pub fn remove_fav_theme(&mut self, theme: &ThemeFile){
+	pub fn remove_fav_theme(&mut self, theme: &ThemeFile) {
 		let theme_name = theme.get_name().to_lowercase();
-		match self.fav_themes.binary_search_by(|item| item.get_name().to_lowercase().cmp(&theme_name)){
-			Ok(pos)=>{
+		match self.fav_themes.binary_search_by(|item| item.get_name().to_lowercase().cmp(&theme_name)) {
+			Ok(pos) => {
 				self.fav_themes.remove(pos);
 				info!("Theme |{}| successfuly removed from the fav themes list!", theme.get_name());
 			},
-			Err(_)=> {
-				warn!("Theme |{}| was not in the fav themes list!", theme.get_name());
-
-			}
+			Err(_) => warn!("Theme |{}| was not in the fav themes list!", theme.get_name())
 		}
 	}
 
-}
-
-#[cfg(test)]
-mod tests{
-	use super::*;
-
-	#[test]
-	fn test_config(){
-		let mut config = GlobalConfig::new();
-
-		*config.get_mut_current_desktop() = None;
-		*config.get_mut_fav_themes()=vec![];
-
-		//config.save();
-	}
 }

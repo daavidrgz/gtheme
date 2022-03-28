@@ -8,17 +8,15 @@ use std::io::prelude::*;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DesktopInfo {
-	author:String,
-	description:String,
-	dependencies:Vec<String>,
-	credits:String
+	author: String,
+	description: String,
+	dependencies: Vec<String>,
+	credits: String
 }
 
-
- 
 impl DesktopInfo {
 	pub fn new(desktop: &DesktopFile) -> Self {
-		let path = format!("{}/desktop_info.toml",desktop.get_path());
+		let path = format!("{}/desktop_info.toml", desktop.get_path());
 
 		let mut file = match File::open(&path) {
 			Ok(file) => file,
@@ -35,7 +33,7 @@ impl DesktopInfo {
 				return Self::default();
 			}
 		};
-		match toml::from_str(&content){
+		match toml::from_str(&content) {
 			Ok(info) => {
 				info!("Using desktop info |{}|",&path);
 				info
@@ -46,8 +44,8 @@ impl DesktopInfo {
 			}
 		}
 	}
-	pub fn save(&self, desktop: &DesktopFile) {
 
+	pub fn save(&self, desktop: &DesktopFile) {
 		let content = toml::to_string_pretty(self).unwrap();
 		let path = format!("{}/desktop_info.toml",desktop.get_path());
 
@@ -59,46 +57,36 @@ impl DesktopInfo {
 			}
 		};
 
-   		match file.write_all(&content.as_bytes()) {
-			Err(e) => error!("Could not write desktop info in |{}|: |{}|",&path,e),
-			_ => info!("Saving desktop info...")
+   	match file.write_all(&content.as_bytes()) {
+			Ok(_) => info!("Saving desktop info..."),
+			Err(e) => error!("Could not write desktop info in |{}|: |{}|", &path, e)
 		}
 	}
-	pub fn create_default(desktop: &DesktopFile){
+
+	pub fn create_default(desktop: &DesktopFile) {
 		Self::default().save(desktop);
 	}
-	pub fn get_author(&self) ->&String{
+	pub fn get_author(&self) ->&String {
 		&self.author
 	}
-	pub fn get_description(&self) ->&String{
+	pub fn get_description(&self) ->&String {
 		&self.description
 	}
-	pub fn get_dependencies(&self) ->&Vec<String>{
+	pub fn get_dependencies(&self) ->&Vec<String> {
 		&self.dependencies
 	}
-	pub fn get_credits(&self) ->&String{
+	pub fn get_credits(&self) ->&String {
 		&self.credits
 	}
 }
-impl Default for DesktopInfo{
-	fn default() -> Self{
-		DesktopInfo{
-			author:"".to_string(),
-			description:"".to_string(),
-			dependencies:vec![],
-			credits:"".to_string(),
+
+impl Default for DesktopInfo {
+	fn default() -> Self {
+		DesktopInfo {
+			author: "".to_string(),
+			description: "".to_string(),
+			dependencies: vec![],
+			credits: "".to_string(),
 		}
-	}
-}
-
-#[cfg(test)]
-mod tests{
-	use super::*;
-	#[test]
-	fn test_info(){
-		let desktop = crate::core::desktop::Desktop::get_by_name("simple").unwrap();
-		let info = DesktopInfo::new(&desktop);
-		dbg!(info);
-
 	}
 }

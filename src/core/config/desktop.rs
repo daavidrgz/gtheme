@@ -7,7 +7,7 @@ use log::{info,warn,error};
 use crate::core::desktop::DesktopFile;
 use crate::core::pattern::PatternFile;
 use crate::core::postscript::PostScript;
-use crate::core::{theme::{Theme,ThemeFile}};
+use crate::core::theme::{Theme,ThemeFile};
 
 #[derive(Debug, Serialize, Deserialize)]
 struct DesktopConfigDto {
@@ -38,7 +38,7 @@ impl DesktopConfigDto {
 		};
 
 		let mut content = String::new();
-		match file.read_to_string(&mut content){
+		match file.read_to_string(&mut content) {
 			Ok(_) => (),
 			Err(e) => {
 				error!("Could not read desktop config, using default config: |{}|", e);
@@ -59,30 +59,30 @@ impl DesktopConfigDto {
 			}
 		};
 
-		//Ensure all keys are filled on hashmaps
+		// Ensure all keys are filled on hashmaps
 		let desktop_owned = desktop.to_desktop();
 		let patterns = desktop_owned.get_patterns();
 		let mut actived = dto.actived;
 		let mut inverted = dto.inverted;
 		for pattern in patterns {
 			let pattern_name = pattern.get_name();
-			if let None = actived.get(pattern_name) {
+			if None == actived.get(pattern_name) {
 				actived.insert(String::from(pattern_name),true);
 			}
-			if let None = inverted.get(pattern_name) {
+			if None == inverted.get(pattern_name) {
 				inverted.insert(String::from(pattern_name),false);
 			}
 		}
 		let extras = PostScript::get_extras(desktop);
-		for extra in extras{
+		for extra in extras {
 			let extra_name = extra.get_name();
-			if let None = actived.get(extra_name) {
-				actived.insert(String::from(extra_name),false);
+			if None == actived.get(extra_name) {
+				actived.insert(String::from(extra_name), true);
 			}
 		}
 
-		DesktopConfigDto{
-			default_theme:dto.default_theme,
+		DesktopConfigDto {
+			default_theme: dto.default_theme,
 			actived,
 			inverted
 		}
@@ -102,7 +102,6 @@ impl DesktopConfigDto {
 	}
 
 	fn save(&self, desktop: &DesktopFile) {
-
 		let content = serde_json::to_string_pretty(self).unwrap();
 		let path = format!("{}/desktop_config.json",desktop.get_path());
 
@@ -114,23 +113,24 @@ impl DesktopConfigDto {
 			}
 		};
 
-   		match file.write_all(&content.as_bytes()) {
-			Err(e) => error!("Could not write desktop config in |{}|: |{}|",&path,e),
-			_ => info!("Saving desktop config...")
+   	match file.write_all(&content.as_bytes()) {
+			Ok(_) => info!("Saving desktop config..."),
+			Err(e) => error!("Could not write desktop config in |{}|: |{}|", &path, e)
 		}
 	}
-	fn default(desktop: &DesktopFile) -> DesktopConfigDto{
+
+	fn default(desktop: &DesktopFile) -> DesktopConfigDto {
 		let desktop_owned = desktop.to_desktop();
 		let patterns = desktop_owned.get_patterns();
 		let mut actived = HashMap::new();
 		let mut inverted = HashMap::new();
-		for pattern in patterns{
+		for pattern in patterns {
 			actived.insert(String::from(pattern.get_name()),true);
 			inverted.insert(String::from(pattern.get_name()),false);
 		}
 		let extras = PostScript::get_extras(desktop);
-		for extra in extras{
-			actived.insert(String::from(extra.get_name()),false);
+		for extra in extras {
+			actived.insert(String::from(extra.get_name()), true);
 		}
 		DesktopConfigDto {
 			default_theme: None,
@@ -138,15 +138,15 @@ impl DesktopConfigDto {
 			inverted
 		}
 	}
-	
 }
 
-impl DesktopConfig{
+impl DesktopConfig {
 	pub fn new(desktop: &DesktopFile) -> Self {
 		let dto = DesktopConfigDto::new(desktop);
 		let themes = Theme::get_themes();
 		let default_theme = match dto.default_theme {
-			Some(theme_name) => themes.into_iter().find(|theme| *theme.get_name().to_lowercase() == theme_name.to_lowercase()),
+			Some(theme_name) => themes.into_iter()
+				.find(|theme| *theme.get_name().to_lowercase() == theme_name.to_lowercase()),
 			None => None
 		};
 		DesktopConfig {
@@ -162,8 +162,8 @@ impl DesktopConfig{
 	pub fn get_mut_default_theme(&mut self) -> &mut Option<ThemeFile> {
 		&mut self.default_theme
 	}
-	pub fn set_default_theme(&mut self,theme:&ThemeFile){
-		info!("Setting default theme |{}| to desktop |{}|",theme.get_name(),self.desktop.get_name());
+	pub fn set_default_theme(&mut self, theme: &ThemeFile) {
+		info!("Setting default theme |{}| to desktop |{}|", theme.get_name(), self.desktop.get_name());
 		self.default_theme = Some(theme.clone());
 	}
 	pub fn get_actived(&self) -> &HashMap<String, bool> {
@@ -182,7 +182,7 @@ impl DesktopConfig{
 		DesktopConfigDto::from(self).save(&self.desktop)
 	}
 
-	pub fn enable_pattern(&mut self,pattern:&PatternFile){
+	pub fn enable_pattern(&mut self, pattern: &PatternFile) {
 		let state = self.actived.get(pattern.get_name()).unwrap_or(&false);
 		match state {
 			true => warn!("Pattern |{}| was already |enabled| in desktop |{}|", pattern.get_name(), self.desktop.get_name()),
@@ -192,7 +192,7 @@ impl DesktopConfig{
 			}
 		}
 	}
-	pub fn disable_pattern(&mut self,pattern: &PatternFile) {
+	pub fn disable_pattern(&mut self, pattern: &PatternFile) {
 		let state = self.actived.get(pattern.get_name()).unwrap_or(&true);
 		match state {
 			false => warn!("Pattern |{}| was already |disabled| in desktop |{}|!", pattern.get_name() ,self.desktop.get_name()),
@@ -202,7 +202,7 @@ impl DesktopConfig{
 			}
 		}
 	}
-	pub fn toggle_pattern(&mut self, pattern: &PatternFile){
+	pub fn toggle_pattern(&mut self, pattern: &PatternFile) {
 		let state = self.actived.get(pattern.get_name()).unwrap_or(&true);
 		match state {
 			true => self.disable_pattern(pattern),
@@ -210,7 +210,7 @@ impl DesktopConfig{
 		}
 	}
 
-	pub fn enable_invert_pattern(&mut self,pattern:&PatternFile){
+	pub fn enable_invert_pattern(&mut self, pattern: &PatternFile) {
 		let state = self.inverted.get(pattern.get_name()).unwrap_or(&false);
 		match state {
 			true => warn!("Pattern |{}| was already |inverted| in desktop |{}|", pattern.get_name(), self.desktop.get_name()),
@@ -220,7 +220,7 @@ impl DesktopConfig{
 			}
 		}
 	}
-	pub fn disable_invert_pattern(&mut self,pattern: &PatternFile) {
+	pub fn disable_invert_pattern(&mut self, pattern: &PatternFile) {
 		let state = self.inverted.get(pattern.get_name()).unwrap_or(&true);
 		match state {
 			true => {
@@ -238,7 +238,7 @@ impl DesktopConfig{
 		}
 	}
 
-	pub fn enable_extra(&mut self,extra:&PostScript){
+	pub fn enable_extra(&mut self, extra: &PostScript) {
 		let state = self.actived.get(extra.get_name()).unwrap_or(&false);
 		match state {
 			true => warn!("Extra |{}| was already |enabled| in desktop |{}|", extra.get_name(), self.desktop.get_name()),
@@ -248,7 +248,7 @@ impl DesktopConfig{
 			}
 		}
 	}
-	pub fn disable_extra(&mut self,extra: &PostScript) {
+	pub fn disable_extra(&mut self, extra: &PostScript) {
 		let state = self.actived.get(extra.get_name()).unwrap_or(&true);
 		match state {
 			true => {
@@ -258,14 +258,15 @@ impl DesktopConfig{
 			false => warn!("Extra |{}| was already |disabled| in desktop |{}|!", extra.get_name(), self.desktop.get_name())
 		}
 	}
-	pub fn toggle_extra(&mut self, extra: &PostScript){
+	pub fn toggle_extra(&mut self, extra: &PostScript) {
 		let state = self.actived.get(extra.get_name()).unwrap_or(&true);
 		match state {
 			true => self.disable_extra(extra),
 			false => self.enable_extra(extra)
 		}
 	}
-	pub fn create_default(desktop: &DesktopFile){
+
+	pub fn create_default(desktop: &DesktopFile) {
 		DesktopConfigDto::default(desktop).save(desktop);
 	}
 }

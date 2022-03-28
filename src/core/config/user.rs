@@ -9,39 +9,39 @@ use crate::core;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct UserConfigDto {
-	properties:HashMap<String,String>,
+	properties: HashMap<String,String>,
 }
 
 #[derive(Debug)]
 pub struct UserConfig {
-	properties:HashMap<String,String>,
+	properties: HashMap<String,String>,
 }
  
 impl UserConfigDto {
 	fn new() -> Self {
-		let path = format!("{}/user_settings.toml",core::expand_path(core::GTHEME_HOME));
+		let path = format!("{}/user_settings.toml", core::expand_path(core::GTHEME_HOME));
 		let mut file = match File::open(&path) {
 			Ok(file) => file,
 			Err(e) => {
 				warn!("Could not open user settings, using default settings: |{}|", e);
-				let config =  Self::default();
+				let config = Self::default();
 				config.save();
 				return config
 			}
 		};
 		let mut content = String::new();
-		match  file.read_to_string(&mut content) {
+		match file.read_to_string(&mut content) {
 			Ok(_) => (),
 			Err(e) => {
 				error!("Could not read user settings, using default settings: |{}|", e);
-				let config =  Self::default();
+				let config = Self::default();
 				config.save();
 				return config;
 			}
 		};
-		match toml::from_str(&content){
+		match toml::from_str(&content) {
 			Ok(config) => {
-				info!("Using user settings |{}|",&path);
+				info!("Using user settings |{}|", &path);
 				config
 			},
 			Err(e) => {
@@ -51,7 +51,7 @@ impl UserConfigDto {
 		}
 	}
 
-	fn from(config:&UserConfig) -> Self {
+	fn from(config: &UserConfig) -> Self {
 		UserConfigDto {
 			properties: config.properties.clone(),
 		}
@@ -75,9 +75,9 @@ impl UserConfigDto {
 				return;
 			}
 		};
-		match file.write_all(&content.as_bytes()){
+		match file.write_all(&content.as_bytes()) {
 			Err(e) => error!("Could not write user settings in |{}|: |{}|", &path, e),
-			_=> info!("Saving user settings...")
+			_ => info!("Saving user settings...")
 		}	
 	}
 }
@@ -85,7 +85,7 @@ impl UserConfigDto {
 impl Default for UserConfigDto {
 	fn default() -> UserConfigDto {
 		UserConfigDto {
-			properties:HashMap::new(),
+			properties: HashMap::new(),
 		}
 	}
 }
@@ -93,45 +93,29 @@ impl Default for UserConfigDto {
 impl UserConfig {
 	pub fn new() -> Self {
 		let dto = UserConfigDto::new();
-
 		UserConfig {
-			properties:dto.properties,
+			properties: dto.properties,
 		}
 	}
 
 	pub fn save(&self) {
 		UserConfigDto::from(self).save()
 	}
-	pub fn set_properties(&mut self, property:&str,value:&str){
+	pub fn set_property(&mut self, property: &str,value: &str) {
 		self.properties.insert(String::from(property),String::from(value));
 	}
-	pub fn set_property(&mut self, property:&str,value:&str){
-		self.properties.insert(String::from(property),String::from(value));
-	}
-	pub fn get_properties(&self) -> &HashMap<String,String>{
+	pub fn get_properties(&self) -> &HashMap<String,String> {
 		&self.properties
 	}
 	pub fn exists() -> bool {
-		let path = format!("{}/user_settings.toml",core::expand_path(core::GTHEME_HOME));
+		let path = format!("{}/user_settings.toml", core::expand_path(core::GTHEME_HOME));
 		Path::new(&path).exists()
 	}
 }
-impl Default for UserConfig{
-	fn default() -> Self{
-		UserConfig{
-			properties:HashMap::new(),
+impl Default for UserConfig {
+	fn default() -> Self {
+		UserConfig {
+			properties: HashMap::new(),
 		}
-	}
-}
-
-#[cfg(test)]
-mod tests{
-	use super::*;
-
-	#[test]
-	fn test_config(){
-		let mut config = UserConfig::new();
-		config.set_properties("monitor", "HDMI-0");
-		config.save();
 	}
 }
