@@ -52,3 +52,5 @@ colors:
     magenta: '0x<[magenta-hg]>'
     cyan: '0x<[cyan-hg]>'
     white: '0x<[white-hg]>'
+env:
+    WINIT_X11_SCALE_FACTOR: "1"
