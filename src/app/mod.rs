@@ -15,12 +15,12 @@ use tui::{
 	Frame
 };
 use crossterm::{
-	event::{self, Event, KeyCode},
+	event::{self, Event, KeyCode, EnableMouseCapture, DisableMouseCapture},
 	execute,
 	terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 
-use crate::core::config::{GlobalConfig};
+use crate::core::config::GlobalConfig;
 use crate::app::{
 	screenitem::ScreenItem,
 	widgets::{ListWidget, LogoWidget, HelpWidget, LoggerWidget, InfoWidget},
@@ -45,7 +45,7 @@ impl Ui {
 	pub fn start_ui(mut self) {
 		enable_raw_mode().unwrap();
 		let mut stdout = io::stdout();
-		execute!(stdout, EnterAlternateScreen).unwrap();
+		execute!(stdout, EnterAlternateScreen, EnableMouseCapture).unwrap();
 
 		// Logger init
 		tui_logger::init_logger(LevelFilter::Info).unwrap();
@@ -57,7 +57,7 @@ impl Ui {
 
 	fn exit_ui(&mut self) {
 		disable_raw_mode().unwrap();
-		execute!(self.terminal.backend_mut(), LeaveAlternateScreen).unwrap();
+		execute!(self.terminal.backend_mut(), LeaveAlternateScreen, DisableMouseCapture).unwrap();
 		self.terminal.show_cursor().unwrap();
 
 		match Command::new("clear")
