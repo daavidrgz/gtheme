@@ -1,9 +1,0 @@
-* {
-  bg:				#%background%;
-  fg:				#%foreground%;
-  accent:		#%yellow%;
-  button:   #%green%;
-
-  background-color:		@bg;
-  text-color:			    @fg;
-}

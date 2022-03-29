@@ -107,6 +107,9 @@ impl UserConfig {
 	pub fn get_properties(&self) -> &HashMap<String,String> {
 		&self.properties
 	}
+	pub fn get_path(&self) -> String {
+		return format!("{}/user_settings.toml", core::expand_path(core::GTHEME_HOME))
+	}
 	pub fn exists() -> bool {
 		let path = format!("{}/user_settings.toml", core::expand_path(core::GTHEME_HOME));
 		Path::new(&path).exists()

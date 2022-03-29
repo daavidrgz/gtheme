@@ -532,6 +532,8 @@ fn edit_file(path: &str) {
 		Err(_) => warn!("Could not found env var |$VISUAL|, using |nano| instead")
 	}
 	
+	info!("Editing |{}|...", path);
+
 	match Command::new("sh")
 	.arg("-c")
 	.arg(format!("${{VISUAL:-nano}} {}", path))
@@ -667,5 +669,10 @@ fn show_settings() {
 }
 
 fn edit_settings() {
-	
+	if !UserConfig::exists() {
+		error!("|There is no global settings file|, run |gtheme config setup| first");
+		return
+	}
+	let user_settings = UserConfig::new();
+	edit_file(&user_settings.get_path());
 }

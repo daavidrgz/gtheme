@@ -44,13 +44,11 @@ function backupConfig() {
 }
 
 function installWallpapers() {
-	if [ -e $GTHEME_PATH/wallpapers ]; then
-		echo -e "${Y}->${W} There is already a wallpapers folder in $GTHEME_PATH, skipping wallpapers download..."
-		return
-	fi
 	echo -e "${G}->${W} Cloning gtheme-wallpapers repository. This may take a while..."
-	git clone https://github.com/daavidrgz/gtheme-wallpapers.git $GTHEME_PATH/wallpapers
-	rm -rf $GTHEME_PATH/wallpapers/.git
+	rm -rf /tmp/gtheme-wallpapers &>/dev/null
+	git clone https://github.com/daavidrgz/gtheme-wallpapers.git /tmp/gtheme-wallpapers
+	rm -rf /tmp/gtheme-wallpapers/.git
+	cp -r /tmp/gtheme-wallpapers $GTHEME_PATH/wallpapers
 	echo -e "${G}->${W} Wallpapers succesfully installed!"
 }
 
