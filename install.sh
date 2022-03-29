@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ->-> Colors
+# Colors
 R="\e[1;31m"
 G="\e[1;32m"
 Y="\e[1;33m"
@@ -133,7 +133,7 @@ function install() {
 		askBackup; echo; copyFiles
 	fi
 
-	echo; askWallpapers
+	echo; askWallpapers; echo
 }
 
 function cleanFiles() {
