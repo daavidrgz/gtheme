@@ -30,8 +30,14 @@ function copyFiles() {
 	declare -a GTHEME_FOLDERS=("desktops" "themes")
 	
 	for FOLDER in ${GTHEME_FOLDERS[@]}; do
-		echo -e "${G}->${W} Transfering ${W_B}$FOLDER${W}..."
-		cp -r $FOLDER/ $GTHEME_PATH || echo -e "${R}->${W} There was an error while transfering ${W_B}$FOLDER/${W}!\n"
+		declare REPO_NAME="gtheme-"$FOLDER
+		declare REPO="https://github.com/daavidrgz/$REPO_NAME.git"
+
+		echo -e "${G}->${W} Transfering ${W_B}$REPO_NAME${W}..."
+		rm -rf /tmp/$REPO_NAME &>/dev/null
+		git clone -q $REPO /tmp/$REPO_NAME || echo -e "${R}->${W} There was an error while cloning ${W_B}$FOLDER/${W}!\n"
+		rm -rf /tmp/$REPO_NAME/.git &>/dev/null
+		mv /tmp/$REPO_NAME $GTHEME_PATH/$FOLDER &>/dev/null || echo -e "${R}->${W} There was an error while copying ${W_B}$FOLDER/${W}!\n"
 	done
 	echo -e "${G}-> Done!${W}"	
 }
@@ -48,7 +54,7 @@ function installWallpapers() {
 	rm -rf /tmp/gtheme-wallpapers &>/dev/null
 	git clone https://github.com/daavidrgz/gtheme-wallpapers.git /tmp/gtheme-wallpapers
 	rm -rf /tmp/gtheme-wallpapers/.git
-	cp -r /tmp/gtheme-wallpapers $GTHEME_PATH/wallpapers
+	mv /tmp/gtheme-wallpapers $GTHEME_PATH/wallpapers
 	echo -e "${G}->${W} Wallpapers succesfully installed!"
 }
 
