@@ -149,7 +149,7 @@ function main() {
 	clear; gthemeLogo
 	install
 	
-	/usr/bin/gtheme setup
+	/usr/bin/gtheme config setup
 
 	clear; gthemeLogo
 	echo -e "${G}->${W} Cleaning installation files..."

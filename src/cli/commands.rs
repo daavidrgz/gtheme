@@ -8,7 +8,7 @@ pub fn build_app() -> Command<'static> {
 	let mut app = Command::new("gtheme")
 		.version("1.0")
 		.about("A rust program that makes your theming life so much easier.")
-		.author("David Rodríguez & Jorge Hermo")
+		.author("David Rodriguez & Jorge Hermo")
 		.arg(Arg::new("verbose")
 			.short('v')
 			.long("verbose")
@@ -16,8 +16,21 @@ pub fn build_app() -> Command<'static> {
 			.help("Show more information")
 		);
 
-		app = app.subcommand(Command::new("setup")
-			.about("Configure global system variables in order to work properly")
+		app = app.subcommand(Command::new("config")
+			.alias("c")
+			.about("Manage global settings")
+			.subcommand_required(true)
+			.subcommand(Command::new("setup")
+				.about("Configure global settings in order to work properly")
+			)
+			.subcommand(Command::new("list")
+				.alias("l")
+				.about("Show current global settings")
+			)
+			.subcommand(Command::new("edit")
+				.alias("ed")
+				.about("Edit global settings")
+			)
 		);
 
 		app = app.subcommand(Command::new("theme")

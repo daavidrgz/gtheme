@@ -19,7 +19,7 @@ use crate::core::{
 	theme::{Theme, ThemeFile},
 	pattern::Pattern,
 	postscript::PostScript,
-	config::{GlobalConfig, DesktopConfig, DesktopInfo}
+	config::{GlobalConfig, DesktopConfig, DesktopInfo, UserConfig}
 };
 
 enum Action{
@@ -48,7 +48,12 @@ pub fn start_cli() {
 	}
 
 	match matches.subcommand() {
-		Some(("setup", _)) => setup::start(),
+		Some(("config", sub_matches)) => match sub_matches.subcommand() {
+			Some(("setup", _)) => setup::start(),
+			Some(("list", _)) => show_settings(),
+			Some(("edit", _)) => edit_settings(),
+			_ => ()
+		},
 
 		Some(("desktop", sub_matches)) => match sub_matches.subcommand() {
 			Some(("status", sub_sub_matches)) => show_status(sub_sub_matches),
@@ -639,4 +644,28 @@ fn show_desktop_info(matches: &ArgMatches) {
 	} else {
 		for dep in dependencies { println!("{}", dep) }
 	}
+}
+
+fn show_settings() {
+	if !UserConfig::exists() {
+		error!("|There is no global settings file|, run |gtheme config setup| first");
+		return
+	}
+	let user_settings = UserConfig::new();
+
+	let mut sorted_props = vec![];
+	for p in user_settings.get_properties() {
+		sorted_props.push(p)
+	}
+	sorted_props.sort_by(|(a,_),(b,_)| a.cmp(b));
+
+	println!("\n{}\n", "GLOBAL SETTINGS".bold().underline().yellow());
+	for (key, value) in sorted_props {
+		println!("{} = '{}'", key.bold().green(), value)
+	}
+	println!("");
+}
+
+fn edit_settings() {
+	
 }
