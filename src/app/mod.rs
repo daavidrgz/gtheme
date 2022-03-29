@@ -15,7 +15,7 @@ use tui::{
 	Frame
 };
 use crossterm::{
-	event::{self, Event, KeyCode, EnableMouseCapture, DisableMouseCapture},
+	event::{self, Event, KeyCode},
 	execute,
 	terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
@@ -45,7 +45,7 @@ impl Ui {
 	pub fn start_ui(mut self) {
 		enable_raw_mode().unwrap();
 		let mut stdout = io::stdout();
-		execute!(stdout, EnterAlternateScreen, EnableMouseCapture).unwrap();
+		execute!(stdout, EnterAlternateScreen).unwrap();
 
 		// Logger init
 		tui_logger::init_logger(LevelFilter::Info).unwrap();
@@ -57,7 +57,7 @@ impl Ui {
 
 	fn exit_ui(&mut self) {
 		disable_raw_mode().unwrap();
-		execute!(self.terminal.backend_mut(), LeaveAlternateScreen, DisableMouseCapture).unwrap();
+		execute!(self.terminal.backend_mut(), LeaveAlternateScreen).unwrap();
 		self.terminal.show_cursor().unwrap();
 
 		match Command::new("clear")
