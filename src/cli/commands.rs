@@ -21,7 +21,7 @@ pub fn build_app() -> Command<'static> {
 			.about("Manage global settings")
 			.subcommand_required(true)
 			.subcommand(Command::new("setup")
-				.about("Configure global settings in order to work properly")
+				.about("Run an interactive setup to configure global settings")
 			)
 			.subcommand(Command::new("list")
 				.alias("l")
