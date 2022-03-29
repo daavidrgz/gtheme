@@ -13,5 +13,3 @@ picom &
 xset r rate 200 40
 
 # mpd
-mpd &
-mpDris2 &

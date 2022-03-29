@@ -343,7 +343,7 @@ local notif_center =  wibox.widget {
 notifs = wibox({
     type = "dock",
     screen = screen.primary,
-    height =  dpi(380),
+    height =  dpi(340),
     width = dpi(300),
     shape = helpers.rrect(beautiful.border_radius),
     ontop = true,
@@ -353,11 +353,11 @@ notifs.y = dpi(365)
 
 -- Rubato
 local slide = rubato.timed{
-    pos = dpi(-300),
-    rate = 60,
-    intro = 0.3,
-    duration = 0.8,
-    easing = rubato.quadratic,
+    pos = dpi(-275),
+    rate = 120,
+    intro = 0.05,
+    duration = 0.3,
+    easing = rubato.linear,
     awestore_compat = true,
     subscribed = function(pos) notifs.x = pos end
 }
@@ -378,7 +378,7 @@ notifs_show = function()
 end
 
 notifs_hide = function()
-    slide:set(dpi(-375))
+    slide:set(dpi(-275))
     notifs_status = true
 end
 

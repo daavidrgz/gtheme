@@ -141,7 +141,7 @@ local stats = wibox.widget{
         spacing = dpi(5),
         layout = wibox.layout.fixed.vertical
     },
-    bg = beautiful.xcolor0,
+    bg = beautiful.xbackground,
     shape = helpers.rrect(beautiful.bar_radius),
     widget = wibox.container.background
 }
@@ -231,7 +231,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
         position = "left",
         screen = s,
         height = awful.screen.focused().geometry.height - dpi(50),
-        width = dpi(50),
+        width = dpi(45),
         shape = helpers.rrect(beautiful.border_radius),
         bg = beautiful.transparent,
         ontop = true,
@@ -270,7 +270,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
     local taglist = wibox.widget{
         s.mytaglist,
         shape = beautiful.taglist_shape_focus,
-        bg = beautiful.xcolor0,
+        bg = beautiful.xbackground,
         widget = wibox.container.background
     }
 
@@ -299,7 +299,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
             margins = dpi(8),
             widget = wibox.container.margin
         },
-        bg = beautiful.darker_bg,
+        bg = beautiful.xbackground,
         shape = helpers.rrect(beautiful.border_radius),
         widget = wibox.container.background
     }

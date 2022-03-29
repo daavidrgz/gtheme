@@ -1,5 +1,14 @@
 {
   "default_theme": "Night",
-  "actived": {},
-  "inverted": {}
+  "actived": {
+    "intellij-idea": true,
+    "alacritty": true,
+    "wallpaper": true,
+    "awesome": true,
+    "vscode": true
+  },
+  "inverted": {
+    "awesome": false,
+    "alacritty": false
+  }
 }

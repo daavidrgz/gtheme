@@ -125,8 +125,8 @@ client.connect_signal("request::default_keybindings", function()
             awful.spawn(file_manager)
         end,
         {description = "open file manager", group = "launcher"}),
-        awful.key({ctrl, alt}, "w", function()
-            awful.spawn.with_shell(browser)
+        awful.key({ctrl, modkey}, "f", function()
+            awful.spawn(browser)
         end,
         {description = "open web browser", group = "launcher"}),
         awful.key({modkey}, "x", function()
@@ -239,12 +239,12 @@ client.connect_signal("request::default_keybindings", function()
 
     -- Screenshots
     awful.key({}, "Print", function()
-        awful.spawn.with_shell("screensht full")
+        awful.spawn.with_shell("flameshot full -c -p ~/pictures/screenshots")
     end,
     {description = "take a full screenshot", group = "hotkeys"}),
 
-    awful.key({alt}, "Print", function()
-        awful.spawn.with_shell("screensht area")
+    awful.key({modkey}, "Print", function()
+        awful.spawn.with_shell("flameshot gui -p ~/pictures/screenshots")
     end,
     {description = "take a area screenshot", group = "hotkeys"}),
 
@@ -293,11 +293,11 @@ client.connect_signal("request::default_keybindings", function()
     {description = "focus the previous screen", group = "screen"}),
 
     -- Layout
-    awful.key({modkey}, "l", function()
+    awful.key({modkey, alt}, "Right", function()
         awful.tag.incmwfact(0.05)
     end,
     {description = "increase master width factor", group = "layout"}),
-    awful.key({modkey}, "h", function()
+    awful.key({modkey, alt}, "Left", function()
         awful.tag.incmwfact(-0.05)
     end,
     {description = "decrease master width factor", group = "layout"}),
@@ -327,10 +327,10 @@ client.connect_signal("request::default_keybindings", function()
     {description = "select previous layout", group = "layout"}),
 
     -- Tag
-    awful.key({ modkey, alt}, "Left",
+    awful.key({modkey}, "[",
         awful.tag.viewprev,
     {description = "view previous", group = "tag"}),
-    awful.key({ modkey, alt}, "Right",
+    awful.key({modkey}, "]",
         awful.tag.viewnext,
     {description = "view next", group = "tag"}),
     awful.key({ modkey}, "Escape",

@@ -9,7 +9,7 @@ dependencies = [
 	'brightnessctl',
 	'pulseaudio',
 	'mpd',
-	'mpc,
+	'mpc',
 	'mpdris2',
 	'ncmpcpp',
 	'playerctl',

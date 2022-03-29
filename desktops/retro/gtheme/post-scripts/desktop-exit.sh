@@ -1,5 +1,5 @@
 #!/bin/sh
 
 sleep 1
-pkill awesome
+awesome-client "awesome.quit()"
 exit $?

@@ -1,4 +1,5 @@
--- Awesome
+<[output-file]>=~/.config/awesome/theme/theme.lua
+-- <[theme-name]>
 
 -- Standard awesome library
 local gears = require("gears")
@@ -18,27 +19,27 @@ local helpers = require("helpers")
 -- Theme
 ----------
 
-theme.xbackground = "#FFF4DE"
-theme.xforeground = "#272727"
-theme.xcolor0 = "#fbf1c7"
-theme.xcolor1 = "#cc241d"
-theme.xcolor2 = "#98971a"
-theme.xcolor3 = "#d79921"
-theme.xcolor4 = "#458588"
-theme.xcolor5 = "#b16286"
-theme.xcolor6 = "#B0D4D0"
-theme.xcolor7 = "#7c6f64"
-theme.xcolor8 = "#282828"
-theme.xcolor9 = "#9d0006"
-theme.xcolor10 = "#79740e"
-theme.xcolor11 = "#b57614"
-theme.xcolor12 = "#076678"
-theme.xcolor13 = "#8f3f71"
-theme.xcolor14 = "#B0D4D0"
-theme.xcolor15 = "#272727"
-theme.darker_bg = "#fbf1c7"
-theme.lighter_bg = "#fbf1c7"
-theme.dashboard_fg = "#fbf1c7"
+theme.xbackground = "#<[background]>"
+theme.xforeground = "#<[foreground]>"
+theme.xcolor0 = "#<[black]>"
+theme.xcolor1 = "#<[red]>"
+theme.xcolor2 = "#<[green]>"
+theme.xcolor3 = "#<[yellow]>"
+theme.xcolor4 = "#<[blue]>"
+theme.xcolor5 = "#<[magenta]>"
+theme.xcolor6 = "#<[cyan]>"
+theme.xcolor7 = "#<[white]>"
+theme.xcolor8 = "#<[black-hg]>"
+theme.xcolor9 = "#<[red-hg]>"
+theme.xcolor10 = "#<[green-hg]>"
+theme.xcolor11 = "#<[yellow-hg]>"
+theme.xcolor12 = "#<[blue-hg]>"
+theme.xcolor13 = "#<[magenta-hg]>"
+theme.xcolor14 = "#<[cyan-hg]>"
+theme.xcolor15 = "#<[white-hg]>"
+theme.darker_bg = "#<[black]>"
+theme.lighter_bg = "#<[black]>"
+theme.dashboard_fg = "#<[black]>"
 theme.transparent = "#00000000"
 
 -- PFP

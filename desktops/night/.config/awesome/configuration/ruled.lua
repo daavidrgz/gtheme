@@ -173,4 +173,3 @@ ruled.client.connect_signal("request::rules", function()
         end
     }
 end)
-
