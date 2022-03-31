@@ -98,6 +98,18 @@ impl Desktop {
 					continue;
 				}
 			};
+
+			let metadata = match entry.metadata(){
+				Ok(metadata) => metadata,
+				Err(err) => {
+					error!("Could not read metadata from desktop |{}|: |{}|",path,err);
+					continue;
+				}
+			};
+			if !metadata.is_dir() || file_name.starts_with("."){
+				//If isnt a dir or is a hidden dir
+				continue;
+			}
 	
 			vec.push(DesktopFile{name: file_name, path});
 		}

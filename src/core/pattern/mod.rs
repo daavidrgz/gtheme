@@ -96,6 +96,11 @@ impl Pattern {
 				}
 			};
 
+			if file_name.starts_with("."){
+				//If it is a hidden file
+				continue;
+			}
+
 			let name = match file_name.rsplit_once(".") {
 				None => file_name,
 				Some((prefix,_)) => String::from(prefix)

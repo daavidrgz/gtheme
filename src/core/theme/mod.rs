@@ -133,6 +133,19 @@ impl Theme {
 				}
 			};
 
+			let metadata = match entry.metadata(){
+				Ok(metadata) => metadata,
+				Err(err) => {
+					error!("Could not read metadata from theme |{}|: |{}|",path,err);
+					continue;
+				}
+			};
+
+			if !metadata.is_file() || file_name.starts_with("."){
+				//if it isnt a file or is a hidden file
+				continue;
+			}
+
 			let name = match file_name.rsplit_once(".") {
 				None => file_name,
 				Some((prefix,_)) => String::from(prefix)
