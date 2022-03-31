@@ -45,7 +45,8 @@ function copyFiles() {
 function backupConfig() {
 	[ ! -e $BACKUP_PATH ] && mkdir -p $BACKUP_PATH
 	echo -e "\n${G}->${W} Copying all your files. This may take a while..."
-	cp -r $HOME/.config $BACKUP_PATH
+	cp -r $HOME/.config /tmp/current-config
+	cp -r /tmp/current-config $BACKUP_PATH
 	echo -e "${G}-> Backup done!${W}"
 }
 
