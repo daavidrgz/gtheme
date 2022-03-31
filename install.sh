@@ -33,12 +33,14 @@ function copyFiles() {
 		declare REPO_NAME="gtheme-"$FOLDER
 		declare REPO="https://github.com/daavidrgz/$REPO_NAME.git"
 
-		echo -e "${G}->${W} Transfering ${W_B}$REPO_NAME${W}..."
+		echo -e "${G}->${W} Cloning ${W_B}$REPO_NAME${W}..."
 		rm -rf /tmp/$REPO_NAME &>/dev/null
-		git clone -q $REPO /tmp/$REPO_NAME || echo -e "${R}->${W} There was an error while cloning ${W_B}$FOLDER/${W}!\n"
+		git clone $REPO /tmp/$REPO_NAME || echo -e "${R}->${W} There was an error while cloning ${W_B}$FOLDER/${W}!\n"
 		rm -rf /tmp/$REPO_NAME/.git /tmp/$REPO_NAME/README.md &>/dev/null
+		echo -e "${G}->${W} Transfering ${W_B}$REPO_NAME${W}..."
 		mv /tmp/$REPO_NAME $GTHEME_PATH/$FOLDER &>/dev/null || echo -e "${R}->${W} There was an error while copying ${W_B}$FOLDER/${W}!\n"
 	done
+	mv $GTHEME_PATH/themes/global_config.json $GTHEME_PATH
 	echo -e "${G}-> Done!${W}"	
 }
 
