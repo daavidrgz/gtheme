@@ -52,6 +52,8 @@ pub fn start_cli() {
 			Some(("setup", _)) => setup::start(),
 			Some(("list", _)) => show_settings(),
 			Some(("edit", _)) => edit_settings(),
+			Some(("set", sub_sub_matches)) => set_settings_prop(sub_sub_matches),
+			Some(("unset", sub_sub_matches)) => unset_settings_prop(sub_sub_matches),
 			_ => ()
 		},
 
@@ -675,4 +677,31 @@ fn edit_settings() {
 	}
 	let user_settings = UserConfig::new();
 	edit_file(&user_settings.get_path());
+}
+
+fn set_settings_prop(matches: &ArgMatches) {
+	if !UserConfig::exists() {
+		error!("|There is no global settings file|, run |gtheme config setup| first");
+		return
+	}
+
+	let key = matches.value_of("key").unwrap();
+	let value = matches.value_of("value").unwrap();
+
+	let mut user_settings = UserConfig::new();
+	user_settings.set_property(key, value);
+	user_settings.save();
+}
+
+fn unset_settings_prop(matches: &ArgMatches) {
+	if !UserConfig::exists() {
+		error!("|There is no global settings file|, run |gtheme config setup| first");
+		return
+	}
+
+	let key = matches.value_of("key").unwrap();
+
+	let mut user_settings = UserConfig::new();
+	user_settings.unset_property(key);
+	user_settings.save();
 }

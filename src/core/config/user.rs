@@ -101,8 +101,13 @@ impl UserConfig {
 	pub fn save(&self) {
 		UserConfigDto::from(self).save()
 	}
-	pub fn set_property(&mut self, property: &str,value: &str) {
+	pub fn set_property(&mut self, property: &str, value: &str) {
 		self.properties.insert(String::from(property),String::from(value));
+		info!("Property |{}| successfully setted to |{}|", property, value)
+	}
+	pub fn unset_property(&mut self, property: &str) {
+		self.properties.remove(property);
+		info!("Property |{}| successfully unsetted", property)
 	}
 	pub fn get_properties(&self) -> &HashMap<String,String> {
 		&self.properties
