@@ -47,6 +47,13 @@ function copyFiles() {
 }
 
 function backupConfig() {
+	AVAIL_SIZE=$(df -P / | awk 'END{print $4}')
+	FOLDER_SIZE=$(du -k $HOME/.config -d 0 | awk '{print $1}')	
+	if [ "$FOLDER_SIZE" -gt "10" ]; then
+		echo -e "${R}-> Error${W}, there is no enough space in ${W_B}/tmp${W}\n"
+		exit 2
+	fi
+
 	echo -e "\n${G}->${W} Copying all your files. This may take a while..."
 	cp -r $HOME/.config /tmp/current-config
 	[ ! -e $BACKUP_PATH ] && mkdir -p $BACKUP_PATH
