@@ -36,7 +36,7 @@ function copyFiles() {
 		echo -e "${G}->${W} Transfering ${W_B}$REPO_NAME${W}..."
 		rm -rf /tmp/$REPO_NAME &>/dev/null
 		git clone -q $REPO /tmp/$REPO_NAME || echo -e "${R}->${W} There was an error while cloning ${W_B}$FOLDER/${W}!\n"
-		rm -rf /tmp/$REPO_NAME/.git &>/dev/null
+		rm -rf /tmp/$REPO_NAME/.git /tmp/$REPO_NAME/README.md &>/dev/null
 		mv /tmp/$REPO_NAME $GTHEME_PATH/$FOLDER &>/dev/null || echo -e "${R}->${W} There was an error while copying ${W_B}$FOLDER/${W}!\n"
 	done
 	echo -e "${G}-> Done!${W}"	
