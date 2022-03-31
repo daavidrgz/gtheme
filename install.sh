@@ -40,7 +40,9 @@ function copyFiles() {
 		echo -e "${G}->${W} Transfering ${W_B}$REPO_NAME${W}..."
 		mv /tmp/$REPO_NAME $GTHEME_PATH/$FOLDER &>/dev/null || echo -e "${R}->${W} There was an error while copying ${W_B}$FOLDER/${W}!\n"
 	done
+	mv $GTHEME_PATH/themes/themes/* $GTHEME_PATH/themes
 	mv $GTHEME_PATH/themes/global_config.json $GTHEME_PATH
+	rmdir $GTHEME_PATH/themes/themes
 	echo -e "${G}-> Done!${W}"	
 }
 
