@@ -343,13 +343,13 @@ impl Section {
 	}
 
 	fn others_section(user_config: &mut UserConfig) {
-		fn validate_terminal(terminal: &String) -> Result<(),String> {
-			let terminal_cmd = vec![
-				("which", vec![terminal.as_str()])
+		fn validate_program(program: &String) -> Result<(),String> {
+			let program_cmd = vec![
+				("which", vec![program.as_str()])
 			];
-			let (exit_code, _) = Section::pipeline(&terminal_cmd);
+			let (exit_code, _) = Section::pipeline(&program_cmd);
 			return match exit_code {
-				Some(c) => if c == 0 { Ok(()) } else { Err(format!("There is no program called '{}'", terminal)) },
+				Some(c) => if c == 0 { Ok(()) } else { Err(format!("There is no program called '{}'", program)) },
 				None => Err("Could not validate program".to_string())
 			}
 		}
@@ -375,8 +375,16 @@ impl Section {
 		Self::type_question(
 			"Select default terminal emulator",
 			None,
-			validate_terminal,
+			validate_program,
 			"terminal",
+			user_config
+		);
+
+		Self::type_question(
+			"Select default browser",
+			None,
+			validate_program,
+			"browser",
 			user_config
 		);
 
