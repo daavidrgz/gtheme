@@ -499,18 +499,15 @@ fn list_patterns(matches: &ArgMatches) {
 }
 
 fn list_pattern_submodules(pre: String, submodules_opt: &Option<Vec<PatternFile>>) {
-	match submodules_opt {
-		Some(submodules) => {
-			if submodules.len() == 0 { return }
-			for s in submodules.iter().take(submodules.len()-1) {
-				println!("{}{} {:<20}", pre.magenta(), "├".magenta(), s.get_name());
-				list_pattern_submodules(pre.clone() + "│ ", s.to_pattern().get_submodules());
-			}
-			let last = submodules.last().unwrap().to_pattern();
-			println!("{}{} {:<20}", pre.magenta(), "╰".magenta(), last.get_name());
-			list_pattern_submodules(pre.clone() + "  ", last.get_submodules());
-		},
-		None => ()
+	if let Some(submodules) = submodules_opt {
+		if submodules.len() == 0 { return }
+		for s in submodules.iter().take(submodules.len()-1) {
+			println!("{}{} {:<20}", pre.magenta(), "├".magenta(), s.get_name());
+			list_pattern_submodules(pre.clone() + "│ ", s.to_pattern().get_submodules());
+		}
+		let last = submodules.last().unwrap().to_pattern();
+		println!("{}{} {:<20}", pre.magenta(), "╰".magenta(), last.get_name());
+		list_pattern_submodules(pre.clone() + "  ", last.get_submodules());
 	}
 }
 
