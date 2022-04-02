@@ -388,7 +388,7 @@ fn list_desktops() {
 
 	for d in all_desktops {
 		if d.get_name() == current_desktop {
-			println!("{} {}", "•".green(), d.get_name().bold().green());
+			println!("{} {}", "•".green(), format!("{} (Active)", d.get_name()).bold().green());
 		} else {
 			println!("{} {}", "•".cyan(), d.get_name());
 		};
