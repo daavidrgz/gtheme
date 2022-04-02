@@ -106,6 +106,10 @@ impl UserConfig {
 		info!("Property |{}| successfully setted to |{}|", property, value)
 	}
 	pub fn unset_property(&mut self, property: &str) {
+		if !self.properties.contains_key(property) {
+			warn!("Property |{}| does not exist", property);
+			return
+		}
 		self.properties.remove(property);
 		info!("Property |{}| successfully unsetted", property)
 	}
