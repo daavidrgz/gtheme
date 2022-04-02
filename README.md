@@ -22,6 +22,10 @@ Moreover, your system's settings will be loaded from `~/.config/gtheme/user_sett
 
 ## Usage
 
+### Terminal User Interface
+If you prefer a terminal UI rather than a CLI, use `gtheme`, without arguments. In order to see Terminal UI help, press `h`. To navigate between desktops and patterns to fav-themes and themes, press `tab`.
+
+## Command Line Interface
 You can see gtheme's help with `gtheme --help` and `gtheme <subcommand> --help`
 
 Here are some examples:
