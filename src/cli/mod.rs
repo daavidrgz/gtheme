@@ -17,7 +17,7 @@ use crate::app;
 use crate::core::{
 	desktop::{Desktop, DesktopFile},
 	theme::{Theme, ThemeFile},
-	pattern::Pattern,
+	pattern::{Pattern, PatternFile},
 	postscript::PostScript,
 	config::{GlobalConfig, DesktopConfig, DesktopInfo, UserConfig}
 };
@@ -491,9 +491,27 @@ fn list_patterns(matches: &ArgMatches) {
 			Some(i) =>  if *i { print!(" {}", "(Inverted)".bold().color(color)) },
 			None => ()
 		}
+
 		println!("");
+		print_pattern_submodules("  ".to_string(), p.to_pattern().get_submodules());
 	}
 	println!("");
+}
+
+fn print_pattern_submodules(pre: String, submodules_opt: &Option<Vec<PatternFile>>) {
+	match submodules_opt {
+		Some(submodules) => {
+			if submodules.len() == 0 { return }
+			for s in submodules.iter().take(submodules.len()-1) {
+				println!("{}{} {:<20}", pre.magenta(), "├".magenta(), s.get_name());
+				print_pattern_submodules(pre.clone() + "│ ", s.to_pattern().get_submodules());
+			}
+			let last = submodules.last().unwrap().to_pattern();
+			println!("{}{} {:<20}", pre.magenta(), "╰".magenta(), last.get_name());
+			print_pattern_submodules(pre.clone() + "  ", last.get_submodules());
+		},
+		None => ()
+	}
 }
 
 fn list_extras(matches: &ArgMatches) {
