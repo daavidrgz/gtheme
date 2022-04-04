@@ -493,7 +493,9 @@ fn list_patterns(matches: &ArgMatches) {
 		}
 
 		println!("");
-		list_pattern_submodules("  ".to_string(), p.to_pattern().get_submodules());
+		if matches.is_present("submodules") {
+			list_pattern_submodules("  ".to_string(), p.to_pattern().get_submodules());
+		}
 	}
 	println!("");
 }
