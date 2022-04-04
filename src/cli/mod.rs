@@ -506,7 +506,7 @@ fn list_pattern_submodules(pre: String, submodules_opt: &Option<Vec<PatternFile>
 			list_pattern_submodules(pre.clone() + "│ ", s.to_pattern().get_submodules());
 		}
 		let last = submodules.last().unwrap().to_pattern();
-		println!("{}{} {}", pre.magenta(), "╰".magenta(), last.get_name());
+		println!("{}{} {}", pre.magenta(), "└".magenta(), last.get_name());
 		list_pattern_submodules(pre.clone() + "  ", last.get_submodules());
 	}
 }
