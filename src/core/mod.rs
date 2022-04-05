@@ -1,4 +1,6 @@
 
+use log::error;
+use std::{fs::{self, DirEntry}, path::Path};
 pub mod theme;
 pub mod pattern;
 pub mod desktop;
@@ -15,6 +17,41 @@ pub fn expand_path(origin_path: &str) -> String{
 	path
 }
 
+//TODO: rework of functions that read directories to use this function
+pub fn get_files(path:&Path) -> Vec<DirEntry> {
+
+	let entries = match fs::read_dir(&path) {
+		Ok(dir) => dir,
+		Err(e) => {
+			error!("Could not read directory |{}|: |{}|", &path.as_os_str().to_string_lossy(), e);
+			return vec![]
+		}
+	};
+
+	let mut vec = Vec::new();
+	for entry in entries {
+		let entry = match entry {
+			Ok(entry) => entry,
+			Err(e) => {
+				error!("Error while reading entry from dir |{}|: |{}|", &path.as_os_str().to_string_lossy(), e);
+				continue;
+			}
+		};
+		vec.push(entry);
+	}
+	vec
+}
+
+//TODO: return result?
+pub fn copy(from:&Path,to:&Path){
+	let mut options = fs_extra::dir::CopyOptions::new();
+	options.overwrite = true;
+	options.copy_inside = true;
+	match fs_extra::dir::copy(from, &to, &options) {
+		Ok(_) => (),
+		Err(e) => error!("Error while copying to |{}|: |{}|", &to.display(), e),
+	}
+}
 
 #[cfg(test)]
 mod tests{

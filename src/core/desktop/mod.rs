@@ -65,24 +65,11 @@ impl Desktop {
 	pub fn get_desktops() -> Vec<DesktopFile> {
 		let gtheme_home: String = core::expand_path(core::GTHEME_HOME);
 		let desktops_dir = gtheme_home + &format!("/desktops");
-		let entries = match fs::read_dir(&desktops_dir) {
-			Ok(dir) => dir,
-			Err(e) => {
-				error!("Could not read directory |{}|: |{}|", &desktops_dir, e);
-				return vec![]
-			}
-		};
 			
 		let mut vec = Vec::new();
-		for entry in entries {
-			let entry = match entry {
-				Ok(entry) => entry,
-				Err(e) => {
-					error!("Error while reading entry from dir |{}|: |{}|", &desktops_dir, e);
-					continue;
-				}
-			};
-			
+		let desktop_entries = core::get_files(Path::new(&desktops_dir));
+
+		for entry in desktop_entries {			
 			let file_name = match entry.file_name().into_string() {
 				Ok(f) => f,
 				Err(_) => {
@@ -160,21 +147,20 @@ impl Desktop {
 	pub fn clean_files(&self) {
 		let config_home = core::expand_path(core::CONFIG_HOME);
 		
-		let files_to_uninstall:Vec<String> = self.get_config_files().iter()
-			.map(|file| String::from(file.file_name().to_str().unwrap())).collect();
-
-		for entry_name in files_to_uninstall {
-			let path = format!("{}/{}", config_home,entry_name);
-			match fs_extra::dir::remove(&path) {
-				Ok(_) => (),
-				Err(e) => error!("Could not remove directory |{}|: |{}|", &path, e)
+		//Remove only config files, not fonts
+		for entry in self.get_config_files() {
+			let path = Path::new(&config_home).join(entry.file_name());
+			if let Err(e) =  fs_extra::dir::remove(&path) {
+				error!("Could not remove directory |{}|: |{}|", path.display(), e);
 			}
 		}
 	}
 
 	pub fn apply(&self, previous: &Option<Desktop>, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>, dry_run: bool) {
 		if dry_run {
-			info!("Installing desktop in dry-run mode...")
+			info!("Installing desktop |{}| in dry-run mode...",self.get_name());
+		}else{
+			info!("Installing desktop |{}|...", self.get_name());
 		}
 
 		let config_home = core::expand_path(core::CONFIG_HOME);
@@ -189,28 +175,27 @@ impl Desktop {
 			self.clean_files();
 		}
 
-		let files_to_install = self.get_config_files();
 
-		info!("Installing desktop |{}|...", self.get_name());
-		for entry in files_to_install {
+		let config_files = self.get_config_files();
+		info!("Copying config files to |{}|...",&config_home);
+		for entry in config_files {
 			if dry_run { break }
-
 			let from = entry.path();
-			let file_name = match entry.file_name().into_string() {
-				Ok(file_name) => file_name,
-				Err(_) => {
-					error!("Error while converting OsString to String: |Invalid unicode data|");
-					continue;
-				}
-			};
-			let to = format!("{}/{}",config_home,file_name);
+			let to = Path::new(&config_home).join(entry.file_name());
+			core::copy(&from,&to)
+		}
 
-			let mut options = fs_extra::dir::CopyOptions::new();
-			options.overwrite = true;
-			options.copy_inside = true;
-			match fs_extra::dir::copy(from, &to, &options) {
-				Ok(_) => (),
-				Err(e) => error!("Error while copying to |{}|: |{}|", &to, e),
+		let fonts_home = core::expand_path( "~/.local/share");
+		info!("Copying fonts to |{}|...",&fonts_home);
+		if !dry_run { 
+			//It its important that the desktop's fonts directory is named 'fonts'
+			//since it is copied to '~/.local/share/fonts
+			let fonts_dir = format!("{}/fonts", self.get_path());
+			let from = Path::new(&fonts_dir);
+			let to = Path::new(&fonts_home);
+			//Only copy if there is a fonts dir on desktop
+			if from.exists(){
+				core::copy(&from,&to);
 			}
 		}
 
@@ -231,27 +216,7 @@ impl Desktop {
 
 	pub fn get_config_files(&self) -> Vec<DirEntry> {
 		let config_dir = format!("{}/.config", self.get_path());
-
-		let entries = match fs::read_dir(&config_dir) {
-			Ok(dir) => dir,
-			Err(e) => {
-				error!("Could not read directory |{}|: |{}|", &config_dir, e);
-				return vec![]
-			}
-		};
-
-		let mut vec = Vec::new();
-		for entry in entries {
-			let entry = match entry {
-				Ok(entry) => entry,
-				Err(e) => {
-					error!("Error while reading entry from dir |{}|: |{}|", &config_dir, e);
-					continue;
-				}
-			};
-			vec.push(entry);
-		}
-		vec
+		return core::get_files(Path::new(&config_dir));
 	}
 
 	pub fn add(from: &Path) {
@@ -284,21 +249,12 @@ impl Desktop {
 		}
 
 		let gtheme_home:String = core::expand_path(core::GTHEME_HOME);
-		let desktops_dir = gtheme_home + &format!("/desktops");
+		let desktops_dir = &format!("{}/desktops",gtheme_home);
 
 		let to = Path::new(&desktops_dir).join(desktop_name);
-		let mut options = fs_extra::dir::CopyOptions::new();
-		options.overwrite = true;
-		options.copy_inside = true;
-
-		match fs_extra::dir::copy(from, &to, &options) {
-			Ok(_) => (),
-			Err(e) => {
-				error!("Error while copying to |{}|: |{}|", &to.to_str().unwrap(), e);
-				return;
-			}
-		}
-		info!("Successfully added desktop |{}|", desktop_name);
+		core::copy(from,&to);
+		//TODO: check if copied successfully?
+		// info!("Successfully added desktop |{}|", desktop_name);
 	}
 
 	pub fn new_skeleton(desktop_name: &str) {
