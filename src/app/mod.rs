@@ -227,9 +227,9 @@ impl Ui {
 						Some(popup) => popups.get_mut(popup).unwrap().get_selected().unwrap(),
 						None => lists[current_list].get_selected().unwrap()
 					};
-					match item {
-						ScreenItem::Theme(_) | ScreenItem::Pattern(_) | ScreenItem::Extra(_) => ScreenItem::edit(item.get_path()),
-						_ => return true
+					match item.get_path() {
+						Some(path) => ScreenItem::edit(&path),
+						None => return true
 					}
 					self.terminal.clear().unwrap();
 				},
@@ -239,7 +239,7 @@ impl Ui {
 						None =>  return true
 					};
 					match item.get_postscript_path(desktop_config) {
-						Some(path) => ScreenItem::edit(path.as_str()),
+						Some(path) => ScreenItem::edit(&path),
 						None => return true
 					}
 					self.terminal.clear().unwrap();

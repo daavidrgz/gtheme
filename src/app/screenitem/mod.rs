@@ -1,6 +1,7 @@
 use std::{process::{Command, Stdio}, env};
 use log::{warn,error,info};
 use tui::style::Color;
+use std::fs::metadata;
 
 use crate::app::statefullist::StatefulList;
 use crate::core::{
@@ -32,14 +33,14 @@ impl ScreenItem {
 		}
 	}
 
-	pub fn get_path(&self) -> &str {
+	pub fn get_path(&self) -> Option<String> {
 		match self {
-			ScreenItem::Desktop(d) => d.get_path(),
-			ScreenItem::Theme(t) => t.get_path(),
-			ScreenItem::Pattern(p) => p.get_path(),
-			ScreenItem::Extra(e) => e.get_path(),
-			ScreenItem::Help(s) => &s,
-			ScreenItem::Info(s) => &s
+			ScreenItem::Desktop(d) => Some(d.get_path().clone()),
+			ScreenItem::Theme(t) => Some(t.get_path().clone()),
+			ScreenItem::Pattern(p) => Some(p.get_path().clone()),
+			ScreenItem::Extra(e) => Some(e.get_path().clone()),
+			ScreenItem::Help(_) => None,
+			ScreenItem::Info(_) => None
 		}
 	}
 
@@ -93,13 +94,14 @@ impl ScreenItem {
 		}
 	}
 
-	pub fn edit(path: &str) {
+	pub fn edit_file(path: &String) {
 		match env::var("VISUAL") {
 			Ok(value) => if value.is_empty() {
 				warn!("Env var |$VISUAL| is empty, using |nano| instead")
 			},
 			Err(_) => warn!("Could not found env var |$VISUAL|, using |nano| instead")
 		}
+
 		match Command::new("sh")
 		.arg("-c")
 		.arg(format!("${{VISUAL:-nano}} {}", path))
@@ -109,10 +111,41 @@ impl ScreenItem {
 			Ok(output) => {
 				match output.status.success() {
 					true => info!("File |{}| edited succesfully", path),
-					false => error!("Could not edit |{}|, error: |{}|", path, String::from_utf8(output.stderr).unwrap())
+					false => error!("Could not edit |{}|, error: {}", path, String::from_utf8(output.stderr).unwrap())
 				}
 			},
-			Err(e) => error!("Could not edit |{}|, error: |{}|", path, e)	
+			Err(e) => error!("Could not edit |{}|, error: {}", path, e)	
+		}
+	}
+
+	pub fn explore_dir(path: &String) {
+		match Command::new("sh")
+		.arg("-c")
+		.arg(format!("ranger {}", path))
+		.stdin(Stdio::inherit())
+		.stdout(Stdio::inherit())
+		.output() {
+			Ok(output) => {
+				match output.status.success() {
+					true => info!("Directory |{}| succesfully readed", path),
+					false => error!("Could not read |{}|, error: {}", path, String::from_utf8(output.stderr).unwrap())
+				}
+			},
+			Err(e) => error!("Could not read |{}|, error: {}", path, e)	
+		}
+	}
+
+	pub fn edit(path: &String) {
+		let md = match metadata(path) {
+			Ok(md) => md,
+			Err(err) => {
+				error!("Could not read metadata from |{}|: |{}|", path, err);
+				return;
+			}
+		};
+		match md.is_dir() {
+			true => Self::explore_dir(&path),
+			false => Self::edit_file(&path)
 		}
 	}
 
