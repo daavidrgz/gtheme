@@ -74,8 +74,7 @@ impl ScreenItem {
 		}
 	}
 
-	pub fn edit(&self) {
-		let path = self.get_path();
+	pub fn edit(path: &str) {
 		match env::var("VISUAL") {
 			Ok(value) => if value.is_empty() {
 				warn!("Env var |$VISUAL| is empty, using |nano| instead")

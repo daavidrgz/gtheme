@@ -228,11 +228,26 @@ impl Ui {
 						None => lists[current_list].get_selected().unwrap()
 					};
 					match item {
-						ScreenItem::Desktop(_) | ScreenItem::Help(_) => return true,
-						_ => ()
+						ScreenItem::Theme(_) | ScreenItem::Pattern(_) | ScreenItem::Extra(_) => {
+							ScreenItem::edit(item.get_path());
+							self.terminal.clear().unwrap();
+						},
+						_ => return true
 					}
-					item.edit();
-					self.terminal.clear().unwrap();
+				},
+				KeyCode::Char('p') | KeyCode::Char('P') => {
+					let item = match lists[current_list].get_selected() {
+						Some(i) => i,
+						None =>  return true
+					};
+					match item {
+						ScreenItem::Pattern(p) => {
+							let ps_path = "";
+							ScreenItem::edit(ps_path);
+							self.terminal.clear().unwrap();
+						},
+						_ => return true
+					}
 				},
 				KeyCode::Char('z') | KeyCode::Char('Z') => {
 					let item = match lists[current_list].get_selected() {
