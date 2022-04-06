@@ -49,7 +49,7 @@ function copyFiles() {
 function backupConfig() {
 	AVAIL_SIZE=$(df -P / | awk 'END{print $4}')
 	FOLDER_SIZE=$(du -k $HOME/.config -d 0 | awk '{print $1}')	
-	if [ "$FOLDER_SIZE" -gt "10" ]; then
+	if [ "$FOLDER_SIZE" -gt "$AVAIL_SIZE" ]; then
 		echo -e "${R}-> Error${W}, there is no enough space in ${W_B}/tmp${W}\n"
 		exit 2
 	fi
@@ -126,7 +126,7 @@ function askWallpapers() {
 
 function install() {
 	echo -e "${G}->${W} Compiling program..."
-	cargo build --release
+	cargo build --release || exit 1
 	
 	clear
 	gthemeLogo
