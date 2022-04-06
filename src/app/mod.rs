@@ -239,7 +239,7 @@ impl Ui {
 						None =>  return true
 					};
 					match item.get_postscript_path(desktop_config) {
-						Some(path) => ScreenItem::edit(path),
+						Some(path) => ScreenItem::edit(path.as_str()),
 						None => return true
 					}
 					self.terminal.clear().unwrap();
