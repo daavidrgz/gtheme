@@ -64,6 +64,11 @@ impl PostScript{
 		map
 	}
 
+	pub fn get_postscript_by_name(desktop:&DesktopFile, postscript_name: &str) -> Option<PostScript> {
+		let all_postscripts = PostScript::get_postscripts(desktop);
+		all_postscripts.get(postscript_name).cloned()
+	}
+
 	pub fn get_extra_by_name(desktop:&DesktopFile, extra: &str)->Option<PostScript> {
 		let all_extras = PostScript::get_extras(desktop);
 		all_extras.into_iter().find(|item| item.get_name().to_lowercase() == extra.to_lowercase())

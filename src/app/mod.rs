@@ -228,26 +228,21 @@ impl Ui {
 						None => lists[current_list].get_selected().unwrap()
 					};
 					match item {
-						ScreenItem::Theme(_) | ScreenItem::Pattern(_) | ScreenItem::Extra(_) => {
-							ScreenItem::edit(item.get_path());
-							self.terminal.clear().unwrap();
-						},
+						ScreenItem::Theme(_) | ScreenItem::Pattern(_) | ScreenItem::Extra(_) => ScreenItem::edit(item.get_path()),
 						_ => return true
 					}
+					self.terminal.clear().unwrap();
 				},
 				KeyCode::Char('p') | KeyCode::Char('P') => {
 					let item = match lists[current_list].get_selected() {
 						Some(i) => i,
 						None =>  return true
 					};
-					match item {
-						ScreenItem::Pattern(p) => {
-							let ps_path = "";
-							ScreenItem::edit(ps_path);
-							self.terminal.clear().unwrap();
-						},
-						_ => return true
+					match item.get_postscript_path(desktop_config) {
+						Some(path) => ScreenItem::edit(path),
+						None => return true
 					}
+					self.terminal.clear().unwrap();
 				},
 				KeyCode::Char('z') | KeyCode::Char('Z') => {
 					let item = match lists[current_list].get_selected() {

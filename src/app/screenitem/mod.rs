@@ -43,6 +43,25 @@ impl ScreenItem {
 		}
 	}
 
+	pub fn get_postscript_path(&self, desktop_config: &Option<DesktopConfig>) -> Option<String> {
+		match self {
+			ScreenItem::Pattern(p) => {
+				let desktop = match desktop_config {
+					Some(c) => c.get_desktop(),
+					None => return None
+				};
+				match PostScript::get_postscript_by_name(desktop, p.get_name()) {
+					Some(ps) => return Some(ps.get_path().clone()),
+					None =>	{
+						info!("The pattern |{}| has no postscript", p.get_name());
+						return None
+					}
+				}
+			},
+			_ => return None
+		}
+	}
+
 	pub fn get_theme(&self) -> Option<&ThemeFile> {
 		match self {
 			ScreenItem::Theme(t) => Some(t),

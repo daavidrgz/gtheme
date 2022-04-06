@@ -156,6 +156,12 @@ impl DesktopConfig {
 			inverted: dto.inverted
 		}
 	}
+	pub fn get_desktop(&self) -> &DesktopFile {
+		return &self.desktop
+	}
+	pub fn get_mut_desktop(&mut self) -> &mut DesktopFile {
+		return &mut self.desktop
+	}
 	pub fn get_default_theme(&self) -> &Option<ThemeFile> {
 		&self.default_theme
 	}
