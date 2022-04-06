@@ -21,6 +21,7 @@ pub const HELP_CONTENT: &str =
 
 'Enter'  #apply desktop
 'i'      #show/hide desktop info popup
+'e'      #read desktop directory with ranger
 
 •• THEMES
 
