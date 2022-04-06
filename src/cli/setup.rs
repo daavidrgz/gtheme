@@ -416,7 +416,7 @@ impl Setup {
 			Section::Monitor,
 			Section::Battery,
 			Section::Network,
-			Section::Keyboard,
+			// Section::Keyboard,
 			Section::Others
 		];
 
