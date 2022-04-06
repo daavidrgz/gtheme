@@ -9,7 +9,6 @@ enum Section {
 	Monitor,
 	Battery,
 	Network,
-	Keyboard,
 	Others
 }
 
@@ -19,7 +18,6 @@ impl Section {
 			Section::Monitor => "Monitor settings",
 			Section::Battery => "Battery",
 			Section::Network => "Network",
-			Section::Keyboard => "Keyboard",
 			Section::Others => "Others"
 		}
 	}
@@ -29,7 +27,6 @@ impl Section {
 			Section::Monitor => Self::monitor_section(user_config),
 			Section::Battery => Self::battery_section(user_config),
 			Section::Network => Self::network_section(user_config),
-			Section::Keyboard => Self::keyboard_section(user_config),
 			Section::Others => Self::others_section(user_config)
 		}
 	}
@@ -284,64 +281,6 @@ impl Section {
 		);
 	}
 
-	fn keyboard_section(user_config: &mut UserConfig) {
-		// KEYBOARD LAYOUT
-		fn validate_layout(layout: &String) -> Result<(),String> {
-			let layout_cmd = vec![
-				("localectl", vec!["list-x11-keymap-layouts"]),
-				("grep", vec!["-x", &layout])
-			];
-			let (exit_code, _) = Section::pipeline(&layout_cmd);
-			return match exit_code {
-				Some(c) => if c == 0 { Ok(()) } else { Err(format!("There is no layout called '{}'", layout)) },
-				None => Err("Could not retrieve layouts".to_string())
-			}
-		}
-		fn validate_variant(variant: &String) -> Result<(),String> {
-			let variant_cmd = vec![
-				("localectl", vec!["list-x11-keymap-variants"]),
-				("grep", vec!["-x", &variant])
-			];
-			let (exit_code, _) = Section::pipeline(&variant_cmd);
-			return match exit_code {
-				Some(c) => if c == 0 { Ok(()) } else { Err(format!("There is no variant called '{}'", variant)) },
-				None => Err("Could not retrieve variants".to_string())
-			}
-		}
-
-		let query_cmd = vec![
-			("setxkbmap", vec!["-query"]),
-			("grep", vec!["layout"])
-		];
-		let (_, query_output) = Self::pipeline(&query_cmd);
-		let query_awk = Self::awk(&query_output, 1);
-		let current_layout= query_awk.get(0).cloned();
-
-		Self::type_question(
-			"Select keyboard layout",
-			current_layout,
-			validate_layout,
-			"keyboard-layout",
-			user_config
-		);
-
-		let query_variant_cmd = vec![
-			("setxkbmap", vec!["-query"]),
-			("grep", vec!["variant"])
-		];
-		let (_, query_variant_output) = Self::pipeline(&query_variant_cmd);
-		let query_variant_awk = Self::awk(&query_variant_output, 1);
-		let current_variant= query_variant_awk.get(0).cloned();
-		
-		Self::type_question(
-			"Select keyboard layout variant",
-			current_variant,
-			validate_variant,
-			"keyboard-variant",
-			user_config
-		);
-	}
-
 	fn others_section(user_config: &mut UserConfig) {
 		fn validate_program(program: &String) -> Result<(),String> {
 			let program_cmd = vec![
@@ -416,7 +355,6 @@ impl Setup {
 			Section::Monitor,
 			Section::Battery,
 			Section::Network,
-			// Section::Keyboard,
 			Section::Others
 		];
 
