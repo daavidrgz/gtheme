@@ -132,11 +132,10 @@ impl Pattern {
 	}
 
 	fn get_patterns_from_path(path: &Path) -> Vec<PatternFile> {
-		let path_name = path.as_os_str().to_string_lossy();
 		let entries = match fs::read_dir(path) {
 			Ok(dir) => dir,
 			Err(e) => {
-				error!("Could not read directory |{}|: |{}|", path_name, e);
+				error!("Could not read directory |{}|: |{}|", path.display(), e);
 				return vec![]
 			}
 		};
@@ -146,7 +145,7 @@ impl Pattern {
 			let entry = match entry {
 				Ok(entry) => entry,
 				Err(e) => {
-					error!("Error while reading entry from dir |{}|: |{}|", path_name, e);
+					error!("Error while reading entry from dir |{}|: |{}|", path.display(), e);
 					continue;
 				}
 			};
@@ -159,6 +158,7 @@ impl Pattern {
 				}
 			};
 
+			//TODO: use path.display or handle utf-u errors?
 			let path = match entry.path().to_str() {
 				Some(path) => String::from(path),
 				None => {
@@ -330,6 +330,12 @@ mod tests{
 			// let cap =caps.get(1);
 			dbg!(caps);
 		};		
+	}
+
+	#[test]
+	fn test_subpatterns(){
+		let subpattern = "test.test2.subsubpattern";
+		dbg!(subpattern.split('.').collect::<Vec<&str>>());
 	}
 
 
