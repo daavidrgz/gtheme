@@ -544,18 +544,18 @@ fn list_extras(matches: &ArgMatches) {
 }
 
 fn edit_file(path: &str) {
-	match env::var("VISUAL") {
+	match env::var("EDITOR") {
 		Ok(value) => if value.is_empty() {
-			warn!("Env var |$VISUAL| is empty, using |nano| instead")
+			warn!("Env var |$EDITOR| is empty, using |nano| instead")
 		},
-		Err(_) => warn!("Could not found env var |$VISUAL|, using |nano| instead")
+		Err(_) => warn!("Could not found env var |$EDITOR|, using |nano| instead")
 	}
 	
 	info!("Editing |{}|...", path);
 
 	match Command::new("sh")
 	.arg("-c")
-	.arg(format!("${{VISUAL:-nano}} {}", path))
+	.arg(format!("${{EDITOR:-nano}} {}", path))
 	.stdin(Stdio::inherit())
 	.stdout(Stdio::inherit())
 	.output() {
