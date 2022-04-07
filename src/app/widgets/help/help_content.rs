@@ -14,24 +14,24 @@ pub const HELP_CONTENT: &str =
 
 'Enter'  #enable/disable pattern
 'i'      #toggle invert pattern's colors
-'p'      #edit pattern's post-script in $VISUAL env var
-'e'      #edit pattern's file in $VISUAL env var
+'p'      #edit pattern's post-script in $EDITOR env var
+'e'      #edit pattern's file in $EDITOR env var
 
 •• DESKTOPS
 
 'Enter'  #apply desktop
 'i'      #show/hide desktop info popup
-'e'      #read desktop directory with ranger
+'e'      #explore desktop directory with $EXPLORER env var
 
 •• THEMES
 
 'Enter'  #apply theme
 'f'      #flag/unflag theme as favourite
-'e'      #edit theme's file in $VISUAL env var
+'e'      #edit theme's file in $EDITOR env var
 'z'      #set theme as default for the current desktop
 
 •• EXTRAS
 
 'Enter'  #enable/disable extra
 'o'      #show/hide extras popup
-'e'      #edit extra's file in $VISUAL env var";
+'e'      #edit extra's file in $EDITOR env var";
