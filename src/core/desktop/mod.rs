@@ -394,10 +394,6 @@ mod tests{
 		println!("Patterns in {}: {:?}",desktop.get_name(),desktop.get_patterns())
 	}
 
-	#[test]
-	fn test_desktop_add(){
-		Desktop::add(Path::new("/home/jorge/tmp/test"));
-	}
 
 	#[test]
 	fn test_desktop_remove(){
