@@ -197,7 +197,7 @@ fn apply_theme(matches: &ArgMatches) {
 
 	current_desktop.to_desktop().apply_theme(&theme.to_theme(), &actived, &inverted, dry_run);
 
-	if !dry_run && !matches.is_present("pattern") && !matches.is_present("pattern") {
+	if !dry_run && !matches.is_present("pattern") {
 		*global_config.get_mut_current_theme() = Some(theme);
 		global_config.save()
 	}
