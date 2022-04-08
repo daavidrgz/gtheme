@@ -20,6 +20,8 @@ pub fn expand_path(origin_path: &str) -> String{
 //TODO: rework of functions that read directories to use this function
 pub fn get_files(path:&Path) -> Vec<DirEntry> {
 
+	if !path.exists(){return vec![]}
+
 	let entries = match fs::read_dir(&path) {
 		Ok(dir) => dir,
 		Err(e) => {
@@ -43,13 +45,18 @@ pub fn get_files(path:&Path) -> Vec<DirEntry> {
 }
 
 //TODO: return result?
-pub fn copy(from:&Path,to:&Path){
+pub fn copy(from:&[&Path],to:&Path){
 	let mut options = fs_extra::dir::CopyOptions::new();
 	options.overwrite = true;
 	options.copy_inside = true;
-	match fs_extra::dir::copy(from, &to, &options) {
-		Ok(_) => (),
-		Err(e) => error!("Error while copying to |{}|: |{}|", &to.display(), e),
+	let to_display = to.display();
+	if let Err(e) = fs::create_dir_all(to){
+		error!("Could not create |{to_display}|: |{e}|");
+		return;
+	}
+	if let Err(e) =  fs_extra::copy_items(from, &to, &options) {
+		error!("Error while copying to |{to_display}|: |{e}|");
+		return;
 	}
 }
 

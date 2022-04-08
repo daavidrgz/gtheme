@@ -37,7 +37,7 @@ impl Pattern {
 			let submodules = Self::get_patterns_from_path(pattern_path).into_iter()
 				.map(|pattern_file| PatternFile{
 					path: pattern_file.get_path().to_string(),
-					name: format!("{}.{}",pattern.get_name(),pattern_file.get_name())
+					name: pattern_file.get_name().to_string()
 				}).collect();
 			
 			//TODO
@@ -158,23 +158,28 @@ impl Pattern {
 				}
 			};
 
-			//TODO: use path.display or handle utf-u errors?
-			let path = match entry.path().to_str() {
-				Some(path) => String::from(path),
-				None => {
-					error!("Error while converting path to String: |Invalid UTF-8 data|");
+			let path = entry.path().display().to_string();
+			let md = match metadata(&path) {
+				Ok(md) => md,
+				Err(err) => {
+					error!("Could not read metadata from |{}|: |{}|", path, err);
 					continue;
 				}
 			};
 
-			if file_name.starts_with("."){
-				//If it is a hidden file
+			if file_name.starts_with(".") || (!file_name.ends_with(".pattern") && !md.is_dir()){
+				//If it is a hidden file or it is a file/symlink without pattern extension
 				continue;
 			}
-
-			let name = match file_name.rsplit_once(".") {
-				None => file_name,
-				Some((prefix,_)) => String::from(prefix)
+			let name = if md.is_dir() {
+				//If it is a directory(i.e module pattern), get the name from the whole dir name
+				file_name
+			}else{
+				//If it is a file, get name from splitting extension
+				match file_name.rsplit_once(".pattern") {
+					None => file_name,
+					Some((prefix,_)) => String::from(prefix)
+				}
 			};
 
 			vec.push(PatternFile { name, path });

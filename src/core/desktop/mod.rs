@@ -1,6 +1,6 @@
 use std::fs::{self, DirEntry,metadata};
 use std::collections::HashMap;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use crate::core;
 use crate::core::pattern::*;
@@ -181,22 +181,21 @@ impl Desktop {
 		for entry in config_files {
 			if dry_run { break }
 			let from = entry.path();
-			let to = Path::new(&config_home).join(entry.file_name());
-			core::copy(&from,&to)
+			let to = Path::new(&config_home);
+			core::copy(&vec![from.as_path()],&to)
 		}
 
-		let fonts_home = core::expand_path( "~/.local/share");
+		let fonts_home = core::expand_path( "~/.local/share/fonts/gtheme-fonts");
 		info!("Copying fonts to |{}|...",&fonts_home);
-		if !dry_run { 
-			//It its important that the desktop's fonts directory is named 'fonts'
-			//since it is copied to '~/.local/share/fonts
-			let fonts_dir = format!("{}/fonts", self.get_path());
-			let from = Path::new(&fonts_dir);
+		if !dry_run {
+			let fonts_files = self.get_fonts_files();
+			let from_buf:Vec<PathBuf> = fonts_files.into_iter()
+				.map(|entry| entry.path()).collect();
+			let from:Vec<&Path> = from_buf.iter().map(|buf| buf.as_path()).collect();
+
 			let to = Path::new(&fonts_home);
 			//Only copy if there is a fonts dir on desktop
-			if from.exists(){
-				core::copy(&from,&to);
-			}
+			core::copy(&from,&to);
 		}
 
 		self.apply_theme(theme, actived, inverted,dry_run);
@@ -217,6 +216,11 @@ impl Desktop {
 	pub fn get_config_files(&self) -> Vec<DirEntry> {
 		let config_dir = format!("{}/.config", self.get_path());
 		return core::get_files(Path::new(&config_dir));
+	}
+
+	pub fn get_fonts_files(&self) -> Vec<DirEntry> {
+		let fonts_dir = format!("{}/fonts", self.get_path());
+		return core::get_files(Path::new(&fonts_dir));
 	}
 
 	pub fn add(from: &Path) {
@@ -251,8 +255,8 @@ impl Desktop {
 		let gtheme_home:String = core::expand_path(core::GTHEME_HOME);
 		let desktops_dir = &format!("{}/desktops",gtheme_home);
 
-		let to = Path::new(&desktops_dir).join(desktop_name);
-		core::copy(from,&to);
+		let to = Path::new(&desktops_dir);
+		core::copy(&vec![from],&to);
 		//TODO: check if copied successfully?
 		// info!("Successfully added desktop |{}|", desktop_name);
 	}
