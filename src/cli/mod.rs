@@ -71,7 +71,7 @@ pub fn start_cli() {
 		}
 
 		Some(("theme", sub_matches)) => match sub_matches.subcommand() {
-			Some(("list", _)) => list_themes(),
+			Some(("list", sub_sub_matches)) => list_themes(sub_sub_matches),
 			Some(("edit", sub_sub_matches)) => edit_theme(sub_sub_matches),
 			Some(("apply", sub_sub_matches)) => apply_theme(sub_sub_matches),
 			_ => ()
@@ -397,7 +397,12 @@ fn list_desktops() {
 	println!("");
 }
 
-fn list_themes() {
+fn list_themes(matches: &ArgMatches) {
+	if matches.is_present("favs") {
+		list_fav_themes();
+		return
+	}
+
 	println!("");
 	let all_themes = Theme::get_themes();
 	let global_config = GlobalConfig::new();
