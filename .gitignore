@@ -4,3 +4,5 @@
 global_config.json
 user_settings.toml
 gtheme.log*
+perf.data
+flamegraph.svg

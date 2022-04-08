@@ -58,8 +58,9 @@ pub fn start_cli() {
 		},
 
 		Some(("desktop", sub_matches)) => match sub_matches.subcommand() {
-			Some(("status", sub_sub_matches)) => show_status(sub_sub_matches),
 			Some(("info", sub_sub_matches)) => show_desktop_info(sub_sub_matches),
+			Some(("edit", sub_sub_matches)) => edit_desktop(sub_sub_matches),
+			Some(("status", sub_sub_matches)) => show_status(sub_sub_matches),
 			Some(("new-skeleton", sub_sub_matches)) => create_desktop(sub_sub_matches),
 			Some(("add", sub_sub_matches)) => add_desktop(sub_sub_matches),
 			Some(("remove", sub_sub_matches)) => remove_desktop(sub_sub_matches),
@@ -569,12 +570,46 @@ fn edit_file(path: &str) {
 	}
 }
 
+fn explore_directory(path: &str) {
+	match env::var("FILE_EXPLORER") {
+		Ok(value) => if value.is_empty() {
+			warn!("Env var |$FILE_EXPLORER| is empty, using |ranger| instead |(try exporting env var FILE_EXPLORER in your shell config)|")
+		},
+		Err(_) => warn!("Could not found env var |$FILE_EXPLORER|, using |ranger| instead |(try exporting env var FILE_EXPLORER in your shell config)|")
+	}
+	
+	info!("Reading |{}|...", path);
+
+	match Command::new("sh")
+	.arg("-c")
+	.arg(format!("${{FILE_EXPLORER:-ranger}} {}", path))
+	.stdin(Stdio::inherit())
+	.stdout(Stdio::inherit())
+	.output() {
+		Ok(output) => {
+			match output.status.success() {
+				true => info!("Directory |{}| readed succesfully", path),
+				false => error!("Could not read |{}|, error: |{}|", path, String::from_utf8(output.stderr).unwrap())
+			}
+		},
+		Err(e) => error!("Could not read |{}|, error: |{}|", path, e)	
+	}
+}
+
 fn edit_theme(matches: &ArgMatches) {
 	let theme = match Theme::get_by_name(matches.value_of("theme").unwrap()) {
 		Some(t) => t,
 		None => return
 	};
 	edit_file(theme.get_path());
+}
+
+fn edit_desktop(matches: &ArgMatches) {
+	let desktop = match Desktop::get_by_name(matches.value_of("desktop").unwrap()) {
+		Some(t) => t,
+		None => return
+	};
+	explore_directory(desktop.get_path());
 }
 
 fn edit_pattern(matches: &ArgMatches) {
@@ -586,7 +621,20 @@ fn edit_pattern(matches: &ArgMatches) {
 		Some(t) => t,
 		None => return
 	};
-	edit_file(pattern.get_path());
+
+	if matches.is_present("postscript") {
+		match PostScript::get_postscript_by_name(&desktop, pattern.get_name()) {
+			Some(ps) => edit_file(ps.get_path()),
+			None => error!("Pattern |{}| has no postscript", pattern.get_name())
+		}
+		return
+	}
+
+	if pattern.to_pattern().has_submodules() {
+		explore_directory(pattern.get_path());
+	} else {
+		edit_file(pattern.get_path());
+	}
 }
 
 fn edit_extra(matches: &ArgMatches) {

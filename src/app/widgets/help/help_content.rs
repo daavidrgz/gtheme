@@ -21,7 +21,7 @@ pub const HELP_CONTENT: &str =
 
 'Enter'  #apply desktop
 'i'      #show/hide desktop info popup
-'e'      #explore desktop directory with $EXPLORER env var
+'e'      #explore desktop directory with $FILE_EXPLORER env var
 
 •• THEMES
 

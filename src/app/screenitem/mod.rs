@@ -97,9 +97,9 @@ impl ScreenItem {
 	pub fn edit_file(path: &String) {
 		match env::var("EDITOR") {
 			Ok(value) => if value.is_empty() {
-				warn!("Env var |$EDITOR| is empty, using |nano| instead")
+				warn!("Env var |$EDITOR| is empty, using |nano| instead |(try exporting env var FILE_EXPLORER in your shell config)|")
 			},
-			Err(_) => warn!("Could not found env var |$EDITOR|, using |nano| instead")
+			Err(_) => warn!("Could not found env var |$EDITOR|, using |nano| instead |(try exporting env var FILE_EXPLORER in your shell config)|")
 		}
 
 		match Command::new("sh")
@@ -119,16 +119,16 @@ impl ScreenItem {
 	}
 
 	pub fn explore_dir(path: &String) {
-		match env::var("EXPLORER") {
+		match env::var("FILE_EXPLORER") {
 			Ok(value) => if value.is_empty() {
-				warn!("Env var |$EXPLORER| is empty, using |ranger| instead")
+				warn!("Env var |$FILE_EXPLORER| is empty, using |ranger| instead |(try exporting env var FILE_EXPLORER in your shell config)|")
 			},
-			Err(_) => warn!("Could not found env var |$EXPLORER|, using |ranger| instead")
+			Err(_) => warn!("Could not found env var |$FILE_EXPLORER|, using |ranger| instead |(try exporting env var FILE_EXPLORER in your shell config)|")
 		}
 
 		match Command::new("sh")
 		.arg("-c")
-		.arg(format!("${{EXPLORER:-ranger}} {}", path))
+		.arg(format!("${{FILE_EXPLORER:-ranger}} {}", path))
 		.stdin(Stdio::inherit())
 		.stdout(Stdio::inherit())
 		.output() {
