@@ -35,7 +35,7 @@ function copyFiles() {
 
 		echo -e "${G}->${W} Cloning ${W_B}$REPO_NAME${W}..."
 		rm -rf /tmp/$REPO_NAME &>/dev/null
-		git clone $REPO /tmp/$REPO_NAME || echo -e "${R}->${W} There was an error while cloning ${W_B}$FOLDER/${W}!\n"
+		git clone --depth=1 $REPO /tmp/$REPO_NAME || echo -e "${R}->${W} There was an error while cloning ${W_B}$FOLDER/${W}!\n"
 		rm -rf /tmp/$REPO_NAME/.git /tmp/$REPO_NAME/desktops.gif &>/dev/null
 		echo -e "${G}->${W} Transfering ${W_B}$REPO_NAME${W}..."
 		mv /tmp/$REPO_NAME $GTHEME_PATH/$FOLDER &>/dev/null || echo -e "${R}->${W} There was an error while copying ${W_B}$FOLDER/${W}!\n"
@@ -64,7 +64,7 @@ function backupConfig() {
 function installWallpapers() {
 	echo -e "${G}->${W} Cloning gtheme-wallpapers repository. This may take a while..."
 	rm -rf /tmp/gtheme-wallpapers &>/dev/null
-	git clone https://github.com/daavidrgz/gtheme-wallpapers.git /tmp/gtheme-wallpapers
+	git clone --depth=1 https://github.com/daavidrgz/gtheme-wallpapers.git /tmp/gtheme-wallpapers
 	rm -rf /tmp/gtheme-wallpapers/.git
 	mv /tmp/gtheme-wallpapers $GTHEME_PATH/wallpapers
 	echo -e "${G}->${W} Wallpapers succesfully installed!"

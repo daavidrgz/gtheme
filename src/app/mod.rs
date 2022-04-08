@@ -179,8 +179,16 @@ impl Ui {
 				},
 				KeyCode::Enter => {
 					match current_popup {
-						Some(p) => popups.get_mut(p).unwrap().get_selected().unwrap().apply(global_config, desktop_config),
-						None => lists[current_list].get_selected().unwrap().apply(global_config, desktop_config),
+						Some(p) => {
+							if let Some(i) = popups.get_mut(p).unwrap().get_selected() {
+								i.apply(global_config, desktop_config)
+							}
+						}
+						None => {
+							if let Some(i)= lists[current_list].get_selected() {
+								i.apply(global_config, desktop_config)
+							}
+						}
 					}
 				},
 				KeyCode::Char('f') | KeyCode::Char('F') => {
@@ -224,8 +232,14 @@ impl Ui {
 				},
 				KeyCode::Char('e') | KeyCode::Char('E') => {
 					let item = match current_popup {
-						Some(popup) => popups.get_mut(popup).unwrap().get_selected().unwrap(),
-						None => lists[current_list].get_selected().unwrap()
+						Some(popup) => match popups.get_mut(popup).unwrap().get_selected() {
+							Some(i) => i,
+							None => return true
+						},
+						None => match lists[current_list].get_selected() {
+							Some(i) => i,
+							None => return true
+						}
 					};
 					match item.get_path() {
 						Some(path) => ScreenItem::edit(&path),
