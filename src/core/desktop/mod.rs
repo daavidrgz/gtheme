@@ -223,33 +223,32 @@ impl Desktop {
 		return core::get_files(Path::new(&fonts_dir));
 	}
 
-	pub fn add(from: &Path) {
+	pub fn add(from: &Path)-> Result<(),Option<DesktopFile>>{
 		info!("Adding desktop from |{}|...",from.to_str().unwrap());
 
 		let md = match metadata(from) {
 			Ok(md) => md,
 			Err(err) => {
 				error!("Could not read metadata from |{}|: |{}|", from.to_str().unwrap(), err);
-				return;
+				return Err(None);
 			}
 		};
 		
 		if !md.is_dir() {
 			error!("|{}| is not a directory", from.to_str().unwrap());
-			return;
+			return Err(None);
 		}
 
 		let desktop_name = match from.file_name() {
 			Some(name) => name.to_str().unwrap(),
 			None => {
 				error!("Could not get directory name from path |{}|", from.to_str().unwrap());
-				return;
+				return Err(None);
 			}
 		};
 
-		if Desktop::exists(desktop_name) {
-			error!("Desktop |{}| already exists", desktop_name);
-			return;
+		if let Some(desktop_file) =  Desktop::get_by_name(desktop_name){
+			return Err(Some(desktop_file));
 		}
 
 		let gtheme_home:String = core::expand_path(core::GTHEME_HOME);
@@ -258,7 +257,8 @@ impl Desktop {
 		let to = Path::new(&desktops_dir);
 		core::copy(&vec![from],&to);
 		//TODO: check if copied successfully?
-		// info!("Successfully added desktop |{}|", desktop_name);
+		info!("Successfully added desktop |{}|", desktop_name);
+		return Ok(());
 	}
 
 	pub fn new_skeleton(desktop_name: &str) {
