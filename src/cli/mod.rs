@@ -29,7 +29,9 @@ enum Action{
 }
 
 pub fn start_cli() {
-let matches = commands::Cli::new(&vec![],&vec![],&vec![]).get_app().get_matches();
+let matches = commands::Cli::new(&vec![],&vec![], 
+	&vec![], &vec![], &vec![])
+	.get_app().get_matches();
 
 	if matches.subcommand() == None {
 		app::Ui::new().start_ui();
@@ -255,6 +257,7 @@ fn apply_desktop(matches: &ArgMatches) {
 		*global_config.get_mut_current_desktop() = Some(current_desktop.clone());
 		*global_config.get_mut_current_theme() = Some(default_theme.clone());
 		global_config.save();
+		commands::generate_completions()
 	}
 
 	current_desktop.to_desktop().apply(&previous_desktop, &default_theme.to_theme(), &actived, &inverted, dry_run);
@@ -339,7 +342,8 @@ fn manage_fav(matches: &ArgMatches, action: Action) {
 			Action::Toggle => global_config.toggle_fav_theme(&theme)
 		}
 	}
-	global_config.save()
+	global_config.save();
+	commands::generate_completions()
 }
 
 fn show_status(matches: &ArgMatches) {
@@ -615,6 +619,7 @@ fn edit_desktop(matches: &ArgMatches) {
 		None => return
 	};
 	explore_directory(desktop.get_path());
+	commands::generate_completions()
 }
 
 fn edit_pattern(matches: &ArgMatches) {
@@ -689,6 +694,7 @@ fn add_desktop(matches: &ArgMatches) {
 			} 
 		}
 	}
+	commands::generate_completions()
 }
 
 fn remove_desktop(matches: &ArgMatches) {
@@ -701,6 +707,7 @@ fn remove_desktop(matches: &ArgMatches) {
 		};
 		desktop_file.remove();
 	}
+	commands::generate_completions()
 }
 
 fn show_desktop_info(matches: &ArgMatches) {

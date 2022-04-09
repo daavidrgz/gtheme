@@ -397,9 +397,7 @@ impl Setup {
 }
 
 pub fn start() {
-	if let Err(e) =super::commands::generate_completions(){
-		println!("{e}")
-	}
+	super::commands::generate_completions();
 
 	if UserConfig::exists() {
 		let mut option_str = String::new();

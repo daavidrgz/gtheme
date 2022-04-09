@@ -1,71 +1,95 @@
 use clap::*;
 use clap_complete::{generate_to, shells::Shell};
-// use clap_mangen::Man;
-use std::{fs, io::Result};
-
-
-use crate::core::{self, theme::Theme, desktop::Desktop,pattern::Pattern, config::GlobalConfig};
+use std::{fs, io::Result, path::PathBuf};
+use log::error;
+use crate::core::{self, 
+	theme::Theme,
+	desktop::Desktop,
+	pattern::Pattern,
+	postscript::PostScript,
+	config::GlobalConfig
+};
 
 pub fn get_themes() -> Vec<String> {
 	let themes =  Theme::get_themes();
-	let themes = themes.clone().into_iter().map(|t| t.get_name().to_string().to_lowercase());
-	let themes = themes.into_iter().map(|s| s.replace("(","\\(").replace(")","\\)")).collect();	
-	// let themes = themes.into_iter().map(|s|shell_escape::unix::escape(s.into()).to_string()).collect();	
-	
-	
+	let themes = themes.into_iter().map(|t| t.get_name().to_string().to_lowercase());
+	let themes = themes.map(|s| s.replace("(","\\(").replace(")","\\)")).collect();
 	themes
 }
+
+pub fn get_fav_themes(global_config: &GlobalConfig) -> Vec<String> {
+	let fav_themes =  global_config.get_fav_themes();
+	let fav_themes = fav_themes.into_iter().map(|t| t.get_name().to_string().to_lowercase());
+	let fav_themes = fav_themes.map(|s| s.replace("(","\\(").replace(")","\\)")).collect();
+	fav_themes
+}
+
 pub fn get_desktops() -> Vec<String> {
 	let desktops =  Desktop::get_desktops();
-	let desktops = desktops.into_iter().map(|d| d.get_name().to_string().to_lowercase()).collect();
+	let desktops = desktops.into_iter().map(|d| d.get_name().to_string().to_lowercase());
+	let desktops = desktops.map(|s| s.replace("(","\\(").replace(")","\\)")).collect();
 	desktops
 }
-pub fn get_patterns() -> Vec<String> {
-	let global_config = GlobalConfig::new();
+
+pub fn get_patterns(global_config: &GlobalConfig) -> Vec<String> {
 	let desktop = match global_config.get_current_desktop() {
-		None=>return vec![],
-		Some(desktop) =>desktop
+		None => return vec![],
+		Some(desktop) => desktop
 	};
 	let patterns =  Pattern::get_patterns(desktop);
-	let patterns = patterns.into_iter().map(|p| p.get_name().to_string().to_lowercase()).collect();
+	let patterns = patterns.into_iter().map(|p| p.get_name().to_string().to_lowercase());
+	let patterns = patterns.map(|s| s.replace("(","\\(").replace(")","\\)")).collect();
 	patterns
 }
 
-
-pub fn generate_completions() -> Result<()> {
-	let completions_dir = std::path::Path::new(&core::expand_path(core::GTHEME_HOME)).join("completions");
-	// let manpage_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("manpage");
-	let _ = fs::create_dir(&completions_dir);
-	// let _ = fs::create_dir(&manpage_dir);
-
-	let themes_owned = get_themes();
-	let themes:Vec<&str> = themes_owned.iter().map(|s| s.as_str()).collect();
-
-	let desktops_owned = get_desktops();
-	let desktops:Vec<&str> = desktops_owned.iter().map(|s| s.as_str()).collect();
-
-	let patterns_owned = get_patterns();
-	let patterns:Vec<&str> = patterns_owned.iter().map(|s| s.as_str()).collect();
-	// Generate completions
-	std::fs::create_dir_all(&completions_dir)?;
-	let mut app = Cli::new(&themes,&desktops,&patterns).get_app();
-	generate_to(Shell::Bash, &mut app, "gtheme", &completions_dir)?;
-	generate_to(Shell::Zsh, &mut app, "gtheme", &completions_dir)?;
-	generate_to(Shell::Fish, &mut app, "gtheme", &completions_dir)?;
-	generate_to(Shell::PowerShell, &mut app, "gtheme", &completions_dir)?;
-	generate_to(Shell::Elvish, &mut app, "gtheme", &completions_dir)?;
-
-	// // Generate manpage
-	// let app = app.name("gtheme");
-	// let man = Man::new(app);
-	// let mut buffer: Vec<u8> = Default::default();
-	// man.render(&mut buffer)?;
-	// std::fs::write(manpage_dir.join("gtheme.1"), buffer)?;
-
-	Ok(())
+pub fn get_extras(global_config: &GlobalConfig) -> Vec<String> {
+	let desktop = match global_config.get_current_desktop() {
+		None => return vec![],
+		Some(desktop) => desktop
+	};
+	let extras =  PostScript::get_extras(desktop);
+	let extras = extras.into_iter().map(|p| p.get_name().to_string().to_lowercase());
+	let extras = extras.map(|s| s.replace("(","\\(").replace(")","\\)")).collect();
+	extras
 }
 
+pub fn generate_completions() {
+	let completions_dir = std::path::Path::new(&core::expand_path(core::GTHEME_HOME)).join("completions");
+	let global_config = GlobalConfig::new();
 
+	let themes_owned = get_themes();
+	let desktops_owned = get_desktops();
+	let patterns_owned = get_patterns(&global_config);
+	let fav_themes_owned = get_fav_themes(&global_config);
+	let extras_owned = get_extras(&global_config);
+
+	let themes: Vec<&str> = themes_owned.iter().map(|s| s.as_str()).collect();
+	let desktops: Vec<&str> = desktops_owned.iter().map(|s| s.as_str()).collect();
+	let patterns: Vec<&str> = patterns_owned.iter().map(|s| s.as_str()).collect();
+	let fav_themes: Vec<&str> = fav_themes_owned.iter().map(|s| s.as_str()).collect();
+	let extras: Vec<&str> = extras_owned.iter().map(|s| s.as_str()).collect();
+
+	let mut app = Cli::new(&themes, &desktops, &patterns, &fav_themes, &extras).get_app();
+	
+	// Generate completions
+	if let Err(e) = fs::create_dir_all(&completions_dir) {
+		error!("Error while creating completions directory: |{e}|");
+		return
+	}
+	if let Err(e) = generate_completions_files(&mut app, &completions_dir) {
+		error!("Error while generating completion scripts: |{e}|");
+		return
+	}
+}
+
+pub fn generate_completions_files(app: &mut Command, completions_dir: &PathBuf) -> Result<()> {
+	generate_to(Shell::Bash, app, "gtheme", &completions_dir)?;
+	generate_to(Shell::Zsh, app, "gtheme", &completions_dir)?;
+	generate_to(Shell::Fish, app, "gtheme", &completions_dir)?;
+	generate_to(Shell::PowerShell, app, "gtheme", &completions_dir)?;
+	generate_to(Shell::Elvish, app, "gtheme", &completions_dir)?;
+	Ok(())
+}
 
 pub struct Cli<'a>{
 	app: Command<'a>,
@@ -75,7 +99,8 @@ impl <'a> Cli<'a> {
 	pub fn get_app(self) -> Command<'a>{
 		self.app
 	}
-	pub fn new(themes:&'a [&'a str],desktops:&'a [&'a str],patterns:&'a [&'a str]) -> Self{
+	pub fn new(themes: &'a [&'a str], desktops: &'a [&'a str], patterns: &'a [&'a str], 
+		fav_themes: &'a [&'a str], extras: &'a [&'a str]) -> Self {
 		let mut app = Command::new("gtheme")
 			.version("1.0")
 			.about("A rust program that makes your theming life so much easier.")
@@ -146,6 +171,7 @@ impl <'a> Cli<'a> {
 				.arg(Arg::new("theme")
 					.required(true)
 					.takes_value(true)
+					.possible_values(themes)
 					.help("Theme to edit")
 				)
 			)
@@ -164,6 +190,7 @@ impl <'a> Cli<'a> {
 						.long("pattern")
 						.takes_value(true)
 						.multiple_values(true)
+						.possible_values(patterns)
 						.value_name("pattern")
 						.help("Apply the theme only on selected patterns"),
 
@@ -172,6 +199,7 @@ impl <'a> Cli<'a> {
 						.long("invert")
 						.takes_value(true)
 						.multiple_values(true)
+						.possible_values(patterns)
 						.value_name("pattern")
 						.help("Invert the foreground and background colors on selected patterns"),
 
@@ -197,6 +225,7 @@ impl <'a> Cli<'a> {
 				.arg(Arg::new("desktop")
 					.required(true)
 					.takes_value(true)
+					.possible_values(desktops)
 					.help("Desktop to edit")
 				)
 			)
@@ -207,6 +236,7 @@ impl <'a> Cli<'a> {
 						.short('d')
 						.long("desktop")
 						.takes_value(true)
+						.possible_values(desktops)
 						.help("Desktop to show info"),
 					Arg::new("deps")
 						.long("deps")
@@ -232,6 +262,7 @@ impl <'a> Cli<'a> {
 					.required(true)
 					.takes_value(true)
 					.multiple_values(true)
+					.possible_values(desktops)
 					.help("Desktops to remove")
 				)
 			)
@@ -251,10 +282,12 @@ impl <'a> Cli<'a> {
 						.short('d')
 						.long("desktop")
 						.takes_value(true)
+						.possible_values(desktops)
 						.help("Set default theme of specified desktop"),
 					Arg::new("theme")
 						.required(true)
 						.takes_value(true)
+						.possible_values(themes)
 						.help("Theme to set as default"),
 				])
 			)
@@ -265,6 +298,7 @@ impl <'a> Cli<'a> {
 					.short('d')
 					.long("desktop")
 					.takes_value(true)
+					.possible_values(desktops)
 					.help("Show status of specified desktop")
 				)
 			)
@@ -282,6 +316,7 @@ impl <'a> Cli<'a> {
 						.short('t')
 						.long("theme")
 						.takes_value(true)
+						.possible_values(themes)
 						.help("Apply specified theme after installing the desktop"),
 
 					Arg::new("pattern")
@@ -320,6 +355,7 @@ impl <'a> Cli<'a> {
 						.short('d')
 						.long("desktop")
 						.takes_value(true)
+						.possible_values(desktops)
 						.help("List patterns of specified desktop"),
 					Arg::new("submodules")
 						.short('s')
@@ -334,11 +370,13 @@ impl <'a> Cli<'a> {
 					Arg::new("pattern")
 						.required(true)
 						.takes_value(true)
+						.possible_values(patterns)
 						.help("Pattern to edit"),
 					Arg::new("desktop")
 						.short('d')
 						.long("desktop")
 						.takes_value(true)
+						.possible_values(desktops)
 						.help("Edit pattern in specified desktop"),
 					Arg::new("postscript")
 						.short('p')
@@ -354,11 +392,13 @@ impl <'a> Cli<'a> {
 						.required(true)
 						.takes_value(true)
 						.multiple_values(true)
+						.possible_values(patterns)
 						.help("Patterns to enable"),
 					Arg::new("desktop")
 						.short('d')
 						.long("desktop")
 						.takes_value(true)
+						.possible_values(desktops)
 						.help("Enable patterns in specified desktop")
 				])
 			)
@@ -370,11 +410,13 @@ impl <'a> Cli<'a> {
 						.required(true)
 						.takes_value(true)
 						.multiple_values(true)
+						.possible_values(patterns)
 						.help("Patterns to disable"),
 					Arg::new("desktop")
 						.short('d')
 						.long("desktop")
 						.takes_value(true)
+						.possible_values(desktops)
 						.help("Disable patterns in specified desktop")
 				])
 			)
@@ -386,11 +428,13 @@ impl <'a> Cli<'a> {
 						.required(true)
 						.takes_value(true)
 						.multiple_values(true)
+						.possible_values(patterns)
 						.help("Patterns to toggle"),
 					Arg::new("desktop")
 						.short('d')
 						.long("desktop")
 						.takes_value(true)
+						.possible_values(desktops)
 						.help("Toggle patterns in specified desktop")
 				])
 			)
@@ -402,11 +446,13 @@ impl <'a> Cli<'a> {
 						.required(true)
 						.takes_value(true)
 						.multiple_values(true)
+						.possible_values(patterns)
 						.help("Patterns to invert"),
 					Arg::new("desktop")
 						.short('d')
 						.long("desktop")
 						.takes_value(true)
+						.possible_values(desktops)
 						.help("Invert patterns in specified desktop")
 				])
 			)
@@ -423,6 +469,7 @@ impl <'a> Cli<'a> {
 					.short('d')
 					.long("desktop")
 					.takes_value(true)
+					.possible_values(desktops)
 					.help("List extras of specified desktop")
 				)
 			)
@@ -433,11 +480,13 @@ impl <'a> Cli<'a> {
 					Arg::new("extra")
 						.required(true)
 						.takes_value(true)
+						.possible_values(extras)
 						.help("Extra to edit"),
 					Arg::new("desktop")
 						.short('d')
 						.long("desktop")
 						.takes_value(true)
+						.possible_values(desktops)
 						.help("Edit extra in specified desktop")
 				])
 			)
@@ -449,11 +498,13 @@ impl <'a> Cli<'a> {
 						.required(true)
 						.takes_value(true)
 						.multiple_values(true)
+						.possible_values(extras)
 						.help("Extras to enable"),
 					Arg::new("desktop")
 						.short('d')
 						.long("desktop")
 						.takes_value(true)
+						.possible_values(desktops)
 						.help("Enable extras in specified desktop")
 				])
 			)
@@ -465,11 +516,13 @@ impl <'a> Cli<'a> {
 						.required(true)
 						.takes_value(true)
 						.multiple_values(true)
+						.possible_values(extras)
 						.help("Extras to disable"),
 					Arg::new("desktop")
 						.short('d')
 						.long("desktop")
 						.takes_value(true)
+						.possible_values(desktops)
 						.help("Disable extras in specified desktop")
 				])
 			)
@@ -481,11 +534,13 @@ impl <'a> Cli<'a> {
 						.required(true)
 						.takes_value(true)
 						.multiple_values(true)
+						.possible_values(extras)
 						.help("Extras to toggle"),
 					Arg::new("desktop")
 						.short('d')
 						.long("desktop")
 						.takes_value(true)
+						.possible_values(desktops)
 						.help("Toggle extras in specified desktop")
 				])
 			)
@@ -506,6 +561,7 @@ impl <'a> Cli<'a> {
 					.required(true)
 					.takes_value(true)
 					.multiple_values(true)
+					.possible_values(themes)
 					.help("Themes to add")
 				)
 			)
@@ -516,6 +572,7 @@ impl <'a> Cli<'a> {
 					.required(true)
 					.takes_value(true)
 					.multiple_values(true)
+					.possible_values(fav_themes)
 					.help("Themes to remove")
 				)
 			)
@@ -526,13 +583,12 @@ impl <'a> Cli<'a> {
 					.required(true)
 					.takes_value(true)
 					.multiple_values(true)
+					.possible_values(themes)
 					.help("Themes to toggle")
 				)
 			)
 		);
 
-		Cli{
-			app,
-		}
+		Cli { app }
 	}
 }
