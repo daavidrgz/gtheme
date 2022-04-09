@@ -678,6 +678,7 @@ fn set_default_theme(matches: &ArgMatches) {
 fn create_desktop(matches: &ArgMatches) {
 	let desktop_name = matches.value_of("name").unwrap();
 	Desktop::new_skeleton(desktop_name);
+	commands::generate_completions()
 }
 
 fn add_desktop(matches: &ArgMatches) {
