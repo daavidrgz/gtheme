@@ -154,7 +154,7 @@ fn get_inverted(values_opt: Option<Values>, current_desktop: &DesktopFile, deskt
 		Some(patterns) => {
 			for p in patterns {
 				match Pattern::get_by_name(current_desktop, p) {
-					Some(_) => inverted.insert(p.to_string(), false),
+					Some(_) => inverted.insert(p.to_string(), true),
 					None => continue
 				};
 			}
