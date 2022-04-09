@@ -1,20 +1,91 @@
 use clap::*;
+use clap_complete::{generate_to, shells::Shell};
+// use clap_mangen::Man;
+use std::{fs, io::Result};
 
-pub fn get_matches() -> clap::ArgMatches {
-	build_app().get_matches()
+
+use crate::core::{self, theme::Theme, desktop::Desktop,pattern::Pattern, config::GlobalConfig};
+
+pub fn get_themes() -> Vec<String> {
+	let themes =  Theme::get_themes();
+	let themes = themes.clone().into_iter().map(|t| t.get_name().to_string().to_lowercase());
+	let themes = themes.into_iter().map(|s| s.replace("(","\\(").replace(")","\\)")).collect();	
+	// let themes = themes.into_iter().map(|s|shell_escape::unix::escape(s.into()).to_string()).collect();	
+	
+	
+	themes
+}
+pub fn get_desktops() -> Vec<String> {
+	let desktops =  Desktop::get_desktops();
+	let desktops = desktops.into_iter().map(|d| d.get_name().to_string().to_lowercase()).collect();
+	desktops
+}
+pub fn get_patterns() -> Vec<String> {
+	let global_config = GlobalConfig::new();
+	let desktop = match global_config.get_current_desktop() {
+		None=>return vec![],
+		Some(desktop) =>desktop
+	};
+	let patterns =  Pattern::get_patterns(desktop);
+	let patterns = patterns.into_iter().map(|p| p.get_name().to_string().to_lowercase()).collect();
+	patterns
 }
 
-pub fn build_app() -> Command<'static> {
-	let mut app = Command::new("gtheme")
-		.version("1.0")
-		.about("A rust program that makes your theming life so much easier.")
-		.author("David Rodriguez & Jorge Hermo")
-		.arg(Arg::new("verbose")
-			.short('v')
-			.long("verbose")
-			.global(true)
-			.help("Show more information")
-		);
+
+pub fn generate_completions() -> Result<()> {
+	let completions_dir = std::path::Path::new(&core::expand_path(core::GTHEME_HOME)).join("completions");
+	// let manpage_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("manpage");
+	let _ = fs::create_dir(&completions_dir);
+	// let _ = fs::create_dir(&manpage_dir);
+
+	let themes_owned = get_themes();
+	let themes:Vec<&str> = themes_owned.iter().map(|s| s.as_str()).collect();
+
+	let desktops_owned = get_desktops();
+	let desktops:Vec<&str> = desktops_owned.iter().map(|s| s.as_str()).collect();
+
+	let patterns_owned = get_patterns();
+	let patterns:Vec<&str> = patterns_owned.iter().map(|s| s.as_str()).collect();
+	// Generate completions
+	std::fs::create_dir_all(&completions_dir)?;
+	let mut app = Cli::new(&themes,&desktops,&patterns).get_app();
+	generate_to(Shell::Bash, &mut app, "gtheme", &completions_dir)?;
+	generate_to(Shell::Zsh, &mut app, "gtheme", &completions_dir)?;
+	generate_to(Shell::Fish, &mut app, "gtheme", &completions_dir)?;
+	generate_to(Shell::PowerShell, &mut app, "gtheme", &completions_dir)?;
+	generate_to(Shell::Elvish, &mut app, "gtheme", &completions_dir)?;
+
+	// // Generate manpage
+	// let app = app.name("gtheme");
+	// let man = Man::new(app);
+	// let mut buffer: Vec<u8> = Default::default();
+	// man.render(&mut buffer)?;
+	// std::fs::write(manpage_dir.join("gtheme.1"), buffer)?;
+
+	Ok(())
+}
+
+
+
+pub struct Cli<'a>{
+	app: Command<'a>,
+}
+
+impl <'a> Cli<'a> {
+	pub fn get_app(self) -> Command<'a>{
+		self.app
+	}
+	pub fn new(themes:&'a [&'a str],desktops:&'a [&'a str],patterns:&'a [&'a str]) -> Self{
+		let mut app = Command::new("gtheme")
+			.version("1.0")
+			.about("A rust program that makes your theming life so much easier.")
+			.author("David Rodriguez & Jorge Hermo")
+			.arg(Arg::new("verbose")
+				.short('v')
+				.long("verbose")
+				.global(true)
+				.help("Show more information")
+			);
 
 		app = app.subcommand(Command::new("config")
 			.alias("c")
@@ -85,6 +156,7 @@ pub fn build_app() -> Command<'static> {
 					Arg::new("theme")
 						.required(true)
 						.takes_value(true)
+						.possible_values(themes)
 						.help("Theme to apply on all active patterns by default"),
 
 					Arg::new("pattern")
@@ -203,6 +275,7 @@ pub fn build_app() -> Command<'static> {
 					Arg::new("desktop")
 						.required(true)
 						.takes_value(true)
+						.possible_values(desktops)
 						.help("Desktop to apply"),
 
 					Arg::new("theme")
@@ -458,5 +531,8 @@ pub fn build_app() -> Command<'static> {
 			)
 		);
 
-		app
+		Cli{
+			app,
+		}
+	}
 }

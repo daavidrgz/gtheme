@@ -29,7 +29,7 @@ enum Action{
 }
 
 pub fn start_cli() {
-	let matches = commands::get_matches();
+let matches = commands::Cli::new(&vec![],&vec![],&vec![]).get_app().get_matches();
 
 	if matches.subcommand() == None {
 		app::Ui::new().start_ui();
