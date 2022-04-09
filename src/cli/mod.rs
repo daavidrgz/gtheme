@@ -1,10 +1,11 @@
 pub mod clilogger;
 pub mod commands;
 pub mod setup;
+pub mod completions;
 
 use std::collections::HashMap;
 use std::env;
-use clap::{ArgMatches,Values};
+use clap::{ArgMatches, Values};
 use log::{LevelFilter, error, warn, info, Level};
 use colored::*;
 use term_grid::{Grid, GridOptions, Direction, Filling};
@@ -22,7 +23,7 @@ use crate::core::{
 	config::{GlobalConfig, DesktopConfig, DesktopInfo, UserConfig}
 };
 
-enum Action{
+enum Action {
 	Enable,
 	Disable,
 	Toggle
@@ -257,7 +258,7 @@ fn apply_desktop(matches: &ArgMatches) {
 		*global_config.get_mut_current_desktop() = Some(current_desktop.clone());
 		*global_config.get_mut_current_theme() = Some(default_theme.clone());
 		global_config.save();
-		commands::generate_completions()
+		completions::generate_completions()
 	}
 
 	current_desktop.to_desktop().apply(&previous_desktop, &default_theme.to_theme(), &actived, &inverted, dry_run);
@@ -343,7 +344,7 @@ fn manage_fav(matches: &ArgMatches, action: Action) {
 		}
 	}
 	global_config.save();
-	commands::generate_completions()
+	completions::generate_completions()
 }
 
 fn show_status(matches: &ArgMatches) {
@@ -619,7 +620,7 @@ fn edit_desktop(matches: &ArgMatches) {
 		None => return
 	};
 	explore_directory(desktop.get_path());
-	commands::generate_completions()
+	completions::generate_completions()
 }
 
 fn edit_pattern(matches: &ArgMatches) {
@@ -678,7 +679,7 @@ fn set_default_theme(matches: &ArgMatches) {
 fn create_desktop(matches: &ArgMatches) {
 	let desktop_name = matches.value_of("name").unwrap();
 	Desktop::new_skeleton(desktop_name);
-	commands::generate_completions()
+	completions::generate_completions()
 }
 
 fn add_desktop(matches: &ArgMatches) {
@@ -695,7 +696,7 @@ fn add_desktop(matches: &ArgMatches) {
 			} 
 		}
 	}
-	commands::generate_completions()
+	completions::generate_completions()
 }
 
 fn remove_desktop(matches: &ArgMatches) {
@@ -708,7 +709,7 @@ fn remove_desktop(matches: &ArgMatches) {
 		};
 		desktop_file.remove();
 	}
-	commands::generate_completions()
+	completions::generate_completions()
 }
 
 fn show_desktop_info(matches: &ArgMatches) {

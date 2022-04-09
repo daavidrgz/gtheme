@@ -3,6 +3,7 @@ use std::{process::{Command, Stdio}, io::{self, Write}};
 use log::error;
 
 use crate::core::config::UserConfig;
+use crate::cli::completions;
 
 #[derive(Eq,PartialEq)]
 enum Section {
@@ -397,7 +398,7 @@ impl Setup {
 }
 
 pub fn start() {
-	super::commands::generate_completions();
+	completions::generate_completions();
 
 	if UserConfig::exists() {
 		let mut option_str = String::new();
