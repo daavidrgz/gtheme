@@ -10,7 +10,8 @@ C="\e[1;36m"
 W="\e[0m"
 W_B="\e[1m"
 
-GTHEME_PATH=$HOME/.config/gtheme
+CONFIG_PATH=${XDG_CONFIG_HOME:-$HOME/.config}
+GTHEME_PATH=$CONFIG_PATH/gtheme
 BACKUP_PATH=$GTHEME_PATH/backup
 
 function gthemeLogo() {
@@ -136,13 +137,14 @@ function install() {
 
 	echo -e "${G}->${W} Setting up autocompletion scripts..."
 	if [ -e ~/.zshrc ]; then
-		if ! cat ~/.zshrc | grep 'fpath=(~/.config/gtheme/completions $fpath)' &>/dev/null; then
-			echo -e '\nfpath=(~/.config/gtheme/completions $fpath)\nautoload -Uz compinit && compinit' >> ~/.zshrc
+		if ! cat ~/.zshrc | grep "fpath=($CONFIG_PATH/zsh/completions \$fpath)" &>/dev/null; then
+			echo -e "\nfpath=($CONFIG_PATH/zsh/completions \$fpath)\nautoload -Uz compinit && compinit" >> ~/.zshrc
+			mkdir -p $CONFIG_PATH/zsh/completions
 		fi
 	fi
 	if [ -e ~/.bashrc ]; then
-		if ! cat ~/.bashrc | grep '[ -r ~/.config/gtheme/completions/gtheme.bash ]' &>/dev/null; then
-			echo -e '\n[ -r ~/.config/gtheme/completions/gtheme.bash ] && source ~/.config/gtheme/completions/gtheme.bash' >> ~/.bashrc
+		if ! cat ~/.bashrc | grep "source $GTHEME_PATH/completions/gtheme.bash" &>/dev/null; then
+			echo -e "\n[ -r $GTHEME_PATH/completions/gtheme.bash ] && source $GTHEME_PATH/completions/gtheme.bash" >> ~/.bashrc
 		fi
 	fi
 	echo -e "${G}-> Done!${W}"
