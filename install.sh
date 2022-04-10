@@ -11,6 +11,7 @@ W="\e[0m"
 W_B="\e[1m"
 
 CONFIG_PATH=${XDG_CONFIG_HOME:-$HOME/.config}
+GTHEME_MISC=$HOME/.gtheme
 GTHEME_PATH=$CONFIG_PATH/gtheme
 BACKUP_PATH=$GTHEME_PATH/backup
 
@@ -92,11 +93,12 @@ function askBackup() {
 function askCopy() {
 	while true; do
 		echo -e "${Y}->${W} It looks like you have already installed gtheme. Do you want to reinstall it?"
-		echo -en "(this will potentially override some files in ${Y}$GTHEME_PATH${W}) ${G}(y/[N])${W} "
+		echo -en "(this will potentially override some files in ${Y}$GTHEME_PATH${W} and ${Y}$GTHEME_MISC${W}) ${G}(y/[N])${W} "
 
 		read INPUT
 		case $INPUT in 
 			y | Y)
+
 				copyFiles
 				return 0;;
 			n | N | "")
@@ -126,18 +128,17 @@ function askWallpapers() {
 }
 
 function set_completions() {
-	echo -e "${G}->${W} Setting up completion scripts initial configuration..."
+	echo -e "${G}->${W} Setting up completion scripts..."
 
 	if [ -e ~/.zshrc ]; then
-		if ! cat ~/.zshrc | grep "fpath=($CONFIG_PATH/zsh/completions \$fpath)" &>/dev/null; then
-			echo -e "\nfpath=($CONFIG_PATH/zsh/completions \$fpath)\nautoload -Uz compinit && compinit" >> ~/.zshrc
-			mkdir -p $CONFIG_PATH/zsh/completions
+		if ! cat ~/.zshrc | grep "fpath=($GTHEME_MISC/completions \$fpath)" &>/dev/null; then
+			echo -e "\nfpath=($GTHEME_MISC/completions \$fpath)\nautoload -Uz compinit && compinit" >> ~/.zshrc
 		fi
 	fi
 
 	if [ -e ~/.bashrc ]; then
-		if ! cat ~/.bashrc | grep "source $GTHEME_PATH/completions/gtheme.bash" &>/dev/null; then
-			echo -e "\n[ -r $GTHEME_PATH/completions/gtheme.bash ] && source $GTHEME_PATH/completions/gtheme.bash" >> ~/.bashrc
+		if ! cat ~/.bashrc | grep "source $GTHEME_MISC/completions/gtheme.bash" &>/dev/null; then
+			echo -e "\n[ -r $GTHEME_MISC/completions/gtheme.bash ] && source $GTHEME_MISC/completions/gtheme.bash" >> ~/.bashrc
 		fi
 	fi
 
@@ -154,6 +155,7 @@ function install() {
 	echo -e "${G}->${W} Copying binary to ${W_B}/usr/bin${W}..."
 	echo -e "${G}->${W} You must be root to proceed!"
 	sudo cp target/release/gtheme /usr/bin || echo -e "${R}->${W} There was an error while copying script to ${W_B}/usr/bin${W}\n"
+	mkdir -p $GTHEME_MISC &>/dev/null
 
 	set_completions
 
@@ -175,7 +177,7 @@ function main() {
 	cd $(realpath $(dirname $0))
 	clear; gthemeLogo
 	install
-	
+
 	/usr/bin/gtheme config setup
 
 	clear; gthemeLogo

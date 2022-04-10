@@ -1,6 +1,6 @@
 use clap_complete::{generate_to, shells::Shell};
 use std::{env, fs, io::Result, path::{PathBuf,Path}};
-use log::{info,error};
+use log::error;
 
 use crate::cli::commands;
 use crate::core::{
@@ -57,23 +57,18 @@ pub fn get_extras(global_config: &GlobalConfig) -> Vec<String> {
 
 pub fn generate_completion_files(app: &mut clap::Command, completions_dir: &PathBuf) -> Result<()> {
 	generate_to(Shell::Bash, app, "gtheme", &completions_dir)?;
-
-	let zsh_dir = Path::new(env!("XDG_CONFIG_HOME")).join("zsh/completions");
-	if zsh_dir.exists() {
-		generate_to(Shell::Zsh, app, "gtheme", zsh_dir)?;
-	}
+	generate_to(Shell::Zsh, app, "gtheme", &completions_dir)?;
 
 	let fish_dir = Path::new(env!("XDG_CONFIG_HOME")).join("fish/completions");
 	if fish_dir.exists() {
 		generate_to(Shell::Fish, app, "gtheme", fish_dir)?;
 	}
-
-	generate_to(Shell::Elvish, app, "gtheme", &completions_dir)?;
+	
 	Ok(())
 }
 
 pub fn generate_completions() {
-	let completions_dir = Path::new(&core::expand_path(core::GTHEME_HOME)).join("completions");
+	let completions_dir = Path::new(&core::expand_path(core::GTHEME_MISC)).join("completions");
 	let global_config = GlobalConfig::new();
 
 	let themes_owned = get_themes();
