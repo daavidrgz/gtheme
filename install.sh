@@ -125,6 +125,26 @@ function askWallpapers() {
 	done
 }
 
+function set_completions() {
+	echo -e "${G}->${W} Setting up completion scripts configuration..."
+
+	if [ -e ~/.zshrc ]; then
+		if ! cat ~/.zshrc | grep "fpath=($CONFIG_PATH/zsh/completions \$fpath)" &>/dev/null; then
+			echo -e "\nfpath=($CONFIG_PATH/zsh/completions \$fpath)\nautoload -Uz compinit && compinit" >> ~/.zshrc
+			mkdir -p $CONFIG_PATH/zsh/completions
+		fi
+	fi
+
+	if [ -e ~/.bashrc ]; then
+		if ! cat ~/.bashrc | grep "source $GTHEME_PATH/completions/gtheme.bash" &>/dev/null; then
+			echo -e "\n[ -r $GTHEME_PATH/completions/gtheme.bash ] && source $GTHEME_PATH/completions/gtheme.bash" >> ~/.bashrc
+		fi
+	fi
+	
+	echo -e "${G}-> Done!${W}"
+	echo -e "${W_B}(You need to restart your shell in order to work properly)${W}\n"
+}
+
 function install() {
 	echo -e "${G}->${W} Compiling program..."
 	cargo build --release || exit 1
@@ -135,20 +155,7 @@ function install() {
 	echo -e "${G}->${W} You must be root to proceed!"
 	sudo cp target/release/gtheme /usr/bin || echo -e "${R}->${W} There was an error while copying script to ${W_B}/usr/bin${W}\n"
 
-	echo -e "${G}->${W} Setting up autocompletion scripts..."
-	if [ -e ~/.zshrc ]; then
-		if ! cat ~/.zshrc | grep "fpath=($CONFIG_PATH/zsh/completions \$fpath)" &>/dev/null; then
-			echo -e "\nfpath=($CONFIG_PATH/zsh/completions \$fpath)\nautoload -Uz compinit && compinit" >> ~/.zshrc
-			mkdir -p $CONFIG_PATH/zsh/completions
-		fi
-	fi
-	if [ -e ~/.bashrc ]; then
-		if ! cat ~/.bashrc | grep "source $GTHEME_PATH/completions/gtheme.bash" &>/dev/null; then
-			echo -e "\n[ -r $GTHEME_PATH/completions/gtheme.bash ] && source $GTHEME_PATH/completions/gtheme.bash" >> ~/.bashrc
-		fi
-	fi
-	echo -e "${G}-> Done!${W}"
-	echo -e "${W_B}(You need to restart your shell in order to work properly)${W}\n"
+	set_completions
 
 	if [ -e "$GTHEME_PATH" ]; then
 		askCopy
