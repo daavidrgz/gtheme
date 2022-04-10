@@ -5,9 +5,10 @@ pub struct Cli<'a>{
 }
 
 impl <'a> Cli<'a> {
-	pub fn get_app(self) -> Command<'a>{
+	pub fn get_app(self) -> Command<'a> {
 		self.app
 	}
+
 	pub fn new(themes: &'a [&'a str], desktops: &'a [&'a str], patterns: &'a [&'a str], 
 		fav_themes: &'a [&'a str], extras: &'a [&'a str]) -> Self {
 		let mut app = Command::new("gtheme")

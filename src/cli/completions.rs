@@ -1,7 +1,7 @@
 use clap_complete::{generate_to, shells::Shell};
-use std::{fs, io::Result, path::PathBuf};
-use log::error;
-use clap::Command;
+use std::{env, fs, io::Result, path::PathBuf};
+use std::process::Command;
+use log::{info,error};
 
 use crate::cli::commands;
 use crate::core::{
@@ -56,7 +56,7 @@ pub fn get_extras(global_config: &GlobalConfig) -> Vec<String> {
 	extras
 }
 
-pub fn generate_completion_files(app: &mut Command, completions_dir: &PathBuf) -> Result<()> {
+pub fn generate_completion_files(app: &mut clap::Command, completions_dir: &PathBuf) -> Result<()> {
 	generate_to(Shell::Bash, app, "gtheme", &completions_dir)?;
 	generate_to(Shell::Zsh, app, "gtheme", &completions_dir)?;
 	generate_to(Shell::Fish, app, "gtheme", &completions_dir)?;
@@ -92,4 +92,20 @@ pub fn generate_completions() {
 		error!("Error while generating completion scripts: |{e}|");
 		return
 	}
+	
+	if let Some((_, shell)) = env!("SHELL").rsplit_once("/") {
+		match shell {
+			"zsh" => reload_zsh(),
+			_ => ()
+		}
+	}
+}
+
+fn reload_zsh() {
+	match Command::new("zsh")
+		.args(["-c", "unfunction", "_gtheme", "&&", "compinit"])
+		.output() {
+			Ok(_) => info!("Zsh autocompletion script |reloaded successfully|"),
+			Err(e) => error!("Error while reloading zsh autocompletion script: |{e}|")
+		}
 }

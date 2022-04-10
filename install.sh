@@ -134,14 +134,19 @@ function install() {
 	echo -e "${G}->${W} You must be root to proceed!"
 	sudo cp target/release/gtheme /usr/bin || echo -e "${R}->${W} There was an error while copying script to ${W_B}/usr/bin${W}\n"
 
-	echo -e "${G}->${W} Copying autocompletion scripts..."
-	sudo cp completions/_gtheme /usr/share/zsh/site-functions
-	sudo cp completions/gtheme.bash /usr/share/bash-completion/completions/gtheme
-	sudo cp completions/gtheme.fish /usr/share/fish/vendor_completions.d/
-
-	echo -e "${G}->${W} Copying manpages...\n"
-	sudo cp manpage/gtheme.1 /usr/share/man/man1/
-	sudo mandb &>/dev/null
+	echo -e "${G}->${W} Setting up autocompletion scripts..."
+	if [ -e ~/.zshrc ]; then
+		if ! cat ~/.zshrc | grep 'fpath=(~/.config/gtheme/completions $fpath)' &>/dev/null; then
+			echo -e '\nfpath=(~/.config/gtheme/completions $fpath)\nautoload -Uz compinit && compinit' >> ~/.zshrc
+		fi
+	fi
+	if [ -e ~/.bashrc ]; then
+		if ! cat ~/.bashrc | grep '[ -r ~/.config/gtheme/completions/gtheme.bash ] && source ~/.config/gtheme/completions/gtheme.bash' &>/dev/null; then
+			echo -e '\n[ -r ~/.config/gtheme/completions/gtheme.bash ] && source ~/.config/gtheme/completions/gtheme.bash' >> ~/.bashrc
+		fi
+	fi
+	echo -e "${G}-> Done!${W}"
+	echo -e "${W_B}(You need to restart your shell in order to work properly)${W}\n"
 
 	if [ -e "$GTHEME_PATH" ]; then
 		askCopy
