@@ -11,11 +11,12 @@ use colored::*;
 use term_grid::{Grid, GridOptions, Direction, Filling};
 // use terminal_size::terminal_size;
 use std::process::{Command, Stdio};
-use std::path::Path;
+use std::{fs, path::Path};
 
 use clilogger::CliLogger;
 use crate::app;
 use crate::core::{
+	self,
 	desktop::{Desktop, DesktopFile},
 	theme::{Theme, ThemeFile},
 	pattern::{Pattern, PatternFile},
@@ -30,9 +31,9 @@ enum Action {
 }
 
 pub fn start_cli() {
-let matches = commands::Cli::new(&vec![],&vec![], 
+	let matches = commands::Cli::new(&vec![],&vec![], 
 	&vec![], &vec![], &vec![])
-	.get_app().get_matches();
+		.get_app().get_matches();
 
 	if matches.subcommand() == None {
 		app::Ui::new().start_ui();
@@ -40,6 +41,9 @@ let matches = commands::Cli::new(&vec![],&vec![],
 	}
 
 	// Logger init
+	let log_dir = Path::new(&core::expand_path(core::GTHEME_MISC)).join("logs");
+	let _ = fs::create_dir_all(&log_dir);
+
 	log::set_max_level(LevelFilter::Info);
 	if matches.is_present("verbose") {
 		static CLI_LOGGER: CliLogger = CliLogger{level: Level::Info};

@@ -2,7 +2,7 @@ use log::{Record, Level, Metadata, Log};
 use chrono::Local;
 use colored::*;
 use file_rotate::{FileRotate, suffix::AppendCount, ContentLimit, compression::Compression};
-use std::{io::Write, fs, path::Path};
+use std::{io::Write};
 
 use crate::core;
 
@@ -38,11 +38,7 @@ impl Log for CliLogger {
 			println!("");
 		}
 		
-		let log_dir_str = format!("{}/logs", core::expand_path(core::GTHEME_MISC));
-		let log_dir = Path::new(&log_dir_str);
-		let _ = fs::create_dir_all(&log_dir);
-
-		let log_path: String = format!("{}/gtheme.log", log_dir_str);
+		let log_path: String = format!("{}/logs/gtheme.log", core::expand_path(core::GTHEME_MISC));
 		let mut log_file = FileRotate::new(
 			log_path,
 			AppendCount::new(2),
