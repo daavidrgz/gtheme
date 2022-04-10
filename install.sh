@@ -126,7 +126,7 @@ function askWallpapers() {
 }
 
 function set_completions() {
-	echo -e "${G}->${W} Setting up completion scripts configuration..."
+	echo -e "${G}->${W} Setting up completion scripts initial configuration..."
 
 	if [ -e ~/.zshrc ]; then
 		if ! cat ~/.zshrc | grep "fpath=($CONFIG_PATH/zsh/completions \$fpath)" &>/dev/null; then
@@ -140,7 +140,7 @@ function set_completions() {
 			echo -e "\n[ -r $GTHEME_PATH/completions/gtheme.bash ] && source $GTHEME_PATH/completions/gtheme.bash" >> ~/.bashrc
 		fi
 	fi
-	
+
 	echo -e "${G}-> Done!${W}"
 	echo -e "${W_B}(You need to restart your shell in order to work properly)${W}\n"
 }
