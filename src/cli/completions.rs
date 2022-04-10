@@ -60,7 +60,6 @@ pub fn generate_completion_files(app: &mut clap::Command, completions_dir: &Path
 	generate_to(Shell::Bash, app, "gtheme", &completions_dir)?;
 	generate_to(Shell::Zsh, app, "gtheme", &completions_dir)?;
 	generate_to(Shell::Fish, app, "gtheme", &completions_dir)?;
-	generate_to(Shell::PowerShell, app, "gtheme", &completions_dir)?;
 	generate_to(Shell::Elvish, app, "gtheme", &completions_dir)?;
 	Ok(())
 }

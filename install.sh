@@ -141,7 +141,7 @@ function install() {
 		fi
 	fi
 	if [ -e ~/.bashrc ]; then
-		if ! cat ~/.bashrc | grep '[ -r ~/.config/gtheme/completions/gtheme.bash ] && source ~/.config/gtheme/completions/gtheme.bash' &>/dev/null; then
+		if ! cat ~/.bashrc | grep '[ -r ~/.config/gtheme/completions/gtheme.bash ]' &>/dev/null; then
 			echo -e '\n[ -r ~/.config/gtheme/completions/gtheme.bash ] && source ~/.config/gtheme/completions/gtheme.bash' >> ~/.bashrc
 		fi
 	fi
@@ -158,10 +158,7 @@ function install() {
 }
 
 function cleanFiles() {
-	DIRS=("completions" "manpage" "target")
-	for dir in ${DIRS[@]}; do
-		rm -rf $dir && echo -e "${G}->${W} Succesfully removed $dir/" || echo -e "${R}->${W} Error while removing $dir/"
-	done
+	rm -rf $dir && echo -e "${G}->${W} Succesfully removed $dir/" || echo -e "${R}->${W} Error while removing $dir/"
 	echo -e "${G}-> Done!${W}"
 }
 
