@@ -21,7 +21,7 @@ You can write some patterns with generic attributes, and then Gtheme will fill t
 The final result you get is that you can change between any desktop of your choice with a **single command**, and change the theme of all applications in a **centralized and automatized way**. Moreover, you can also install desktops from other people who had
 already adapted their dotfiles to Gtheme and everything will work just fine.
 
-AKA you can try your favourite [Unixporn](https://www.reddit.com/r/unixporn/) ricings 🍚 (if authors port them to Gtheme)
+To sum up, you can try your favourite [Unixporn](https://www.reddit.com/r/unixporn/) ricings 🍚 (if authors port them to Gtheme)
 </details>
 
 #
@@ -57,8 +57,6 @@ with `gtheme config edit` or run the setup again with `gtheme setup`. This file 
 	* If you prefer a Terminal UI rather than a CLI, execute `gtheme` without arguments. 
 	* To navigate between desktops and patterns to fav-themes and themes, press `tab`.
 	* In order to see Terminal UI help and all included functionalities, press `h`.
-
-<br>
 
 * **Command Line Interface**
 
