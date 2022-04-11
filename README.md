@@ -12,14 +12,14 @@ A **blazingly fast** easy to use **dotfile and global theme manager** for *NIX s
 <details open>
 <summary><strong>&nbsp;O V E R V I E W &nbsp;👁️‍🗨️</strong></summary>
 Its main goal is to standarize and abstract hardware specific configurations and change your desktop colors
-with +350 diffrent themes and wallpapers.
+with +350 different themes and wallpapers.
 
 You can write some patterns with generic attributes, and then Gtheme will fill those values with the appropriate ones following the selected theme/settings.
 
 The final result you get is that you can change between any desktop of your choice with a single command, and change the theme of all applications in a centralized and automatized way. Moreover, you can also
 install desktops from other people who had already adapted their dotfiles to Gtheme and everything will work just fine.
 
-(AKA you can try your favourite [Unixporn](https://www.reddit.com/r/unixporn/) ricings 🍚 if authors port them to Gtheme)
+AKA you can try your favourite [Unixporn](https://www.reddit.com/r/unixporn/ ricings 🍚 (if authors port them to Gtheme)
 </details>
 
 #
