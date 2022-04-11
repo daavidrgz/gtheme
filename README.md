@@ -1,6 +1,17 @@
-# Gtheme
+<div align="center"> <h1><strong>GTHEME</strong></h1> </div>
 
-Gtheme is a dotfile and global theme manager for *NIX systems. It is aimed to make your ricing life much better. 
+<details open>
+<summary><strong>&nbsp;O V E R V I E W &nbsp;👁️‍🗨️</strong></summary>
+A blazingly fast easy to use dotfile and global theme manager for *NIX systems written in Rust.
+<br>
+
+![Gtheme](screenshots/gtheme.gif)
+
+<br>
+
+Its main goal is to standarize and abstract hardware specific configurations and change your desktop colors
+with +350 diffrent color themes and wallpapers.
+</details>
 
 You can write some patterns with generic attributes, and then Gtheme will fill those values with the appropriate ones following the selected theme/settings.
 

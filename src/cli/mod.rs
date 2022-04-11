@@ -48,7 +48,6 @@ pub fn start_cli() {
 	if matches.is_present("verbose") {
 		static CLI_LOGGER: CliLogger = CliLogger{level: Level::Info};
 		log::set_logger(&CLI_LOGGER).unwrap();
-
 	} else {
 		static CLI_LOGGER: CliLogger = CliLogger{level: Level::Warn};
 		log::set_logger(&CLI_LOGGER).unwrap();
