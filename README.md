@@ -1,22 +1,27 @@
 <div align="center"> <h1><strong>GTHEME</strong></h1> </div>
 
-<details open>
-<summary><strong>&nbsp;O V E R V I E W &nbsp;👁️‍🗨️</strong></summary>
+
+<div align="center">
+
 A blazingly fast easy to use dotfile and global theme manager for *NIX systems written in Rust.
 <br>
 
 ![Gtheme](screenshots/gtheme.gif)
 
+</div>
 <br>
 
+<details open>
+<summary><strong>&nbsp;O V E R V I E W &nbsp;👁️‍🗨️</strong></summary>
 Its main goal is to standarize and abstract hardware specific configurations and change your desktop colors
 with +350 diffrent color themes and wallpapers.
-</details>
 
 You can write some patterns with generic attributes, and then Gtheme will fill those values with the appropriate ones following the selected theme/settings.
 
 The final result you got is that you can change between any desktop of your choice with a single command, and change the theme of all applications in a centralized and automatized way. Moreover, you can also
 install desktops from other people who had already adapted their dotfiles to gtheme and everything will work just fine.
+
+</details>
 
 ## Installation
 First of all, you should clone this repo, run the installation script and follow the setup.
