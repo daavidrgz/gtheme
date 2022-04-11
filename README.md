@@ -18,7 +18,7 @@ with **+350 different themes** and wallpapers.
 
 You can write some patterns with generic attributes, and then Gtheme will fill those values with the appropriate ones following the selected theme/settings.
 
-The final result you get is that you can change between any desktop of your choice with a **single command**, and change the theme of all applications in a centralized and automatized way. Moreover, you can also install desktops from other people who had
+The final result you get is that you can change between any desktop of your choice with a **single command**, and change the theme of all applications in a **centralized and automatized way**. Moreover, you can also install desktops from other people who had
 already adapted their dotfiles to Gtheme and everything will work just fine.
 
 AKA you can try your favourite [Unixporn](https://www.reddit.com/r/unixporn/) ricings 🍚 (if authors port them to Gtheme)
@@ -47,9 +47,10 @@ Moreover, your system's settings will be loaded from `~/.config/gtheme/user_sett
 with `gtheme config edit` or run the setup again with `gtheme setup`. This file is very important in order to be hardware agnostic and enjoy a full **Plug and Play** experience.
 </details>
 
+#
+
 <details open>
 <summary><strong>&nbsp;U S A G E &nbsp;🪧</strong></summary>
-<br>
 
 * **Terminal User Interface**
 
