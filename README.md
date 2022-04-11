@@ -11,6 +11,8 @@ A **blazingly fast** easy to use **dotfile and global theme manager** for *NIX s
 
 <details open>
 <summary><strong>&nbsp;O V E R V I E W &nbsp;👁️‍🗨️</strong></summary>
+<br>
+
 Its main goal is to standarize and abstract hardware specific configurations and change your desktop colors
 with +350 different themes and wallpapers.
 
@@ -26,6 +28,9 @@ AKA you can try your favourite [Unixporn](https://www.reddit.com/r/unixporn/ ric
 
 <details open>
 <summary><strong>&nbsp;I N S T A L L A T I O N &nbsp;🛠</strong></summary>
+<br>
+
+
 First of all, you should clone this repo, run the installation script and follow the setup.
 
 ```console
@@ -41,7 +46,8 @@ with `gtheme config edit` or run the setup again with `gtheme setup`. This file 
 </details>
 
 <details open>
-<summary><strong>&nbsp;U S A G E &nbsp;🛠</strong></summary>
+<summary><strong>&nbsp;U S A G E &nbsp;🪧</strong></summary>
+<br>
 
 * **Terminal User Interface**
 
