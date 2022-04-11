@@ -46,7 +46,7 @@ where all color schemes and dotfiles are stored, respectively. You may see also 
 choose to download them.
 
 Besides, your system's settings will be loaded from `~/.config/gtheme/user_settings.toml`. You can edit that file 
-with `gtheme config edit` or run the setup again with `gtheme setup`. This file is very important in order to be hardware agnostic and enjoy a full **Plug and Play** experience.
+with `gtheme config edit` or run the setup again with `gtheme config setup`. This file is very important in order to be hardware agnostic and enjoy a full **Plug and Play** experience.
 </details>
 
 #
