@@ -13,15 +13,15 @@ A **blazingly fast** easy to use **dotfile and global theme manager** for *NIX s
 <summary><strong>&nbsp;O V E R V I E W &nbsp;👁️‍🗨️</strong></summary>
 <br>
 
-Its main goal is to standarize and abstract hardware specific configurations and change your desktop colors
-with +350 different themes and wallpapers.
+Its main goal is to **standarize and abstract hardware specific configurations** and change your desktop colors
+with **+350 different themes** and wallpapers.
 
 You can write some patterns with generic attributes, and then Gtheme will fill those values with the appropriate ones following the selected theme/settings.
 
-The final result you get is that you can change between any desktop of your choice with a single command, and change the theme of all applications in a centralized and automatized way. Moreover, you can also
-install desktops from other people who had already adapted their dotfiles to Gtheme and everything will work just fine.
+The final result you get is that you can change between any desktop of your choice with a **single command**, and change the theme of all applications in a centralized and automatized way. Moreover, you can also install desktops from other people who had
+already adapted their dotfiles to Gtheme and everything will work just fine.
 
-AKA you can try your favourite [Unixporn](https://www.reddit.com/r/unixporn/ ricings 🍚 (if authors port them to Gtheme)
+AKA you can try your favourite [Unixporn](https://www.reddit.com/r/unixporn/) ricings 🍚 (if authors port them to Gtheme)
 </details>
 
 #
@@ -31,7 +31,7 @@ AKA you can try your favourite [Unixporn](https://www.reddit.com/r/unixporn/ ric
 <br>
 
 
-First of all, you should clone this repo, run the installation script and follow the setup.
+First of all, you should clone this repo, run the installation script and follow the initial setup:
 
 ```console
 git clone https://github.com/daavidrgz/gtheme.git gtheme
@@ -39,9 +39,11 @@ cd gtheme
 ./install.sh
 ```
 
-At the end, gtheme files should be placed in `~/.config/gtheme`, where you can see a `themes` folder where al color schemes are saved and a `desktop` folder where dotfiles live.
+At the end, gtheme files should be placed in `~/.config/gtheme`, where you can see a `themes` and a `desktop` folder
+where all color schemes are dotfiles are stored respectivelly. You may see also a `wallpapers` folder if you
+choose to download them.
 
-Moreover, your system's settings will be loaded from `~/.config/gtheme/user_settings.toml`, you can edit that file 
+Moreover, your system's settings will be loaded from `~/.config/gtheme/user_settings.toml`. You can edit that file 
 with `gtheme config edit` or run the setup again with `gtheme setup`. This file is very important in order to be hardware agnostic and enjoy a full **Plug and Play** experience.
 </details>
 
