@@ -40,10 +40,10 @@ cd gtheme
 ```
 
 At the end, gtheme files should be placed in `~/.config/gtheme`, where you can see a `themes` and a `desktop` folder
-where all color schemes are dotfiles are stored respectivelly. You may see also a `wallpapers` folder if you
+where all color schemes and dotfiles are stored, respectively. You may see also a `wallpapers` folder if you
 choose to download them.
 
-Moreover, your system's settings will be loaded from `~/.config/gtheme/user_settings.toml`. You can edit that file 
+Besides, your system's settings will be loaded from `~/.config/gtheme/user_settings.toml`. You can edit that file 
 with `gtheme config edit` or run the setup again with `gtheme setup`. This file is very important in order to be hardware agnostic and enjoy a full **Plug and Play** experience.
 </details>
 
