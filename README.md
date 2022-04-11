@@ -5,7 +5,7 @@ A **blazingly fast** easy to use **dotfile and global theme manager** for *NIX s
 
 ![Gtheme](screenshots/gtheme.gif)
 
-Demo using the **wip** desktop. To check out more desktop configurations refer to [Gtheme-Desktops](https://github.com/daavidrgz/gtheme-desktops).
+Demo using **wip** desktop. To check out more desktop configurations refer to [Gtheme-Desktops](https://github.com/daavidrgz/gtheme-desktops).
 
 </div>
 
