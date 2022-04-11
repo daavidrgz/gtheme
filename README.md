@@ -3,8 +3,6 @@
 
 A **blazingly fast** easy to use **dotfile and global theme manager** for *NIX systems written in Rust 🔥.
 
-<br>
-
 ![Gtheme](screenshots/gtheme.gif)
 
 </div>
