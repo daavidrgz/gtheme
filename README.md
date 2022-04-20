@@ -5,6 +5,8 @@
 
 <img src="screenshots/ferris.svg" align=top style="width: 50px; height: 50px;">
 
+<br>
+
 ![Gtheme](screenshots/gtheme.gif)
 
 Demo using **wip** desktop. To check out more desktop configurations refer to [Gtheme-Desktops →](https://github.com/daavidrgz/gtheme-desktops).
