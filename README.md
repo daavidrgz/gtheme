@@ -3,13 +3,11 @@
 
 🔥 A **blazingly fast** easy to use **dotfile and global theme manager** for *NIX systems written in Rust.
 
-<img src="screenshots/ferris.svg" align=top style="width: 50px; height: 50px;">
-
-<br>
+<img src="screenshots/ferris.svg" align=top style="width: min(4vw, 4vh); height: min(4vw, 4vh);">
 
 ![Gtheme](screenshots/gtheme.gif)
 
-Demo using **wip** desktop. To check out more desktop configurations refer to [Gtheme-Desktops →](https://github.com/daavidrgz/gtheme-desktops).
+Demo using **wip** desktop. To check out more desktop configurations refer to [Gtheme-Desktops →](https://github.com/daavidrgz/gtheme-desktops)
 
 </div>
 
