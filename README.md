@@ -1,7 +1,7 @@
 <div align="center"> <h1><strong>GTHEME</strong></h1> </div>
 <div align="center">
 
-🔥 A **blazingly fast** easy to use **dotfile and global theme manager** for *NIX systems written in Rust.
+A **blazingly fast** easy to use **dotfile and global theme manager** for *NIX systems written in Rust 🔥
 
 <!-- ![Ferris](screenshots/ferris.svg) -->
 ![Gtheme](screenshots/gtheme.gif)
