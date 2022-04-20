@@ -3,7 +3,6 @@
 
 
 🔥 A **blazingly fast** easy to use **dotfile and global theme manager** for *NIX systems written in Rust
-
 <img src="screenshots/ferris.svg" align=top style="width: 20px; height: 20px;">
 
 
