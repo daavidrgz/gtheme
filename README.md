@@ -2,6 +2,7 @@
 <div align="center">
 
 🔥 A **blazingly fast** easy to use **dotfile and global theme manager** for *NIX systems written in Rust
+
 <img src="screenshots/ferris.svg" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center">
 
 ![Gtheme](screenshots/gtheme.gif)
