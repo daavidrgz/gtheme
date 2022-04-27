@@ -1,5 +1,5 @@
 use clap_complete::{generate_to, shells::Shell};
-use std::{env, fs, io::Result, path::{PathBuf,Path}};
+use std::{fs, io::Result, path::{PathBuf,Path}};
 use log::error;
 
 use crate::cli::commands;
@@ -59,7 +59,7 @@ pub fn generate_completion_files(app: &mut clap::Command, completions_dir: &Path
 	generate_to(Shell::Bash, app, "gtheme", &completions_dir)?;
 	generate_to(Shell::Zsh, app, "gtheme", &completions_dir)?;
 
-	let fish_dir = Path::new(env!("XDG_CONFIG_HOME")).join("fish/completions");
+	let fish_dir = Path::new(&core::expand_path(core::CONFIG_HOME)).join("fish/completions");
 	if fish_dir.exists() {
 		generate_to(Shell::Fish, app, "gtheme", fish_dir)?;
 	}
