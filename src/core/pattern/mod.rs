@@ -34,14 +34,7 @@ impl Pattern {
 
 		if metadata.is_dir(){
 			//Change submodules name to "pattern_name.submodule_name" instead of "submodule_name"
-			let submodules = Self::get_patterns_from_path(pattern_path).into_iter()
-				.map(|pattern_file| PatternFile{
-					path: pattern_file.get_path().to_string(),
-					name: pattern_file.get_name().to_string()
-				}).collect();
-			
-			//TODO
-			//Return content as empty string. Maybe better option<String>? lazy to do this change tho
+			let submodules = Self::get_patterns_from_path(pattern_path);
 			return Pattern{
 				name:pattern.get_name().to_string(),
 				path:pattern.get_path().to_string(),
