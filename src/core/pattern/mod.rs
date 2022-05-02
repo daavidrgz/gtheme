@@ -1,8 +1,8 @@
-use std::collections::HashSet;
+use std::collections::HashMap;
 use std::fs::{self,File,metadata};
 use std::io::prelude::*;
 use std::path::Path;
-use regex::Regex;
+use regex::{Regex,Captures};
 use log::{info,error,warn};
 
 use crate::core;
@@ -15,7 +15,7 @@ pub struct Pattern {
 	name: String,
 	path: String,
 	output: Option<String>,
-	content: String,
+	content: Option<String>,
 	submodules: Option<Vec<PatternFile>>
 }
 impl Pattern {
@@ -46,7 +46,7 @@ impl Pattern {
 				name:pattern.get_name().to_string(),
 				path:pattern.get_path().to_string(),
 				output:None,
-				content:"".to_string(),
+				content:None,
 				submodules:Some(submodules)
 			}
 		}else if !metadata.is_file(){
@@ -84,8 +84,8 @@ impl Pattern {
 			name: String::from(pattern.get_name()),
 			path: String::from(pattern.get_path()),
 			output: output_path,
-			content,
-			submodules:None
+			content: Some(content),
+			submodules: None
 		}
 	}
 
@@ -95,8 +95,11 @@ impl Pattern {
 	pub fn get_path(&self) -> &String {
 		&self.path
 	}
-	pub fn get_output(&self) -> &Option<String> 	{
+	pub fn get_output(&self) -> &Option<String> {
 		&self.output
+	}
+	pub fn get_content(&self) -> &Option<String> {
+		&self.content
 	}
 	pub fn has_submodules(&self)->bool{
 		self.submodules.is_some()
@@ -109,7 +112,7 @@ impl Pattern {
 			name: String::from(pattern.get_name()),
 			path: String::from(pattern.get_path()),
 			output: None,
-			content:"".to_string(),
+			content:None,
 			submodules:None
 		}
 	}
@@ -234,72 +237,69 @@ impl Pattern {
 		}
 	}
 
-	fn fill_values(&self, theme: &Theme, is_inverted: bool, user_config: &UserConfig) -> String {
-		let mut result = String::from(&self.content);
-		for (key,value) in theme.get_colors().iter() {
-			let real_key = if is_inverted {
-				match key.as_str() {
-					"foreground" => "background",
-					"background" => "foreground",
-					"selection-foreground" => "selection-background",
-					"selection-background" => "selection-foreground",
-					_ => key
-				}
-			} else {
-				key
-			};
+	pub fn fill_values(&self, theme: &Theme, is_inverted: bool, user_config: &UserConfig) -> String {
+		let pattern_content = self.get_content().as_ref().unwrap();
+		let pattern_name = self.get_name();
 
-			let re = Regex::new(&format!(r"<\[{}\]>", real_key)).unwrap();
-			result = re.replace_all(&result, value).into_owned();
-		}
+		let mut extended_keys = HashMap::new();
 
-		let re = Regex::new(r"<\[theme-name\]>").unwrap();
-		result = re.replace_all(&result, theme.get_name()).into_owned();
+		extended_keys.extend(theme.get_colors().clone().into_iter());
+		extended_keys.extend(user_config.get_properties().clone().into_iter());
+		extended_keys.insert("theme-name".to_string(),theme.get_name().to_string());
 
-		// Fill user defined properties
-		for (key,value) in user_config.get_properties() {
-			let re = Regex::new(&format!(r"<\[({})(?:\|(.*))?\]>",key)).unwrap();
-			result = re.replace_all(&result, value).into_owned();
-		}
-	
-		// Find not filled properties
-		let mut missing_properties = HashSet::new();
-		let mut default_properties = HashSet::new();
+		let re = Regex::new(r"<\[((?:\w|-)+)?(?:\|(.*))?\]>").unwrap();
 
-		let re = Regex::new(r"<\[((?:\w|-)+)(?:\|(.*))?\]>").unwrap();
+		let result =re.replace_all(pattern_content,|captured:&Captures|{
 
-		let mut default_filled_result = result.clone();
-		for caps in re.captures_iter(&result){
-			let property = match caps.get(1) {
+			// Check if there is no property key on the match
+			let property = match captured.get(1) {
 				None => {
-					//This warning should not happen, since property name captured group
-					//is not optional, hence a string <[]> does not match in the regex and 
-					//can't enter in this branch
-					warn!("There is an empty property (<[]>) in pattern |{}|", self.get_name());
-					continue
+					let whole_capture = captured.get(0).unwrap();
+					warn!("There is an empty property (<[]>) in pattern |{pattern_name}|: content |byte offset {}|",
+						whole_capture.start());
+					return whole_capture.as_str().to_string();
 				},
-				Some(value) => String::from(value.as_str())
+				Some(value) => value.as_str()
 			};
-			let default = caps.get(2);
-			match default {
-				None => {missing_properties.insert(property);},
-				Some(value) => {
-					let default_value = String::from(value.as_str());
-					// If pair property-default value were not replaced before
-					if default_properties.insert((property.clone(),default_value.clone())){
-						let re = Regex::new(&format!(r"<\[{}\|{}\]>", property, default_value)).unwrap();
-						default_filled_result = re.replace_all(&default_filled_result, default_value).into_owned();
+
+			let property = Pattern::get_real_property(property,is_inverted);
+
+			if let Some(value) = extended_keys.get(property){
+				return value.to_string()
+			}else{
+				// Check for a default value for missing property
+				match captured.get(2){
+					Some(value) => {
+						let default_value = value.as_str();
+						info!("Filled property |{property}| with default value |{default_value}| in pattern |{pattern_name}|");
+						return default_value.to_string()
+					},
+					None=> {
+						let whole_capture = captured.get(0).unwrap();
+						warn!("Could not fill property |{property}| in pattern |{pattern_name}|: content |byte offset {}|",
+							whole_capture.start());
+						return whole_capture.as_str().to_string()
 					}
 				}
-			};
-		};
-		for missing_property in missing_properties {
-			warn!("Could not fill property |{}| in pattern |{}|", missing_property, self.get_name());
+			}
+		}).to_string();
+
+		result
+	}
+
+	// This inverts background and foreground key colors.
+	fn get_real_property(property:&str, is_inverted:bool) -> &str{
+		if is_inverted {
+			match property {
+				"foreground" => "background",
+				"background" => "foreground",
+				"selection-foreground" => "selection-background",
+				"selection-background" => "selection-foreground",
+				_ => property
+			}
+		} else {
+			property
 		}
-		for (default_property,value) in default_properties {
-			info!("Filled property |{}| with default value |{}| in pattern |{}|", default_property, value, self.get_name());
-		}
-		default_filled_result
 	}
 }
 
@@ -320,28 +320,7 @@ impl PatternFile {
 	}
 }
 
-#[cfg(test)]
-mod tests{
-	use super::*;
-	#[test]
-	fn test_regex_fill(){
-		let content = "<[]>";
-		let re = Regex::new(r"<\[((?:\w|-)+)?(?:\|(.*))?\]>").unwrap();
+// #[cfg(test)]
+// mod tests{
 
-		println!("{}", re.is_match(content));
-		for caps in re.captures_iter(content){
-			// println!("{}",String::from(&caps[1]));
-			// println!("{}",String::from(&caps[3]));
-			// let cap =caps.get(1);
-			dbg!(caps);
-		};		
-	}
-
-	#[test]
-	fn test_subpatterns(){
-		let subpattern = "test.test2.subsubpattern";
-		dbg!(subpattern.split('.').collect::<Vec<&str>>());
-	}
-
-
-}
+// }
