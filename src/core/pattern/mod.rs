@@ -284,7 +284,7 @@ impl Pattern {
 			}
 		}).to_string();
 
-		result
+		return result;
 	}
 
 	// This inverts background and foreground key colors.
