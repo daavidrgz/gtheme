@@ -143,9 +143,8 @@ fn get_actived(values_opt: Option<Values>, current_desktop: &DesktopFile, deskto
 	match values_opt {
 		Some(patterns) => {
 			for p in patterns {
-				match Pattern::get_by_name(current_desktop, p) {
-					Some(_) => actived.insert(p.to_string(), true),
-					None => continue
+				if let Some(_) = Pattern::get_by_name(current_desktop, p) {
+					actived.insert(p.to_string(), true);
 				};
 			}
 		},
@@ -155,17 +154,17 @@ fn get_actived(values_opt: Option<Values>, current_desktop: &DesktopFile, deskto
 }
 
 fn get_inverted(values_opt: Option<Values>, current_desktop: &DesktopFile, desktop_config: &DesktopConfig) -> HashMap<String,bool> {
-	let mut inverted: HashMap<String,bool> = HashMap::new();
-	match values_opt {
-		Some(patterns) => {
-			for p in patterns {
-				match Pattern::get_by_name(current_desktop, p) {
-					Some(_) => inverted.insert(p.to_string(), true),
-					None => continue
-				};
-			}
-		},
-		None => inverted = desktop_config.get_inverted().clone()
+	let mut inverted: HashMap<String,bool> = desktop_config.get_inverted().clone();
+	if let Some(patterns) = values_opt {
+		for p_str in patterns {
+			if let Some(p) =  Pattern::get_by_name(current_desktop, p_str) {
+				if let Some(default_inverted) = inverted.get_mut(p.get_name()) {
+					*default_inverted = !*default_inverted;
+				} else {
+					inverted.insert(p.get_name().to_string(), true);
+				}
+			};
+		}
 	}
 	inverted
 }
