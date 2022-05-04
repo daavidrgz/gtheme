@@ -424,7 +424,7 @@ fn list_themes(matches: &ArgMatches) {
 
 	let print_themes: Vec<String> = all_themes.into_iter().map(|t| {
 		if t.get_name() == current_theme {
-			format!("{} {}", "•".green(), t.get_name())
+			format!("{} {} (Active)", "•".green(), t.get_name())
 		} else {
 			format!("{} {}", "•".yellow(), t.get_name())
 		}
@@ -461,7 +461,7 @@ fn list_fav_themes() {
 
 	for t in fav_themes {
 		if t.get_name() == current_theme {
-			println!("{} {}", "•".green(), t.get_name().bold().green());
+			println!("{} {}", "•".green(), format!("{} (Active)", t.get_name()).bold().green());
 		} else {
 			println!("{} {}", "•".blue(), t.get_name());
 		};
