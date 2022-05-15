@@ -55,11 +55,11 @@ with `gtheme config edit` or run the setup again with `gtheme config setup`. Thi
 <details open>
 <summary><strong>&nbsp;U S A G E &nbsp;🪧</strong></summary>
 
-* **Terminal User Interface**
+* **Text User Interface**
 
-	* If you prefer a Terminal UI rather than a CLI, execute `gtheme` without arguments. 
+	* If you prefer a Text UI rather than a CLI, execute `gtheme` without arguments. 
 	* To navigate between desktops and patterns to fav-themes and themes, press `tab`.
-	* In order to see Terminal UI help and all included functionalities, press `h`.
+	* In order to see Text UI help and all included functionalities, press `h`.
 
 * **Command Line Interface**
 
