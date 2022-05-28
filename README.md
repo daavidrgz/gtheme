@@ -74,8 +74,10 @@ with `gtheme config edit` or run the setup again with `gtheme config setup`. Thi
 	- `gtheme desktop apply <desktop>`:  will apply the specified desktop and copy desktop's dotfiles to your `~/.config` folder.
 	- `gtheme theme apply <theme>`: will apply the specified theme for the current desktop.
 
-	> Most of the subcommands has an alias for convenience. For example, you can run `gtheme desktop apply <theme>` with `gtheme d a <theme>`, or `gtheme theme apply <theme>` with `gtheme t a <theme>`.
 
+	> Command and themes/patterns/desktops completions should be available without any problems. If not, please submit an issue. 
+	> Most of the subcommands has an alias for convenience. For example, you can run `gtheme desktop apply <theme>` with `gtheme d a <theme>`, or `gtheme theme apply <theme>` with `gtheme t a <theme>`.
+</details>
 ## License
 
 Licensed under either of
