@@ -79,6 +79,7 @@ with `gtheme config edit` or run the setup again with `gtheme config setup`. Thi
 	> Most of the subcommands has an alias for convenience. For example, you can run `gtheme desktop apply <theme>` with `gtheme d a <theme>`, or `gtheme theme apply <theme>` with `gtheme t a <theme>`.
 </details>
 
+#
 ## License
 
 Licensed under either of
