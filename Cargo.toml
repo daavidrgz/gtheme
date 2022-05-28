@@ -1,9 +1,10 @@
 [package]
 name = "gtheme"
 version = "0.1.0"
-edition = "2021"
+edition = "2022"
+authors = ["David Rodríguez","Jorge Hermo"]
+license = "MIT OR Apache-2.0"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [[bin]]
 name = "gtheme"
