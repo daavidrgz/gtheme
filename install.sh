@@ -92,7 +92,7 @@ function askBackup() {
 
 function askCopy() {
 	while true; do
-		echo -e "${Y}->${W} It looks like you have already installed gtheme. Do you want to reinstall it?"
+		echo -e "${Y}->${W} It looks like you have already installed gtheme before. Do you want to reinstall its files?"
 		echo -en "(this will potentially override some files in ${Y}$GTHEME_PATH${W} and ${Y}$GTHEME_MISC${W}) ${G}(y/[N])${W} "
 
 		read INPUT
