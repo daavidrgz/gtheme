@@ -1,0 +1,12 @@
+[properties]
+backlight-card = 'amdgpu_bl0'
+battery = 'BAT1'
+battery-adapter = 'ACAD'
+default-font = 'MesLoLGS NF'
+default-font-size = '13'
+keyboard-layout = 'us'
+keyboard-variant = 'altgr-intl'
+monitor = 'HDMI-1'
+monitor-fallback = 'eDP-1'
+network-if = 'wlp2s0'
+terminal = 'alacritty'
