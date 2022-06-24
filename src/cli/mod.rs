@@ -257,7 +257,6 @@ fn apply_desktop(matches: &ArgMatches) {
 	);
 
 	let dry_run = matches.is_present("dry-run");
-
 	if !dry_run {
 		*global_config.get_mut_current_desktop() = Some(current_desktop.clone());
 		*global_config.get_mut_current_theme() = Some(default_theme.clone());
@@ -266,6 +265,10 @@ fn apply_desktop(matches: &ArgMatches) {
 	}
 
 	current_desktop.to_desktop().apply(&previous_desktop, &default_theme.to_theme(), &actived, &inverted, dry_run);
+
+	if previous_desktop.is_none() {
+		warn!("|Reboot your computer to see the changes!|")
+	}
 }
 
 fn manage_patterns(matches: &ArgMatches, action:Action) {

@@ -148,6 +148,12 @@ function set_completions() {
 
 function install() {
 	echo -e "${G}->${W} Compiling program..."
+
+	if ! which cargo &>/dev/null; then
+		echo -e "${R}->${W} Error, Rust is not installed. Follow the instructions in https://doc.rust-lang.org/book/ch01-01-installation.html to install it.\n"
+		exit 1
+	fi
+
 	cargo build --release || exit 1
 	
 	clear

@@ -51,7 +51,7 @@ impl Section {
 		println!("{} {}", format!("{})", length+1).bold().green(), "[None]".bold());
 		println!("");
 
-		print!("Select one option: ");
+		print!("Select one option (if there's only one, select that): ");
 		loop {
 			let mut option_str = String::new();
 			io::stdout().flush().unwrap();
@@ -70,10 +70,8 @@ impl Section {
 						}
 					}
 				}
-				Err(_) => ()
+				Err(_) => print!("{} try again: ", "Invalid option,".red().bold())
 			}
-
-			print!("{} try again: ", "Invalid option,".red().bold())
 		}
 	}
 
@@ -189,14 +187,14 @@ impl Section {
 			.collect();
 
 		Self::select_question(
-			"Select main monitor output (for more info see 'xrandr')",
+			"Select main monitor output (for more info run 'xrandr')",
 			&monitors_print,
 			"monitor",
 			user_config
 		);
 
 		Self::select_question(
-			"Select monitor fallback output",
+			"Select monitor fallback output (for more info run 'xrandr')",
 			&monitors_print,
 			"monitor-fallback",
 			user_config
@@ -211,7 +209,7 @@ impl Section {
 		let backlight_print: Vec<(String,String)> = backlight_cards.into_iter().map(|i| (i, "".to_string())).collect();
 		
 		Self::select_question(
-			"Select backlight card for brightness control (for more info see 'brightnessctl')",
+			"Select backlight card for brightness control (for more info run 'brightnessctl')",
 			&backlight_print,
 			"backlight-card",
 			user_config
@@ -248,7 +246,7 @@ impl Section {
 		let battery_print: Vec<(String,String)> = batteries.into_iter().map(|i| (i, "".to_string())).collect();
 
 		Self::select_question(
-			"Select battery (for more info see 'upower -d')",
+			"Select battery (for more info run 'upower -d')",
 			&battery_print,
 			"battery",
 			user_config
@@ -258,7 +256,7 @@ impl Section {
 		let battery_adp_print: Vec<(String,String)> = adapters.into_iter().map(|i| (i, "".to_string())).collect();
 
 		Self::select_question(
-			"Select battery adapter",
+			"Select battery adapter (for more info run 'upower -d')",
 			&battery_adp_print,
 			"battery-adapter",
 			user_config
@@ -275,7 +273,7 @@ impl Section {
 		let ifs_print: Vec<(String,String)> = ifs.into_iter().map(|i| (i, "".to_string())).collect();
 		
 		Self::select_question(
-			"Select main network interface",
+			"Select main network interface (for more info run 'ip a')",
 			&ifs_print,
 			"network-if",
 			user_config

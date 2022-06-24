@@ -159,7 +159,7 @@ impl Desktop {
 	pub fn apply(&self, previous: &Option<Desktop>, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>, dry_run: bool) {
 		if dry_run {
 			info!("Installing desktop |{}| in dry-run mode...",self.get_name());
-		}else{
+		} else {
 			info!("Installing desktop |{}|...", self.get_name());
 		}
 
@@ -169,12 +169,11 @@ impl Desktop {
 			if !dry_run {
 				previous_desktop.clean_files();
 			}
-		};
-		if !dry_run {
-			// Clean files to install
-			self.clean_files();
 		}
 
+		if !dry_run {
+			self.clean_files(); // Clean files to install
+		}
 
 		let config_files = self.get_config_files();
 		info!("Copying config files to |{}|...",&config_home);
