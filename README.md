@@ -46,6 +46,7 @@ cd gtheme
 
 <details open>
 <summary><strong>&nbsp;W I K I &nbsp;🪧</strong></summary>
+<br>
 
 Refer to the [Wiki →](https://github.com/daavidrgz/gtheme/wiki) to know how to apply desktops, themes, and create your own ones.
 
