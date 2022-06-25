@@ -33,7 +33,6 @@ To sum up, you can try your favourite [Unixporn](https://www.reddit.com/r/unixpo
 <summary><strong>&nbsp;I N S T A L L A T I O N &nbsp;🛠</strong></summary>
 <br>
 
-
 First of all, you should clone this repo, run the installation script and follow the initial setup:
 
 ```console
@@ -41,44 +40,18 @@ git clone https://github.com/daavidrgz/gtheme.git gtheme
 cd gtheme
 ./install.sh
 ```
-
-At the end, gtheme files should be placed in `~/.config/gtheme`, where you can see a `themes` and a `desktop` folder
-where all color schemes and dotfiles are stored, respectively. You may see also a `wallpapers` folder if you
-choose to download them.
-
-Besides, your system's settings will be loaded from `~/.config/gtheme/user_settings.toml`. You can edit that file 
-with `gtheme config edit` or run the setup again with `gtheme config setup`. This file is very important in order to be hardware agnostic and enjoy a full **Plug and Play** experience.
 </details>
 
 #
 
 <details open>
-<summary><strong>&nbsp;U S A G E &nbsp;🪧</strong></summary>
+<summary><strong>&nbsp;W I K I &nbsp;🪧</strong></summary>
 
-* **Text User Interface**
+Refer to the [Wiki →](https://github.com/daavidrgz/gtheme/wiki) to know how to apply desktops, themes, and create your own ones.
 
-	* If you prefer a Text UI rather than a CLI, execute `gtheme` without arguments. 
-	* To navigate between desktops and patterns to fav-themes and themes, press `tab`.
-	* In order to see Text UI help and all included functionalities, press `h`.
-
-* **Command Line Interface**
-
-	You can see gtheme's help with `gtheme --help` and `gtheme <subcommand> --help`
-
-	Here are some examples:
-
-	- `gtheme desktop list`: will show all the desktops you've installed.
-	- `gtheme desktop add <path/to/desktop>`: will install the specified desktop on `~/.config/gtheme/desktops/<desktop>`.
-	- `gtheme theme list`: will show all the themes installed.
-	- `gtheme desktop set-default-theme <theme> -d <desktop>`: will set a default theme for the specified desktop.
-	- `gtheme desktop apply <desktop>`:  will apply the specified desktop and copy desktop's dotfiles to your `~/.config` folder.
-	- `gtheme theme apply <theme>`: will apply the specified theme for the current desktop.
-
-
-	> Command and themes/patterns/desktops completions should be available without any problems. If not, please submit an issue. 
-	> Most of the subcommands has an alias for convenience. For example, you can run `gtheme desktop apply <theme>` with `gtheme d a <theme>`, or `gtheme theme apply <theme>` with `gtheme t a <theme>`.
 </details>
 
+#
 
 ## License
 
