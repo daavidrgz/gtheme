@@ -51,7 +51,7 @@ impl Section {
 		println!("{} {}", format!("{})", length+1).bold().green(), "[None]".bold());
 		println!("");
 
-		print!("Select one option (if there's only one, select that): ");
+		print!("Write the number (if there's only one, select that): ");
 		loop {
 			let mut option_str = String::new();
 			io::stdout().flush().unwrap();
@@ -69,6 +69,7 @@ impl Section {
 							None => None
 						}
 					}
+					print!("{} try again: ", "Invalid option,".red().bold())
 				}
 				Err(_) => print!("{} try again: ", "Invalid option,".red().bold())
 			}
