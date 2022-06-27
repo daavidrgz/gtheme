@@ -69,10 +69,10 @@ impl Section {
 							None => None
 						}
 					}
-					print!("{} try again: ", "Invalid option,".red().bold())
 				}
-				Err(_) => print!("{} try again: ", "Invalid option,".red().bold())
+				Err(_) => ()
 			}
+			print!("{} try again: ", "Invalid option,".red().bold())
 		}
 	}
 
