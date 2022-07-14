@@ -33,7 +33,7 @@ To sum up, you can try your favourite [Unixporn](https://www.reddit.com/r/unixpo
 <summary><strong>&nbsp;I N S T A L L A T I O N &nbsp;🛠</strong></summary>
 <br>
 
-First of all, you should clone this repo, run the installation script and follow the initial setup:
+You only need to clone this repo, run the installation script and follow the initial setup:
 
 ```console
 git clone https://github.com/daavidrgz/gtheme.git gtheme
