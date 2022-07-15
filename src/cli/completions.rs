@@ -2,7 +2,7 @@ use clap_complete::{generate_to, shells::Shell};
 use std::{fs, io::Result, path::{PathBuf,Path}};
 use log::error;
 
-use crate::cli::commands;
+use crate::cli::specification;
 use crate::core::{
 	self,
 	theme::Theme,
@@ -83,7 +83,7 @@ pub fn generate_completions() {
 	let fav_themes: Vec<&str> = fav_themes_owned.iter().map(|s| s.as_str()).collect();
 	let extras: Vec<&str> = extras_owned.iter().map(|s| s.as_str()).collect();
 
-	let mut app = commands::Cli::new(&themes, &desktops, &patterns, &fav_themes, &extras).get_app();
+	let mut app = specification::create_app(&themes, &desktops, &patterns, &fav_themes, &extras);
 	
 	// Generate completions
 	if let Err(e) = fs::create_dir_all(&completions_dir) {
