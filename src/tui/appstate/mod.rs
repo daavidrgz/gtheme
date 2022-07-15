@@ -8,9 +8,9 @@ use crate::core::{
 	postscript::PostScript,
 	config::{GlobalConfig, DesktopConfig},
 };
-use crate::app::statefullist::StatefulList;
-use crate::app::screenitem::ScreenItem;
-use crate::app::widgets::HELP_CONTENT;
+use crate::tui::statefullist::StatefulList;
+use crate::tui::screenitem::ScreenItem;
+use crate::tui::widgets::HELP_CONTENT;
 
 #[derive(Eq, PartialEq, Hash)]
 pub enum Screen {

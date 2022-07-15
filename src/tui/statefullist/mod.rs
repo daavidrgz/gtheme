@@ -3,7 +3,7 @@ use tui::{
 	style::Color,
 };
 use crate::core::config::GlobalConfig;
-use crate::app::screenitem::ScreenItem;
+use crate::tui::screenitem::ScreenItem;
 
 pub struct StatefulList<T> {
 	state: ListState,

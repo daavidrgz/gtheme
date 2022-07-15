@@ -11,7 +11,7 @@ use std::{fs, path::Path};
 
 use utils::Action;
 use clilogger::CliLogger;
-use crate::app;
+use crate::tui;
 use crate::core;
 
 fn init_logger(matches: &ArgMatches) {
@@ -35,7 +35,7 @@ pub fn start_cli() {
 
 	// Start TUI
 	if matches.subcommand() == None {
-		app::Ui::new().start_ui();
+		tui::Ui::new().start_ui();
 		return
 	}
 

@@ -21,7 +21,7 @@ use crossterm::{
 };
 
 use crate::core::config::GlobalConfig;
-use crate::app::{
+use crate::tui::{
 	screenitem::ScreenItem,
 	widgets::{ListWidget, LogoWidget, HelpWidget, LoggerWidget, InfoWidget},
 	appstate::{AppState, Screen, Popup}
@@ -33,6 +33,7 @@ const RIGHT_LIST: usize = 1;
 pub struct Ui {
 	terminal: Terminal<CrosstermBackend<io::Stdout>>
 }
+
 impl Ui {
 	pub fn new() -> Self {
 		let stdout = io::stdout();

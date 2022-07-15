@@ -1,3 +1,3 @@
 pub mod core;
-pub mod app;
+pub mod tui;
 pub mod cli;

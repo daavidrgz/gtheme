@@ -3,7 +3,7 @@ use log::{warn,error,info};
 use tui::style::Color;
 use std::fs::metadata;
 
-use crate::app::statefullist::StatefulList;
+use crate::tui::statefullist::StatefulList;
 use crate::core::{
 	desktop::DesktopFile,
 	theme::ThemeFile,

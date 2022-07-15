@@ -5,7 +5,7 @@ use tui::{
 };
 
 use crate::core::config::{GlobalConfig, DesktopConfig,};
-use crate::app::{screenitem::ScreenItem, statefullist::StatefulList};
+use crate::tui::{screenitem::ScreenItem, statefullist::StatefulList};
 
 pub struct ListWidget<'a> {
 	widget: List<'a>

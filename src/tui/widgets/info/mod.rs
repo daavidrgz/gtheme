@@ -4,8 +4,8 @@ use tui::{
 	text::{Span, Spans},
 };
 
-use crate::app::statefullist::StatefulList;
-use crate::app::screenitem::ScreenItem;
+use crate::tui::statefullist::StatefulList;
+use crate::tui::screenitem::ScreenItem;
 
 pub struct InfoWidget<'a> {
 	widget: List<'a>
