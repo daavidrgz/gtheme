@@ -328,6 +328,14 @@ impl Section {
 		);
 
 		Self::type_question(
+			"Select default file explorer",
+			None,
+			validate_program,
+			"file-explorer",
+			user_config
+		);
+
+		Self::type_question(
 			"Select default font family (this will overwrite specific desktop fonts)",
 			None,
 			validate_font,
