@@ -76,10 +76,8 @@ impl Section {
 		}
 	}
 
-	fn process_type_input(default_value: Option<String>, validate: fn(&String) -> Result<(), String>) -> Option<String> {
-		println!("{} {}\n", "Default option:".bold().green(), default_value.clone().unwrap_or("[None]".to_string()).bold());
-
-		print!("Type (leave empty to use default): ");
+	fn process_type_input(validate: fn(&String) -> Result<(), String>) -> Option<String> {
+		print!("Type (leave empty to ignore): ");
 		loop {
 			let mut input_str = String::new();
 			io::stdout().flush().unwrap();
@@ -89,7 +87,7 @@ impl Section {
 			}
 			input_str = input_str.trim().to_string();
 
-			if input_str.is_empty() { return default_value }
+			if input_str.is_empty() { return None }
 
 			match validate(&input_str) {
 				Ok(_) => return Some(input_str),
@@ -106,11 +104,11 @@ impl Section {
 		}
 	}
 
-	fn type_question(question: &str, default_value: Option<String>, validate: fn(&String) -> Result<(), String>,
+	fn type_question(question: &str, validate: fn(&String) -> Result<(), String>,
 		key: &str, user_config: &mut UserConfig) {
 
 		println!("\n{}", format!("-> {}:", question).magenta().bold());
-		let input_opt = Self::process_type_input(default_value, validate);
+		let input_opt = Self::process_type_input(validate);
 		if let Some(value) = input_opt {
 			user_config.set_property(key, &value);
 		}
@@ -313,7 +311,6 @@ impl Section {
 
 		Self::type_question(
 			"Select default terminal emulator",
-			None,
 			validate_program,
 			"terminal",
 			user_config
@@ -321,7 +318,6 @@ impl Section {
 
 		Self::type_question(
 			"Select default browser",
-			None,
 			validate_program,
 			"browser",
 			user_config
@@ -329,7 +325,6 @@ impl Section {
 
 		Self::type_question(
 			"Select default file explorer",
-			None,
 			validate_program,
 			"file-explorer",
 			user_config
@@ -337,7 +332,6 @@ impl Section {
 
 		Self::type_question(
 			"Select default font family (this will overwrite specific desktop fonts)",
-			None,
 			validate_font,
 			"default-font",
 			user_config
@@ -345,7 +339,6 @@ impl Section {
 
 		Self::type_question(
 			"Select default font size",
-			None,
 			validate_font_size,
 			"default-font-size",
 			user_config
