@@ -127,7 +127,25 @@ function askWallpapers() {
 	done
 }
 
-function set_completions() {
+function askCompletions() {
+		while true; do
+		echo -en "${G}->${W} Do you want to install autocompletions? Your shell config file will be modified. ${G}([Y]/n)${W} "
+		read INPUT
+		case $INPUT in 
+			y | Y | "")
+				setCompletions
+				return 0;;
+			n | N)
+				echo -e "${Y}->${W} Skipping completions installation..."
+				echo -e "To set them up manually, refer to https://github.com/daavidrgz/gtheme/wiki\n"
+				return 0;;
+			*)
+				echo -e "\n${R}->${W} Incorrect option!\n";;
+		esac
+	done
+}
+
+function setCompletions() {
 	echo -e "${G}->${W} Setting up completion scripts..."
 
 	if [ -e ~/.zshrc ]; then
@@ -163,7 +181,7 @@ function install() {
 	sudo cp target/release/gtheme /usr/bin || echo -e "${R}->${W} There was an error while copying script to ${W_B}/usr/bin${W}\n"
 	mkdir -p $GTHEME_MISC &>/dev/null
 
-	set_completions
+	askCompletions
 
 	if [ -e "$GTHEME_PATH" ]; then
 		askCopy
