@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 use std::fs::{self,File, OpenOptions};
 use std::io::prelude::*;
 use serde::{Serialize,Deserialize};
-use log::{warn,error};
+use log::{warn,error, info};
 
 use crate::core;
 
@@ -25,50 +25,32 @@ impl Theme {
 	}
 
 	pub fn from(theme: &ThemeFile) -> Self {
-		let mut file = File::open(theme.get_path()).expect("Could not open theme file");
+		let mut file = match File::open(theme.get_path()) {
+			Ok(file) => file,
+			Err(e) => {
+				warn!("Could not open theme file |{}|, using default theme: |{}|",theme.get_path(), e);
+				return Self::default(theme.get_name());
+			}
+		};
 		let mut content = String::new();
 
-		match file.read_to_string(&mut content) {
-			Ok(_) => (),
-			Err(e) => {
-				error!("Error reading theme file |{}|: |{}|", theme.get_path(), e);
-				warn!("Using default theme");
-				return Theme::default(theme.get_name());
-			}
+		if let Err(e) =  file.read_to_string(&mut content) {
+			error!("Could not read theme file |{}|,using default theme: |{}|", theme.get_path(), e);
+			return Self::default(theme.get_name());
 		}
 
-		match serde_json::from_str(&content) {
-			Ok(t) => t,
+		match toml::from_str(&content) {
+			Ok(theme) => {
+				theme
+			},
 			Err(e) => {
 				error!("Error while deserializing theme file |{}|: |{}|", theme.get_path(), e);
 				warn!("Using default theme colors");
-				return Theme::default(theme.get_name());
+				Self::default(theme.get_name())
 			}
 		}
 	}
-	pub fn save(&self) {
-		let content = toml::to_string_pretty(self).unwrap();
-		// let mut splitted:Vec<&str> = content.trim().split("\n").collect();
-
-		// let mut to_order:Vec<&str> = splitted.drain(1..).collect();
-		// to_order.sort_by(|a,b| a.cmp(b));
-
-		// let content = splitted.into_iter().chain(to_order.into_iter())
-		// 	.map(|e|e.to_string()).collect::<Vec<String>>().join("\n");
-
-		let path = format!("{}/themes_tmp/{}.toml",core::expand_path(core::GTHEME_HOME),self.get_name());
-		let mut file = match OpenOptions::new().create(true).write(true).truncate(true).open(&path) {
-			Ok(f) => f,
-			Err(e) => {
-				error!("Could not open |{}|: |{}|", &path, e);
-				return;
-			}
-		};
-		match file.write_all(&content.as_bytes()) {
-			Err(e) => error!("Could not write user settings in |{}|: |{}|", &path, e),
-			_ => ()
-		}	
-	}
+	
 	fn default(name:&str) -> Self{
 		// Nord theme colors by default
 		let mut colors = BTreeMap::new();
@@ -117,6 +99,7 @@ impl Theme {
 			Some(theme) => Some(theme)
 		}
 	}
+
 	
 	pub fn get_themes() -> Vec<ThemeFile> {
 		let gtheme_home: String = core::expand_path(core::GTHEME_HOME);
@@ -178,6 +161,75 @@ impl Theme {
 		vec.sort_by(|a,b| a.get_name().to_lowercase().cmp(&b.get_name().to_lowercase()));
 		vec
 	}
+
+	fn save(&self) {
+		let content = toml::to_string_pretty(self).unwrap();
+		let path = format!("{}/themes/{}.toml",core::expand_path(core::GTHEME_HOME),self.get_name());
+		let mut file = match OpenOptions::new().create(true).write(true).truncate(true).open(&path) {
+			Ok(f) => f,
+			Err(e) => {
+				error!("Could not open |{}|: |{}|", &path, e);
+				return;
+			}
+		};
+		if let Err(e)=  file.write_all(&content.as_bytes()) {
+			error!("Could not save theme in |{}|: |{}|", &path, e);
+		}	
+	}
+
+	pub fn new_skeleton(theme_name: &str) {
+		if let Some(_) = Self::get_by_name(theme_name) {
+			error!("Theme |{}| already exists", theme_name);
+			return;
+		}
+
+		let theme_path = format!("{}/themes/", core::expand_path(core::GTHEME_HOME));
+
+		match fs::create_dir_all(&theme_path) {
+			Ok(_) => info!("Created directory |{}|", &theme_path),
+			Err(e) => {
+				error!("Error while creating directory |{}|: |{}|", &theme_path, e);
+				return;
+			}
+		}
+
+		let mut colors = BTreeMap::new();
+
+		let pairs = vec![
+			("background", ""),
+			("foreground", ""),
+			("cursor", ""),
+			("selection-background", ""),
+			("selection-foreground", ""),
+			("black", ""),
+			("black-hg", ""),
+			("red", ""),
+			("red-hg", ""),
+			("green", ""),
+			("green-hg", ""),
+			("yellow", ""),
+			("yellow-hg", ""),
+			("blue", ""),
+			("blue-hg", ""),
+			("magenta", ""),
+			("magenta-hg", ""),
+			("cyan", ""),
+			("cyan-hg", ""),
+			("white", ""),
+			("white-hg", "")
+		];
+
+		colors.extend(pairs.into_iter().map(|(key,value)| (key.to_string(), value.to_string())));
+
+		let extras = BTreeMap::new();
+		let theme =Theme {
+			name: theme_name.to_string(),
+			colors,
+			extras
+		};
+		theme.save();		
+		info!("Successfully created theme |{}|", theme_name);
+	}
 }
 
 #[derive(Debug,Clone)]
@@ -202,8 +254,7 @@ impl ThemeFile {
 mod tests{
 	#[test]
 	fn save(){
-		let themes = super::Theme::get_themes();
-		themes.iter().map(|t|t.to_theme().save()).collect::<Vec<_>>();
+		super::Theme::new_skeleton("hola");
 
 	}
 }
