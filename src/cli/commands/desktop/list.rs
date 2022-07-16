@@ -1,3 +1,4 @@
+use clap::ArgMatches;
 use colored::*;
 
 use crate::core::{
@@ -5,8 +6,7 @@ use crate::core::{
 	config::GlobalConfig
 };
 
-pub fn run() {
-	println!("");
+pub fn run(matches: &ArgMatches) {
 	let all_desktops = Desktop::get_desktops();
 	let global_config = GlobalConfig::new();
 	let current_desktop = match global_config.get_current_desktop() {
@@ -14,6 +14,13 @@ pub fn run() {
 		None => ""
 	};
 
+	if matches.is_present("quiet") {
+		all_desktops.iter()
+			.for_each(|desktop| println!("{}", desktop.get_name()));
+		return;
+	}
+	
+	println!("");
 	println!("{}\n", "DESKTOPS".bold().underline().cyan());
 
 	for d in all_desktops {

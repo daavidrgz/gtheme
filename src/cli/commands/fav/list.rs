@@ -1,8 +1,9 @@
 use colored::*;
+use clap::ArgMatches;
+
 use crate::core::config::GlobalConfig;
 
-pub fn run() {
-	println!("");
+pub fn run(matches: &ArgMatches) {
 	let global_config = GlobalConfig::new();
 	let current_theme = match global_config.get_current_theme() {
 		Some(t) => t.get_name(),
@@ -11,6 +12,13 @@ pub fn run() {
 
 	let fav_themes = global_config.get_fav_themes();
 
+	if matches.is_present("quiet") {
+		fav_themes.iter()
+			.for_each(|theme| println!("{}", theme.get_name()));
+		return;
+	}
+
+	println!("");
 	println!("{}\n", "FAV THEMES".bold().underline().blue());
 
 	for t in fav_themes {

@@ -8,7 +8,6 @@ use crate::core::{
 };
 
 pub fn run(matches: &ArgMatches) {
-	println!("");
 	let desktop = match utils::get_desktop(matches.value_of("desktop")) {
 		Some(d) => d,
 		None => return
@@ -19,8 +18,15 @@ pub fn run(matches: &ArgMatches) {
 
 	let enabled = desktop_config.get_actived();
 
+	if matches.is_present("quiet") {
+		all_extras.iter()
+			.for_each(|extra| println!("{}", extra.get_name()));
+		return;
+	}
+
 	let desktop_title = format!("({})", desktop.get_name());
 
+	println!("");
 	println!("{} {}\n", "EXTRAS".bold().underline().red(), desktop_title.bold().cyan());
 
 	for p in all_extras {

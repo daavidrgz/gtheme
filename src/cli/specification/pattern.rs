@@ -18,7 +18,11 @@ pub fn init<'a>(app: Command<'a>, patterns: &'a [&'a str], desktops: &'a [&'a st
 				Arg::new("submodules")
 					.short('s')
 					.long("submodules")
-					.help("Show also pattern submodules")
+					.help("Show also pattern submodules"),
+				Arg::new("quiet")
+					.short('q')
+					.long("quiet")
+					.help("Show only pattern's names")
 			])
 		)
 		.subcommand(Command::new("edit")

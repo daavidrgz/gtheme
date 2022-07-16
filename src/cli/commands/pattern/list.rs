@@ -8,7 +8,6 @@ use crate::core::{
 };
 
 pub fn run(matches: &ArgMatches) {
-	println!("");
 	let desktop = match utils::get_desktop(matches.value_of("desktop")) {
 		Some(d) => d,
 		None => return
@@ -20,8 +19,15 @@ pub fn run(matches: &ArgMatches) {
 	let enabled = desktop_config.get_actived();
 	let inverted = desktop_config.get_inverted();
 
+	if matches.is_present("quiet") {
+		all_patterns.iter()
+			.for_each(|pattern| println!("{}", pattern.get_name()));
+		return;
+	}
+
 	let desktop_title = format!("({})", desktop.get_name());
 
+	println!("");
 	println!("{} {}\n", "PATTERNS".bold().underline().magenta(), desktop_title.bold().cyan());
 
 	for p in all_patterns {

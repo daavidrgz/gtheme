@@ -4,27 +4,12 @@ use term_grid::{Grid, GridOptions, Direction, Filling};
 
 use crate::cli::commands;
 use crate::core::{
-	theme::Theme,
+	theme::{Theme, ThemeFile},
 	config::GlobalConfig
 };
 
-pub fn run(matches: &ArgMatches) {
-	if matches.is_present("favs") {
-		commands::fav::list::run();
-		return
-	}
-
-	println!("");
-	let all_themes = Theme::get_themes();
-	let global_config = GlobalConfig::new();
-	let current_theme = match global_config.get_current_theme() {
-		Some(t) => t.get_name(),
-		None => ""
-	};
-
-	println!("{}\n", "THEMES".bold().underline().yellow());
-
-	let print_themes: Vec<String> = all_themes.into_iter().map(|t| {
+fn get_themes(all_themes: &Vec<ThemeFile>, current_theme: &str) -> Vec<String> {
+	let themes = all_themes.into_iter().map(|t| {
 		if t.get_name() == current_theme {
 			format!("{} {} (Active)", "•".green(), t.get_name())
 		} else {
@@ -32,19 +17,43 @@ pub fn run(matches: &ArgMatches) {
 		}
 	}).collect();
 
-	let mut grid = Grid::new(GridOptions {
-		filling: Filling::Spaces(2),
-		direction: Direction::TopToBottom,
-	});
-	
-	for s in print_themes {
+	return themes;
+}
+
+fn create_grid(items: Vec<String>, options: GridOptions) -> Grid {
+	let mut grid = Grid::new(options);
+	for s in items {
 		grid.add(s.into());
 	}
+	return grid;
+}
 
-	// let term_width: usize = match terminal_size() {
-	// 	Some((width, _)) => width.0.into(),
-	// 	None => return 
-	// };
-	
+pub fn run(matches: &ArgMatches) {
+	if matches.is_present("favs") {
+		commands::fav::list::run(matches);
+		return
+	}
+
+	let all_themes = Theme::get_themes();
+	let global_config = GlobalConfig::new();
+	let current_theme = match global_config.get_current_theme() {
+		Some(t) => t.get_name(),
+		None => ""
+	};
+
+	if matches.is_present("quiet") {
+		all_themes.iter()
+			.for_each(|theme| println!("{}", theme.get_name()));
+		return
+	}
+
+	println!("");
+	println!("{}\n", "THEMES".bold().underline().yellow());
+	let formatted_themes = get_themes(&all_themes, current_theme);
+	let options = GridOptions {
+		filling: Filling::Spaces(2),
+		direction: Direction::TopToBottom,
+	};
+	let grid = create_grid(formatted_themes, options);
 	println!("{}", grid.fit_into_columns(3));
 }

@@ -52,7 +52,7 @@ pub fn start_cli() {
 		},
 
 		Some(("desktop", sub_matches)) => match sub_matches.subcommand() {
-			Some(("list", _)) => commands::desktop::list::run(),
+			Some(("list",  sub_sub_matches)) => commands::desktop::list::run(sub_sub_matches),
 			Some(("info", sub_sub_matches)) => commands::desktop::info::run(sub_sub_matches),
 			Some(("edit", sub_sub_matches)) => commands::desktop::edit::run(sub_sub_matches),
 			Some(("status", sub_sub_matches)) => commands::desktop::status::run(sub_sub_matches),
@@ -65,8 +65,8 @@ pub fn start_cli() {
 		}
 
 		Some(("theme", sub_matches)) => match sub_matches.subcommand() {
-			Some(("colors", sub_sub_matches)) => commands::theme::colors::run(sub_sub_matches),
 			Some(("list", sub_sub_matches)) => commands::theme::list::run(sub_sub_matches),
+			Some(("colors", sub_sub_matches)) => commands::theme::colors::run(sub_sub_matches),
 			Some(("edit", sub_sub_matches)) => commands::theme::edit::run(sub_sub_matches),
 			Some(("apply", sub_sub_matches)) => commands::theme::apply::run(sub_sub_matches),
 			_ => ()
@@ -92,7 +92,7 @@ pub fn start_cli() {
 		}
 
 		Some(("fav", sub_matches)) => match sub_matches.subcommand() {
-			Some(("list", _)) => commands::fav::list::run(),
+			Some(("list", sub_sub_matches)) => commands::fav::list::run(sub_sub_matches),
 			Some(("add", sub_sub_matches)) => commands::fav::manage::run(sub_sub_matches, Action::Enable),
 			Some(("remove", sub_sub_matches)) => commands::fav::manage::run(sub_sub_matches, Action::Disable),
 			Some(("toggle", sub_sub_matches)) => commands::fav::manage::run(sub_sub_matches, Action::Toggle),
