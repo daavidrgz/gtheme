@@ -33,7 +33,6 @@ impl Pattern {
 		};
 
 		if metadata.is_dir(){
-			//Change submodules name to "pattern_name.submodule_name" instead of "submodule_name"
 			let submodules = Self::get_patterns_from_path(pattern_path);
 			return Pattern{
 				name:pattern.get_name().to_string(),

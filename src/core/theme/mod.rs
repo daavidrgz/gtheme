@@ -93,11 +93,14 @@ impl Theme {
 		let all_themes = Theme::get_themes();
 		match all_themes.into_iter().find(|item| item.get_name().to_lowercase() == name.to_lowercase()) {
 			None => {
-				error!("The theme |{}| does not exist!", name);
+				error!("Theme |{}| does not exist!", name);
 				None
 			}
 			Some(theme) => Some(theme)
 		}
+	}
+	pub fn exists(desktop: &str) -> bool {
+		Theme::get_themes().iter().any(|desktop_file|desktop_file.get_name().to_lowercase() == desktop.to_lowercase())
 	}
 
 	
@@ -178,7 +181,7 @@ impl Theme {
 	}
 
 	pub fn new_skeleton(theme_name: &str) {
-		if let Some(_) = Self::get_by_name(theme_name) {
+		if Self::exists(theme_name) {
 			error!("Theme |{}| already exists", theme_name);
 			return;
 		}
