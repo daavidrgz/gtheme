@@ -68,6 +68,7 @@ pub fn start_cli() {
 			Some(("list", sub_sub_matches)) => commands::theme::list::run(sub_sub_matches),
 			Some(("colors", sub_sub_matches)) => commands::theme::colors::run(sub_sub_matches),
 			Some(("edit", sub_sub_matches)) => commands::theme::edit::run(sub_sub_matches),
+			Some(("new-skeleton", sub_sub_matches)) => commands::theme::newskeleton::run(sub_sub_matches),
 			Some(("apply", sub_sub_matches)) => commands::theme::apply::run(sub_sub_matches),
 			_ => ()
 		}
