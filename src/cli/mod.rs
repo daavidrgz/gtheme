@@ -43,8 +43,8 @@ pub fn start_cli() {
 
 	match matches.subcommand() {
 		Some(("config", sub_matches)) => match sub_matches.subcommand() {
-			Some(("setup", _)) => commands::config::setup::run(),
 			Some(("list", _)) => commands::config::list::run(),
+			Some(("setup", _)) => commands::config::setup::run(),
 			Some(("edit", _)) => commands::config::edit::run(),
 			Some(("set", sub_sub_matches)) => commands::config::set::run(sub_sub_matches),
 			Some(("unset", sub_sub_matches)) => commands::config::unset::run(sub_sub_matches),
@@ -52,6 +52,7 @@ pub fn start_cli() {
 		},
 
 		Some(("desktop", sub_matches)) => match sub_matches.subcommand() {
+			Some(("list", _)) => commands::desktop::list::run(),
 			Some(("info", sub_sub_matches)) => commands::desktop::info::run(sub_sub_matches),
 			Some(("edit", sub_sub_matches)) => commands::desktop::edit::run(sub_sub_matches),
 			Some(("status", sub_sub_matches)) => commands::desktop::status::run(sub_sub_matches),
@@ -59,7 +60,6 @@ pub fn start_cli() {
 			Some(("add", sub_sub_matches)) => commands::desktop::add::run(sub_sub_matches),
 			Some(("remove", sub_sub_matches)) => commands::desktop::remove::run(sub_sub_matches),
 			Some(("set-default-theme", sub_sub_matches)) => commands::desktop::setdefault::run(sub_sub_matches),
-			Some(("list", _)) => commands::config::list::run(),
 			Some(("apply", sub_sub_matches)) => commands::desktop::apply::run(sub_sub_matches),
 			_ => ()
 		}
@@ -92,7 +92,7 @@ pub fn start_cli() {
 		}
 
 		Some(("fav", sub_matches)) => match sub_matches.subcommand() {
-			Some(("list", _)) => commands::config::list::run(),
+			Some(("list", _)) => commands::fav::list::run(),
 			Some(("add", sub_sub_matches)) => commands::fav::manage::run(sub_sub_matches, Action::Enable),
 			Some(("remove", sub_sub_matches)) => commands::fav::manage::run(sub_sub_matches, Action::Disable),
 			Some(("toggle", sub_sub_matches)) => commands::fav::manage::run(sub_sub_matches, Action::Toggle),
