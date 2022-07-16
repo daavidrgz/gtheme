@@ -137,7 +137,7 @@ function askCompletions() {
 				return 0;;
 			n | N)
 				echo -e "${Y}->${W} Skipping completions installation..."
-				echo -e "To set them up manually, refer to https://github.com/daavidrgz/gtheme/wiki\n"
+				echo -e "To set them up manually, refer to https://github.com/daavidrgz/gtheme/wiki/Autocompletions\n"
 				return 0;;
 			*)
 				echo -e "\n${R}->${W} Incorrect option!\n";;
