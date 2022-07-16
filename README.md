@@ -36,7 +36,7 @@ To sum up, you can try your favourite [Unixporn](https://www.reddit.com/r/unixpo
 You only need to clone this repo, run the installation script and follow the initial setup:
 
 ```console
-git clone https://github.com/daavidrgz/gtheme.git gtheme
+git clone --depth 1 https://github.com/daavidrgz/gtheme.git gtheme 
 cd gtheme
 ./install.sh
 ```
