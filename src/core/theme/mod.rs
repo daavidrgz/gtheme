@@ -249,12 +249,3 @@ impl ThemeFile {
 		&self.path
 	}
 }
-
-#[cfg(test)]
-mod tests{
-	#[test]
-	fn save(){
-		super::Theme::new_skeleton("hola");
-
-	}
-}
