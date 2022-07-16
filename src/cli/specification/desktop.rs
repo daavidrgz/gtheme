@@ -27,8 +27,6 @@ pub fn init<'a>(app: Command<'a>, desktops: &'a [&'a str], themes: &'a [&'a str]
 			.about("Show desktop information")
 			.args([
 				Arg::new("desktop")
-					.short('d')
-					.long("desktop")
 					.takes_value(true)
 					.possible_values(desktops)
 					.help("Desktop to show info"),

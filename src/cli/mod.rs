@@ -43,7 +43,7 @@ pub fn start_cli() {
 
 	match matches.subcommand() {
 		Some(("config", sub_matches)) => match sub_matches.subcommand() {
-			Some(("list", _)) => commands::config::list::run(),
+			Some(("show", _)) => commands::config::show::run(),
 			Some(("setup", _)) => commands::config::setup::run(),
 			Some(("edit", _)) => commands::config::edit::run(),
 			Some(("set", sub_sub_matches)) => commands::config::set::run(sub_sub_matches),
