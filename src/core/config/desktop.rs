@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::fs::{File, OpenOptions};
 use std::io::prelude::*;
 use serde::{Serialize,Deserialize};
@@ -12,16 +12,16 @@ use crate::core::theme::{Theme,ThemeFile};
 #[derive(Debug, Serialize, Deserialize)]
 struct DesktopConfigDto {
 	default_theme: Option<String>,
-	actived: HashMap<String,bool>,
-	inverted: HashMap<String,bool>,
+	actived: BTreeMap<String,bool>,
+	inverted: BTreeMap<String,bool>,
 }
 
 #[derive(Debug,Clone)]
 pub struct DesktopConfig {
 	desktop: DesktopFile,
 	default_theme: Option<ThemeFile>,
-	actived: HashMap<String,bool>,
-	inverted: HashMap<String,bool>,
+	actived: BTreeMap<String,bool>,
+	inverted: BTreeMap<String,bool>,
 }
 
 impl DesktopConfigDto {
@@ -59,7 +59,7 @@ impl DesktopConfigDto {
 			}
 		};
 
-		// Ensure all keys are filled on hashmaps
+		// Ensure all keys are filled on BTreeMaps
 		let desktop_owned = desktop.to_desktop();
 		let patterns = desktop_owned.get_patterns();
 		let mut actived = dto.actived;
@@ -122,8 +122,8 @@ impl DesktopConfigDto {
 	fn default(desktop: &DesktopFile) -> DesktopConfigDto {
 		let desktop_owned = desktop.to_desktop();
 		let patterns = desktop_owned.get_patterns();
-		let mut actived = HashMap::new();
-		let mut inverted = HashMap::new();
+		let mut actived = BTreeMap::new();
+		let mut inverted = BTreeMap::new();
 		for pattern in patterns {
 			actived.insert(String::from(pattern.get_name()),true);
 			inverted.insert(String::from(pattern.get_name()),false);
@@ -172,16 +172,16 @@ impl DesktopConfig {
 		info!("Setting default theme |{}| to desktop |{}|", theme.get_name(), self.desktop.get_name());
 		self.default_theme = Some(theme.clone());
 	}
-	pub fn get_actived(&self) -> &HashMap<String, bool> {
+	pub fn get_actived(&self) -> &BTreeMap<String, bool> {
 		&self.actived
 	}
-	pub fn get_mut_actived(&mut self) -> &mut HashMap<String, bool> {
+	pub fn get_mut_actived(&mut self) -> &mut BTreeMap<String, bool> {
 		&mut self.actived
 	}
-	pub fn get_inverted(&self) -> &HashMap<String, bool> {
+	pub fn get_inverted(&self) -> &BTreeMap<String, bool> {
 		&self.inverted
 	}
-	pub fn get_mut_inverted(&mut self) -> &mut HashMap<String, bool> {
+	pub fn get_mut_inverted(&mut self) -> &mut BTreeMap<String, bool> {
 		&mut self.inverted
 	}
 	pub fn save(&self) {

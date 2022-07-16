@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::fs::{self,File,metadata};
 use std::io::prelude::*;
 use std::path::Path;
@@ -207,25 +207,9 @@ impl Pattern {
 		};
 
 		// Return if dry_run mode. i.e, dont write content to output path
-		if dry_run { return }
-
-		let path = std::path::Path::new(output_path);
-		let prefix = path.parent().unwrap();
-		// TODO: error handling
-		fs::create_dir_all(prefix).unwrap();
-		// If cant create output file, returns
-		let mut output_file = match File::create(output_path) {
-			Ok(file) => file,
-			Err(e) => {
+		if !dry_run {
+			if let Err(e) = core::write_content_to(&filled_content, Path::new(output_path)){
 				error!("Could not create |{}|: |{}|", output_path, e);
-				return;
-			}
-		};
-		match output_file.write_all(filled_content.as_bytes()) {
-			Ok(_) => (),
-			Err(e) => {
-				error!("Could not write to |{}|: |{}|", output_path, e);
-				return;
 			}
 		}
 	}
@@ -234,10 +218,11 @@ impl Pattern {
 		let pattern_content = self.get_content().as_ref().unwrap();
 		let pattern_name = self.get_name();
 
-		let mut extended_keys = HashMap::new();
+		let mut extended_keys = BTreeMap::new();
 
-		extended_keys.extend(theme.get_colors().clone().into_iter());
 		extended_keys.extend(user_config.get_properties().clone().into_iter());
+		// Ensure that user_config does not overwrites theme keys
+		extended_keys.extend(theme.get_colors().clone().into_iter());
 		extended_keys.insert("theme-name".to_string(),theme.get_name().to_string());
 
 		let re = Regex::new(r"<\[((?:\w|-)+)?(?:\|(.*))?\]>").unwrap();
@@ -255,6 +240,7 @@ impl Pattern {
 				Some(value) => value.as_str()
 			};
 
+			// Invert background colors if needed
 			let property = Pattern::get_real_property(property,is_inverted);
 
 			if let Some(value) = extended_keys.get(property){
@@ -299,6 +285,7 @@ impl Pattern {
 #[derive(Debug,Clone)]
 pub struct PatternFile {
 	name: String,
+	// TODO: Change path type to PathBuf
 	path: String,
 }
 impl PatternFile {

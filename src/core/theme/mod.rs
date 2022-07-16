@@ -1,5 +1,5 @@
-use std::collections::HashMap;
-use std::fs::{self,File};
+use std::collections::BTreeMap;
+use std::fs::{self,File, OpenOptions};
 use std::io::prelude::*;
 use serde::{Serialize,Deserialize};
 use log::{warn,error};
@@ -9,18 +9,18 @@ use crate::core;
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Theme {
 	name: String,
-	extras: HashMap<String,Vec<String>>,
-	colors: HashMap<String, String>
+	extras: BTreeMap<String,Vec<String>>,
+	colors: BTreeMap<String, String>
 }
 
 impl Theme {
 	pub fn get_name(&self) -> &String {
 		&self.name
 	}
-	pub fn get_extras(&self) -> &HashMap<String,Vec<String>> {
+	pub fn get_extras(&self) -> &BTreeMap<String,Vec<String>> {
 		&self.extras
 	}
-	pub fn get_colors(&self) -> &HashMap<String, String> {
+	pub fn get_colors(&self) -> &BTreeMap<String, String> {
 		&self.colors
 	}
 
@@ -46,9 +46,32 @@ impl Theme {
 			}
 		}
 	}
+	pub fn save(&self) {
+		let content = toml::to_string_pretty(self).unwrap();
+		// let mut splitted:Vec<&str> = content.trim().split("\n").collect();
+
+		// let mut to_order:Vec<&str> = splitted.drain(1..).collect();
+		// to_order.sort_by(|a,b| a.cmp(b));
+
+		// let content = splitted.into_iter().chain(to_order.into_iter())
+		// 	.map(|e|e.to_string()).collect::<Vec<String>>().join("\n");
+
+		let path = format!("{}/themes_tmp/{}.toml",core::expand_path(core::GTHEME_HOME),self.get_name());
+		let mut file = match OpenOptions::new().create(true).write(true).truncate(true).open(&path) {
+			Ok(f) => f,
+			Err(e) => {
+				error!("Could not open |{}|: |{}|", &path, e);
+				return;
+			}
+		};
+		match file.write_all(&content.as_bytes()) {
+			Err(e) => error!("Could not write user settings in |{}|: |{}|", &path, e),
+			_ => ()
+		}	
+	}
 	fn default(name:&str) -> Self{
 		// Nord theme colors by default
-		let mut colors = HashMap::new();
+		let mut colors = BTreeMap::new();
 
 		let pairs = vec![
 			("background", "2e3440"),
@@ -76,7 +99,7 @@ impl Theme {
 
 		colors.extend(pairs.into_iter().map(|(key,value)| (key.to_string(), value.to_string())));
 
-		let extras = HashMap::new();
+		let extras = BTreeMap::new();
 		Theme {
 			name: name.to_string(),
 			colors,
@@ -172,5 +195,15 @@ impl ThemeFile {
 	}
 	pub fn get_path(&self) -> &String {
 		&self.path
+	}
+}
+
+#[cfg(test)]
+mod tests{
+	#[test]
+	fn save(){
+		let themes = super::Theme::get_themes();
+		themes.iter().map(|t|t.to_theme().save()).collect::<Vec<_>>();
+
 	}
 }

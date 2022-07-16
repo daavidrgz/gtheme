@@ -1,6 +1,6 @@
 use std::fs;
 use std::process::{Command,Stdio};
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use log::error;
 
 use crate::core::desktop::DesktopFile;
@@ -19,17 +19,17 @@ impl PostScript{
 		&self.path
 	}
 	
-	pub fn get_postscripts(desktop: &DesktopFile) -> HashMap<String,PostScript> {
+	pub fn get_postscripts(desktop: &DesktopFile) -> BTreeMap<String,PostScript> {
 		let postscripts_dir = format!("{}/gtheme/post-scripts", desktop.get_path());
 		let entries = match fs::read_dir(&postscripts_dir) {
 			Ok(dir) => dir,
 			Err(e) => {
 				error!("Could not read directory |{}|: |{}|", &postscripts_dir, e);
-				return HashMap::new()
+				return BTreeMap::new()
 			}
 		};
 
-		let mut map = HashMap::new();
+		let mut map = BTreeMap::new();
 		for entry in entries {
 			let entry = match entry {
 				Ok(d) => d,

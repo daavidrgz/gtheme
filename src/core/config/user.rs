@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::fs::{File, OpenOptions};
 use std::io::prelude::*;
 use serde::{Serialize,Deserialize};
@@ -9,12 +9,12 @@ use crate::core;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct UserConfigDto {
-	properties: HashMap<String,String>,
+	properties: BTreeMap<String,String>,
 }
 
 #[derive(Debug)]
 pub struct UserConfig {
-	properties: HashMap<String,String>,
+	properties: BTreeMap<String,String>,
 }
  
 impl UserConfigDto {
@@ -59,14 +59,6 @@ impl UserConfigDto {
 
 	fn save(&self) {
 		let content = toml::to_string_pretty(self).unwrap();
-		let mut splitted:Vec<&str> = content.trim().split("\n").collect();
-
-		let mut to_order:Vec<&str> = splitted.drain(1..).collect();
-		to_order.sort_by(|a,b| a.cmp(b));
-
-		let content = splitted.into_iter().chain(to_order.into_iter())
-			.map(|e|e.to_string()).collect::<Vec<String>>().join("\n");
-
 		let path = format!("{}/user_settings.toml",core::expand_path(core::GTHEME_HOME));
 		let mut file = match OpenOptions::new().create(true).write(true).truncate(true).open(&path) {
 			Ok(f) => f,
@@ -85,7 +77,7 @@ impl UserConfigDto {
 impl Default for UserConfigDto {
 	fn default() -> UserConfigDto {
 		UserConfigDto {
-			properties: HashMap::new(),
+			properties: BTreeMap::new(),
 		}
 	}
 }
@@ -113,7 +105,7 @@ impl UserConfig {
 		self.properties.remove(property);
 		info!("Property |{}| successfully unsetted", property)
 	}
-	pub fn get_properties(&self) -> &HashMap<String,String> {
+	pub fn get_properties(&self) -> &BTreeMap<String,String> {
 		&self.properties
 	}
 	pub fn get_path(&self) -> String {
@@ -127,7 +119,7 @@ impl UserConfig {
 impl Default for UserConfig {
 	fn default() -> Self {
 		UserConfig {
-			properties: HashMap::new(),
+			properties: BTreeMap::new(),
 		}
 	}
 }

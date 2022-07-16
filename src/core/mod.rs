@@ -1,6 +1,6 @@
 
 use log::error;
-use std::{fs::{self, DirEntry}, path::Path};
+use std::{fs::{self, DirEntry, File}, path::Path, io::{Write, self}};
 pub mod theme;
 pub mod pattern;
 pub mod desktop;
@@ -19,7 +19,7 @@ pub fn expand_path(origin_path: &str) -> String{
 }
 
 //TODO: rework of functions that read directories to use this function
-pub fn get_files(path:&Path) -> Vec<DirEntry> {
+fn get_files(path:&Path) -> Vec<DirEntry> {
 
 	if !path.exists(){return vec![]}
 
@@ -44,9 +44,16 @@ pub fn get_files(path:&Path) -> Vec<DirEntry> {
 	}
 	vec
 }
-
+// TODO: 
+fn write_content_to(content:&String,path:&Path)->io::Result<()>{
+	let prefix = path.parent().unwrap_or(Path::new("/"));
+	fs::create_dir_all(prefix)?;
+	// Check config save functions to use this instead.
+	let mut output_file = File::create(path)?;
+	return output_file.write_all(content.as_bytes())
+}
 //TODO: return result?
-pub fn copy(from:&[&Path],to:&Path){
+fn copy(from:&[&Path],to:&Path){
 	let mut options = fs_extra::dir::CopyOptions::new();
 	options.overwrite = true;
 	options.copy_inside = true;
@@ -66,7 +73,7 @@ mod tests{
 	// use super::pattern::Pattern;
 	use super::theme::Theme;
 	use super::desktop::Desktop;
-	use std::collections::HashMap;
+	use std::collections::BTreeMap;
 	
 	// #[test]
 	// fn test_fill_pattern(){
@@ -105,13 +112,13 @@ mod tests{
 		let desktop = desktop.to_desktop();
 		let patterns = desktop.get_patterns();
 		
-		let mut active = HashMap::new();
+		let mut active = BTreeMap::new();
 		for pattern in patterns{
 			active.insert(String::from(pattern.get_name()),true);
 		}
 		active.insert(String::from("wallpaper"),true);
 
-		let mut inverted = HashMap::new();
+		let mut inverted = BTreeMap::new();
 		inverted.insert(String::from("polybar"), true);
 
 		desktop.apply_theme(&theme,&active,&inverted,false);

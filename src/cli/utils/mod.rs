@@ -1,6 +1,6 @@
 use std::env;
 use std::process::{Command, Stdio};
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use log::{error, warn, info};
 use clap::Values;
 
@@ -89,8 +89,8 @@ pub fn get_desktop(desktop_opt: Option<&str>) -> Option<DesktopFile> {
 	}
 }
 
-pub fn get_actived(values_opt: Option<Values>, current_desktop: &DesktopFile, desktop_config: &DesktopConfig) -> HashMap<String,bool> {
-	let mut actived: HashMap<String,bool> = HashMap::new();
+pub fn get_actived(values_opt: Option<Values>, current_desktop: &DesktopFile, desktop_config: &DesktopConfig) -> BTreeMap<String,bool> {
+	let mut actived: BTreeMap<String,bool> = BTreeMap::new();
 	match values_opt {
 		Some(patterns) => {
 			for p in patterns {
@@ -104,8 +104,8 @@ pub fn get_actived(values_opt: Option<Values>, current_desktop: &DesktopFile, de
 	actived
 }
 
-pub fn get_inverted(values_opt: Option<Values>, current_desktop: &DesktopFile, desktop_config: &DesktopConfig) -> HashMap<String,bool> {
-	let mut inverted: HashMap<String,bool> = desktop_config.get_inverted().clone();
+pub fn get_inverted(values_opt: Option<Values>, current_desktop: &DesktopFile, desktop_config: &DesktopConfig) -> BTreeMap<String,bool> {
+	let mut inverted: BTreeMap<String,bool> = desktop_config.get_inverted().clone();
 	if let Some(patterns) = values_opt {
 		for p_str in patterns {
 			if let Some(p) =  Pattern::get_by_name(current_desktop, p_str) {

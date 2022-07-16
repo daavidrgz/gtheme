@@ -1,5 +1,5 @@
 use std::fs::{self, DirEntry,metadata};
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
 use crate::core;
@@ -15,7 +15,7 @@ pub struct Desktop{
 	name: String,
 	path: String,
 	patterns: Vec<PatternFile>,
-	post_scripts: HashMap<String,PostScript>,
+	post_scripts: BTreeMap<String,PostScript>,
 	extras: Vec<PostScript>
 }
 impl Desktop {
@@ -40,7 +40,7 @@ impl Desktop {
 	pub fn get_patterns(&self) -> &Vec<PatternFile> {
 		&self.patterns
 	}
-	pub fn get_post_scripts(&self) -> &HashMap<String,PostScript> {
+	pub fn get_post_scripts(&self) -> &BTreeMap<String,PostScript> {
 		&self.post_scripts
 	}
 	pub fn get_extras(&self) -> &Vec<PostScript> {
@@ -104,7 +104,7 @@ impl Desktop {
 		vec
 	}
 
-	pub fn apply_theme(&self, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>, dry_run: bool) {
+	pub fn apply_theme(&self, theme: &Theme, actived: &BTreeMap<String,bool>, inverted: &BTreeMap<String,bool>, dry_run: bool) {
 		if dry_run {
 			info!("Applying theme in dry-run mode...");
 		}
@@ -156,7 +156,7 @@ impl Desktop {
 		}
 	}
 
-	pub fn apply(&self, previous: &Option<Desktop>, theme: &Theme, actived: &HashMap<String,bool>, inverted: &HashMap<String,bool>, dry_run: bool) {
+	pub fn apply(&self, previous: &Option<Desktop>, theme: &Theme, actived: &BTreeMap<String,bool>, inverted: &BTreeMap<String,bool>, dry_run: bool) {
 		if dry_run {
 			info!("Installing desktop |{}| in dry-run mode...",self.get_name());
 		} else {
@@ -363,13 +363,13 @@ mod tests{
 
 		let patterns = desktop.get_patterns();
 
-		let mut actived = HashMap::new();
+		let mut actived = BTreeMap::new();
 		for pattern in patterns{
 			actived.insert(String::from(pattern.get_name()),true);
 		}
 		actived.insert(String::from("wallpaper"),true);
 
-		let mut inverted = HashMap::new();
+		let mut inverted = BTreeMap::new();
 		inverted.insert(String::from("polybar"), true);
 
 		desktop.apply(&Some(previous),&theme,&actived,&inverted,false);
