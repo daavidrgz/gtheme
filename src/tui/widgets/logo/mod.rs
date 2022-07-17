@@ -1,14 +1,15 @@
 mod logo_content;
 
+use log::error;
 use tui::{
 	widgets::Paragraph,
 	layout::Alignment,
 	style::{Color, Style},
 	text::{Span, Spans},
 };
-use tint::Color as TintColor;
 
 use logo_content::LOGO_CONTENT;
+use crate::utils;
 use crate::core::theme::Theme;
 
 pub struct LogoWidget<'a> {
@@ -17,6 +18,7 @@ pub struct LogoWidget<'a> {
 impl<'a> LogoWidget<'a> {
 	fn get_colors(theme: Option<Theme>) -> Vec<Color> {
 		let default_colors = vec![Color::Red, Color::Green, Color::Yellow, Color::Blue, Color::Magenta, Color::Cyan];
+
 		match theme {
 			None => default_colors,
 			Some(t) => {
@@ -24,9 +26,19 @@ impl<'a> LogoWidget<'a> {
 				let colors_map = t.get_colors();
 				let mut colors: Vec<Color> = vec![];
 				for key in color_keys {
+					if colors_map.get(key) == None {
+						error!("The property |{}| does not exist!", key);
+						return default_colors
+					}
+
 					let hex_color = format!("#{}", colors_map.get(key).unwrap());
-					let (r,g,b) = TintColor::from_hex(&hex_color).to_rgb255();
-					colors.push(Color::Rgb(r,g,b));
+					match utils::hex_to_rgb(&hex_color) {
+						Some((r,g,b)) => colors.push(Color::Rgb(r,g,b)),
+						None => {
+							error!("Invalid hexadcimal color '|{}|' in property |{}|", hex_color, key);
+							return default_colors
+						}
+					}
 				}
 				colors
 			}

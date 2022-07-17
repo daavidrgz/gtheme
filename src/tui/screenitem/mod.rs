@@ -1,5 +1,5 @@
 use std::{process::{Command, Stdio}, env};
-use log::{warn,error,info};
+use log::{warn, error, info};
 use tui::style::Color;
 use std::fs::metadata;
 

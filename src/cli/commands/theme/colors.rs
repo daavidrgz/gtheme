@@ -1,9 +1,9 @@
 use clap::ArgMatches;
 use std::collections::BTreeSet;
 use log::error;
-use tint::Color as TintColor;
 use colored::*;
 
+use crate::utils;
 use crate::core::{
 	theme::Theme,
 	config::GlobalConfig
@@ -32,9 +32,13 @@ pub fn run(matches: &ArgMatches) {
 
 	println!("\n{} {}\n", "THEME".bold().underline().green(), theme.get_name().bold());
 	for (color_key, color_value) in sorted_colors {
-		let color_hex = format!("#{}", &color_value);
-		let (r,g, b) = TintColor::from_hex(&color_hex).to_rgb255();
-		println!("{color_hex}  {}  {}", "██".truecolor(r, g, b), color_key.bold().cyan())
+		let hex_color = format!("#{}", &color_value);
+		match utils::hex_to_rgb(&hex_color) {
+			Some((r,g,b)) => 
+				println!("{hex_color}  {}  {}", "██".truecolor(r, g, b), color_key.bold().cyan()),
+			None => 
+				error!("Invalid hexadcimal color '|{}|' in property |{}|", color_value, color_key)
+		}
 	}
 	println!();
 }
