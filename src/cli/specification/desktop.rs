@@ -49,7 +49,7 @@ pub fn init<'a>(app: Command<'a>, desktops: &'a [&'a str], themes: &'a [&'a str]
 			])
 		)
 		.subcommand(Command::new("remove")
-			.about("Remove desktop")
+			.about("Remove desktops")
 			.arg(Arg::new("desktop")
 				.required(true)
 				.takes_value(true)
