@@ -16,10 +16,10 @@ pub struct LogoWidget<'a> {
 	widget: Paragraph<'a>,
 }
 impl<'a> LogoWidget<'a> {
-	fn get_colors(theme: Option<Theme>) -> Vec<Color> {
+	fn get_colors(theme_opt: Option<Theme>) -> Vec<Color> {
 		let default_colors = vec![Color::Red, Color::Green, Color::Yellow, Color::Blue, Color::Magenta, Color::Cyan];
 
-		match theme {
+		match theme_opt {
 			None => default_colors,
 			Some(t) => {
 				let color_keys = ["red", "green", "yellow", "blue", "magenta", "cyan"];
