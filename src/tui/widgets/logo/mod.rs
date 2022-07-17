@@ -15,9 +15,10 @@ pub struct LogoWidget<'a> {
 	widget: Paragraph<'a>,
 }
 impl<'a> LogoWidget<'a> {
-	pub fn new(theme: Option<Theme>) -> LogoWidget<'a> {
-		let colors = match theme {
-			None => vec![Color::Red, Color::Green, Color::Yellow, Color::Blue, Color::Magenta, Color::Cyan],
+	fn get_colors(theme: Option<Theme>) -> Vec<Color> {
+		let default_colors = vec![Color::Red, Color::Green, Color::Yellow, Color::Blue, Color::Magenta, Color::Cyan];
+		match theme {
+			None => default_colors,
 			Some(t) => {
 				let color_keys = ["red", "green", "yellow", "blue", "magenta", "cyan"];
 				let colors_map = t.get_colors();
@@ -29,16 +30,7 @@ impl<'a> LogoWidget<'a> {
 				}
 				colors
 			}
-		};
-
-		LogoWidget {
-			widget: Paragraph::new(Self::create_logo(colors))
-				.alignment(Alignment::Left)
 		}
-	}
-
-	pub fn get_widget(self) -> Paragraph<'a> {
-		self.widget
 	}
 
 	fn create_logo(colors: Vec<Color>) -> Vec<Spans<'a>> {
@@ -53,5 +45,18 @@ impl<'a> LogoWidget<'a> {
 			spans.push(Spans::from(line_spans));
 		}
 		spans
+	}
+
+	pub fn new(theme: Option<Theme>) -> LogoWidget<'a> {
+		let colors = Self::get_colors(theme);
+
+		LogoWidget {
+			widget: Paragraph::new(Self::create_logo(colors))
+				.alignment(Alignment::Left)
+		}
+	}
+
+	pub fn get_widget(self) -> Paragraph<'a> {
+		self.widget
 	}
 }
