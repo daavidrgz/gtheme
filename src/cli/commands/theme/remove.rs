@@ -11,8 +11,6 @@ pub fn run(matches: &ArgMatches) {
 			Some(t) => t,
 			None => continue
 		};
-
-		println!("{}", theme_file.get_name());
 	}
 
 	completions::generate_completions()
