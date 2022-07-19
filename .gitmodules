@@ -7,3 +7,6 @@
 [submodule "wallpapers"]
 	path = wallpapers
 	url = git@github.com:daavidrgz/gtheme-wallpapers.git
+[submodule "docs"]
+	path = docs
+	url = git@github.com:daavidrgz/gtheme-docs.git
