@@ -251,4 +251,16 @@ impl ThemeFile {
 	pub fn get_path(&self) -> &String {
 		&self.path
 	}
+	pub fn remove(&self) {
+		let path = self.get_path();
+		let theme_name = self.get_name();
+		info!("Removing theme |{theme_name}| from |{path}|");
+
+		if let Err(reason) =  fs_extra::dir::remove(&path) {
+			error!("Could not remove theme |{theme_name}| from |{path}|: |{reason}|");
+			return;
+		}
+
+		info!("Successfully removed desktop |{theme_name}|");
+	}
 }

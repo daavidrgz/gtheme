@@ -323,27 +323,23 @@ impl DesktopFile {
 	// WARNING: After uninstalling a desktop, you SHOULD NOT use a DesktopFile or a Desktop 
 	// that references this desktop. Behaviour is undefined.
 	pub fn remove(&self) {
-		info!("Removing desktop |{}| from |{}|", self.get_name(), self.path);
+		let path = self.get_path();
+		let desktop_name = self.get_name();
+		info!("Removing desktop |{desktop_name}| from |{path}|");
 
 		let global_config = GlobalConfig::new();
-		match global_config.get_current_desktop() {
-			Some(current_desktop) => {
-				let current_desktop_name = current_desktop.get_name();
-				if current_desktop_name == self.get_name() {
-					error!("Cannot uninstall current desktop |({})|",self.get_name());
-					return;
-				}
+		if let Some(current_desktop) = global_config.get_current_desktop() {
+			let current_desktop_name = current_desktop.get_name();
+			if current_desktop_name == desktop_name {
+				error!("Cannot uninstall current desktop |({current_desktop_name})|");
+				return;
 			}
-			None => ()
 		}
-
-		let path = self.get_path();
-
-		match fs_extra::dir::remove(&path) {
-			Ok(_) => (),
-			Err(e) => error!("Could not remove desktop |{}| from |{}|: |{}|",self.get_name(),self.get_path(),e)
+		if let Err(reason) = fs_extra::dir::remove(&path) {
+			error!("Could not remove desktop |{desktop_name}| from |{path}|: |{reason}|");
+			return;
 		}
-		info!("Successfully removed desktop |{}|",self.get_name());
+		info!("Successfully removed desktop |{desktop_name}|");
 	}
 }
 
