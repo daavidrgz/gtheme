@@ -1,0 +1,3 @@
+[submodule "gtheme-themes"]
+	path = gtheme-themes
+	url = git@github.com:daavidrgz/gtheme-themes.git
