@@ -1,3 +1,9 @@
 [submodule "themes"]
 	path = themes
 	url = git@github.com:daavidrgz/gtheme-themes.git
+[submodule "desktops"]
+	path = desktops
+	url = git@github.com:daavidrgz/gtheme-desktops.git
+[submodule "wallpapers"]
+	path = wallpapers
+	url = git@github.com:daavidrgz/gtheme-wallpapers.git
