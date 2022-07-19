@@ -146,13 +146,15 @@ impl Desktop {
 
 	pub fn clean_files(&self) {
 		let config_home = core::expand_path(core::CONFIG_HOME);
-		
+
 		//Remove only config files, not fonts
-		for entry in self.get_config_files() {
-			let path = Path::new(&config_home).join(entry.file_name());
-			if let Err(e) =  fs_extra::dir::remove(&path) {
-				error!("Could not remove directory |{}|: |{}|", path.display(), e);
-			}
+		let to_remove = self.get_config_files()
+			.into_iter()
+			.map(|entry| Path::new(&config_home).join(entry.file_name()))
+			.collect::<Vec<_>>();
+			
+		if let Err(reason) = fs_extra::remove_items(&to_remove){
+			error!("Could not clean desktop file: |{reason}|");
 		}
 	}
 

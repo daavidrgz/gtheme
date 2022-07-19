@@ -1,6 +1,6 @@
 use clap_complete::{generate_to, shells::Shell};
 use std::{fs, io::Result, path::{PathBuf,Path}};
-use log::error;
+use log::{error};
 
 use crate::cli::specification;
 use crate::core::{
@@ -70,7 +70,7 @@ pub fn generate_completion_files(app: &mut clap::Command, completions_dir: &Path
 pub fn generate_completions() {
 	let completions_dir = Path::new(&core::expand_path(core::GTHEME_MISC)).join("completions");
 	let global_config = GlobalConfig::new();
-
+	
 	let themes_owned = get_themes();
 	let desktops_owned = get_desktops();
 	let patterns_owned = get_patterns(&global_config);

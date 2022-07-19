@@ -168,6 +168,7 @@ impl Theme {
 	fn save(&self) {
 		let content = toml::to_string_pretty(self).unwrap();
 		let path = format!("{}/themes/{}.toml",core::expand_path(core::GTHEME_HOME),self.get_name());
+
 		let mut file = match OpenOptions::new().create(true).write(true).truncate(true).open(&path) {
 			Ok(f) => f,
 			Err(e) => {
@@ -182,18 +183,16 @@ impl Theme {
 
 	pub fn new_skeleton(theme_name: &str) {
 		if Self::exists(theme_name) {
-			error!("Theme |{}| already exists", theme_name);
+			error!("Theme |{theme_name}| already exists");
 			return;
 		}
 
 		let theme_path = format!("{}/themes/", core::expand_path(core::GTHEME_HOME));
 
-		match fs::create_dir_all(&theme_path) {
-			Ok(_) => info!("Created directory |{}|", &theme_path),
-			Err(e) => {
-				error!("Error while creating directory |{}|: |{}|", &theme_path, e);
-				return;
-			}
+		if let Err(reason)=  fs::create_dir_all(&theme_path) {
+			error!("Error while creating directory |{theme_path}|: |{reason}|");
+			return;
+			
 		}
 
 		let mut colors = BTreeMap::new();
@@ -256,11 +255,11 @@ impl ThemeFile {
 		let theme_name = self.get_name();
 		info!("Removing theme |{theme_name}| from |{path}|");
 
-		if let Err(reason) =  fs_extra::dir::remove(&path) {
+		if let Err(reason) =  fs_extra::remove_items(&[path]) {
 			error!("Could not remove theme |{theme_name}| from |{path}|: |{reason}|");
 			return;
 		}
 
-		info!("Successfully removed desktop |{theme_name}|");
+		info!("Successfully removed theme |{theme_name}|");
 	}
 }
