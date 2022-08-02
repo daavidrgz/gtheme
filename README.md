@@ -21,7 +21,7 @@ with **+350 different themes** and wallpapers.
 
 You can write some patterns with generic attributes, and then Gtheme will fill those values with the appropriate ones following the selected theme/settings.
 
-The final result you get is that you can change between any desktop of your choice with a **single command**, and change the theme of all applications in a **centralized and automatized way**. Moreover, you can also install desktops from other people who had
+The final result you get is that you can change between any desktop of your choice with a **single command**, and also change the theme of all applications in a **centralized and automatized way**. Moreover, you can also install desktops from other people who had
 already adapted their dotfiles to Gtheme and everything will work just fine.
 
 To sum up, you can try your favourite [Unixporn](https://www.reddit.com/r/unixporn/) ricings 🍚 (if authors port them to Gtheme)
