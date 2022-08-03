@@ -1,12 +1,7 @@
 use crate::core::config::UserConfig;
 use colored::*;
-use log::error;
 
 pub fn run() {
-    if !UserConfig::exists() {
-        error!("|There is no global settings file|, run |gtheme config setup| first");
-        return;
-    }
     let user_settings = UserConfig::new();
 
     let mut sorted_props = vec![];

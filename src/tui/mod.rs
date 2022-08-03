@@ -53,7 +53,7 @@ fn exit_ui(terminal: &mut Terminal<CrosstermBackend<Stdout>>) {
 
     match Command::new("clear").stdout(Stdio::inherit()).output() {
         Ok(_) => (),
-        Err(e) => println!("ERROR Error while clearing terminal: {}", e),
+        Err(e) => println!("ERROR Error while clearing terminal: {e}"),
     };
 }
 
