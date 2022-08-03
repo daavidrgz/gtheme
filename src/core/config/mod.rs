@@ -1,9 +1,9 @@
-mod global;
 mod desktop;
-mod user;
+mod global;
 mod info;
+mod user;
 
-pub use global::GlobalConfig;
 pub use desktop::DesktopConfig;
-pub use user::UserConfig;
+pub use global::GlobalConfig;
 pub use info::DesktopInfo;
+pub use user::UserConfig;

@@ -1,7 +1,7 @@
 use clap::{Arg, Command};
 
 pub fn init(app: Command) -> Command {
-	let app = app.subcommand(Command::new("config")
+    let app = app.subcommand(Command::new("config")
 		.alias("c")
 		.about("Manage user settings")
 		.subcommand_required(true)
@@ -40,5 +40,5 @@ pub fn init(app: Command) -> Command {
 		)
 	);
 
-	return app;
+    return app;
 }

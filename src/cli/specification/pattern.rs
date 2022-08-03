@@ -1,7 +1,7 @@
 use clap::{Arg, Command};
 
 pub fn init<'a>(app: Command<'a>, patterns: &'a [&'a str], desktops: &'a [&'a str]) -> Command<'a> {
-	let app = app.subcommand(Command::new("pattern")
+    let app = app.subcommand(Command::new("pattern")
 		.alias("p")
 		.about("Manage patterns")
 		.subcommand_required(true)
@@ -120,5 +120,5 @@ pub fn init<'a>(app: Command<'a>, patterns: &'a [&'a str], desktops: &'a [&'a st
 		)
 	);
 
-	return app;
+    return app;
 }

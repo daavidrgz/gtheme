@@ -1,7 +1,7 @@
 use clap::{Arg, Command};
 
 pub fn init<'a>(app: Command<'a>, themes: &'a [&'a str], patterns: &'a [&'a str]) -> Command<'a> {
-	let app = app.subcommand(Command::new("theme")
+    let app = app.subcommand(Command::new("theme")
 		.alias("t")
 		.about("Manage themes")
 		.subcommand_required(true)
@@ -93,5 +93,5 @@ pub fn init<'a>(app: Command<'a>, themes: &'a [&'a str], patterns: &'a [&'a str]
 		)
 	);
 
-	return app;
+    return app;
 }

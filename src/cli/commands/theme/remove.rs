@@ -4,16 +4,16 @@ use crate::cli::completions;
 use crate::core::theme::Theme;
 
 pub fn run(matches: &ArgMatches) {
-	let themes = matches.values_of("theme").unwrap();
+    let themes = matches.values_of("theme").unwrap();
 
-	for theme in themes {
-		let theme_file = match Theme::get_by_name(theme) {
-			Some(t) => t,
-			None => continue
-		};
+    for theme in themes {
+        let theme_file = match Theme::get_by_name(theme) {
+            Some(t) => t,
+            None => continue,
+        };
 
-		theme_file.remove();
-	}
+        theme_file.remove();
+    }
 
-	completions::generate_completions()
+    completions::generate_completions()
 }
