@@ -1,5 +1,4 @@
-use crate::cli::utils;
-use crate::core::config::UserConfig;
+use crate::{cli::commands::utils, core::config::UserConfig};
 
 pub fn run() {
     let user_settings = UserConfig::new();

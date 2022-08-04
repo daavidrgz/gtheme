@@ -1,10 +1,10 @@
 use clap::ArgMatches;
 
-use crate::cli::utils::Action;
+use crate::cli::commands::utils::Action;
 
-pub mod edit;
+mod edit;
 pub mod list;
-pub mod manage;
+mod manage;
 
 pub fn handle_subcommands(sub_matches: &ArgMatches) {
     match sub_matches.subcommand() {

@@ -1,6 +1,7 @@
 use clap::ArgMatches;
 
-use crate::cli::{completions, utils};
+use crate::cli::commands::utils;
+use crate::cli::completions;
 use crate::core::desktop::Desktop;
 
 pub fn run(matches: &ArgMatches) {

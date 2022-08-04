@@ -1,11 +1,11 @@
 use clap::ArgMatches;
 
-pub mod apply;
-pub mod colors;
-pub mod edit;
-pub mod list;
-pub mod newskeleton;
-pub mod remove;
+mod apply;
+mod colors;
+mod edit;
+mod list;
+mod newskeleton;
+mod remove;
 
 pub fn handle_subcommands(sub_matches: &ArgMatches) {
     match sub_matches.subcommand() {

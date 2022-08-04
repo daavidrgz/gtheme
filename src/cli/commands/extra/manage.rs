@@ -1,6 +1,6 @@
 use clap::ArgMatches;
 
-use crate::cli::utils;
+use crate::cli::commands::utils;
 use crate::core::{config::DesktopConfig, postscript::PostScript};
 
 pub fn run(matches: &ArgMatches, action: utils::Action) {

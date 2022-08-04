@@ -6,6 +6,7 @@ mod extra;
 mod fav;
 mod pattern;
 mod theme;
+mod utils;
 
 pub fn handle_command(matches: &ArgMatches) {
     match matches.subcommand() {

@@ -1,6 +1,6 @@
 use clap::ArgMatches;
 
-use crate::cli::utils;
+use crate::cli::commands::utils;
 use crate::core::{config::DesktopConfig, theme::Theme};
 
 pub fn run(matches: &ArgMatches) {

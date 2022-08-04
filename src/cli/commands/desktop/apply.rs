@@ -1,7 +1,8 @@
 use clap::ArgMatches;
 use log::{error, warn};
 
-use crate::cli::{completions, utils};
+use crate::cli::commands::utils;
+use crate::cli::completions;
 use crate::core::{
     config::{DesktopConfig, GlobalConfig},
     desktop::Desktop,

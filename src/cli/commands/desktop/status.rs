@@ -1,7 +1,8 @@
 use clap::ArgMatches;
 use colored::*;
 
-use crate::cli::{commands, utils};
+use crate::cli::commands;
+use crate::cli::commands::utils;
 use crate::core::config::{DesktopConfig, GlobalConfig};
 
 pub fn run(matches: &ArgMatches) {

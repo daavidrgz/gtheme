@@ -1,7 +1,7 @@
 use clap::ArgMatches;
 use log::error;
 
-use crate::cli::utils;
+use crate::cli::commands::utils;
 use crate::core::{pattern::Pattern, postscript::PostScript};
 
 pub fn run(matches: &ArgMatches) {
