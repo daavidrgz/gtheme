@@ -1,9 +1,11 @@
-pub mod clilogger;
-pub mod commands;
-pub mod completions;
-pub mod setup;
+
+
+mod clilogger;
+mod commands;
+mod completions;
+mod setup;
 pub mod specification;
-pub mod utils;
+mod utils;
 
 use clap::ArgMatches;
 use log::{Level, LevelFilter};
@@ -29,14 +31,5 @@ fn init_logger(matches: &ArgMatches) {
 
 pub fn start_cli(matches: ArgMatches) {
     init_logger(&matches);
-
-    match matches.subcommand() {
-        Some(("config", sub_matches)) => commands::config::handle_subcommands(sub_matches),
-        Some(("desktop", sub_matches)) => commands::desktop::hanlde_subcommands(sub_matches),
-        Some(("theme", sub_matches)) => commands::theme::handle_subcommands(sub_matches),
-        Some(("pattern", sub_matches)) => commands::pattern::handle_subcommands(sub_matches),
-        Some(("extra", sub_matches)) => commands::extra::handle_subcommands(sub_matches),
-        Some(("fav", sub_matches)) => commands::fav::handle_subcommands(sub_matches),
-        _ => (),
-    }
+    commands::handle_command(&matches);
 }
