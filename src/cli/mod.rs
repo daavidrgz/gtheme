@@ -1,5 +1,3 @@
-
-
 mod clilogger;
 mod commands;
 mod completions;

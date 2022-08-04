@@ -35,3 +35,14 @@ pub fn create_app<'a>(
 
     return app;
 }
+
+const EMPTY_SLICE: &[&str] = &[];
+pub fn create_app_no_suggestions<'a>() -> Command<'a> {
+    create_app(
+        EMPTY_SLICE,
+        EMPTY_SLICE,
+        EMPTY_SLICE,
+        EMPTY_SLICE,
+        EMPTY_SLICE,
+    )
+}
