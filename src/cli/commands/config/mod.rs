@@ -6,7 +6,7 @@ pub mod setup;
 pub mod show;
 pub mod unset;
 
-pub fn hanlde_subcommands(sub_matches: &ArgMatches) {
+pub fn handle_subcommands(sub_matches: &ArgMatches) {
     match sub_matches.subcommand() {
         Some(("show", _)) => show::run(),
         Some(("setup", _)) => setup::run(),

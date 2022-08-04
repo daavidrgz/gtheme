@@ -31,12 +31,12 @@ pub fn start_cli(matches: ArgMatches) {
     init_logger(&matches);
 
     match matches.subcommand() {
-        Some(("config", sub_matches)) => commands::config::hanlde_subcommands(sub_matches),
+        Some(("config", sub_matches)) => commands::config::handle_subcommands(sub_matches),
         Some(("desktop", sub_matches)) => commands::desktop::hanlde_subcommands(sub_matches),
-        Some(("theme", sub_matches)) => commands::theme::hanlde_subcommands(sub_matches),
-        Some(("pattern", sub_matches)) => commands::pattern::hanlde_subcommands(sub_matches),
-        Some(("extra", sub_matches)) => commands::extra::hanlde_subcommands(sub_matches),
-        Some(("fav", sub_matches)) => commands::fav::hanlde_subcommands(sub_matches),
+        Some(("theme", sub_matches)) => commands::theme::handle_subcommands(sub_matches),
+        Some(("pattern", sub_matches)) => commands::pattern::handle_subcommands(sub_matches),
+        Some(("extra", sub_matches)) => commands::extra::handle_subcommands(sub_matches),
+        Some(("fav", sub_matches)) => commands::fav::handle_subcommands(sub_matches),
         _ => (),
     }
 }

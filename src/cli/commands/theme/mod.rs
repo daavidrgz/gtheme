@@ -7,7 +7,7 @@ pub mod list;
 pub mod newskeleton;
 pub mod remove;
 
-pub fn hanlde_subcommands(sub_matches: &ArgMatches) {
+pub fn handle_subcommands(sub_matches: &ArgMatches) {
     match sub_matches.subcommand() {
         Some(("list", sub_sub_matches)) => list::run(sub_sub_matches),
         Some(("colors", sub_sub_matches)) => colors::run(sub_sub_matches),
