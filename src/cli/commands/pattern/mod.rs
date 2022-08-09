@@ -15,6 +15,6 @@ pub fn handle_subcommands(sub_matches: &ArgMatches) {
         Some(("disable", sub_sub_matches)) => manage::run(sub_sub_matches, Action::Disable),
         Some(("toggle", sub_sub_matches)) => manage::run(sub_sub_matches, Action::Toggle),
         Some(("invert", sub_sub_matches)) => invert::run(sub_sub_matches),
-        _ => (),
+        _ =>  unreachable!("Exhausted list of subcommands and subcommand_required prevents `None`"),
     }
 }

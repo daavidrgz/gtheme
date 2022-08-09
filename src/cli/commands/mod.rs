@@ -15,6 +15,6 @@ pub fn handle_command(matches: &ArgMatches) {
         Some(("fav", sub_matches)) => fav::handle_subcommands(sub_matches),
         Some(("pattern", sub_matches)) => pattern::handle_subcommands(sub_matches),
         Some(("theme", sub_matches)) => theme::handle_subcommands(sub_matches),
-        _ => (),
+        _ =>  unreachable!("Exhausted list of subcommands and subcommand_required prevents `None`"),
     }
 }

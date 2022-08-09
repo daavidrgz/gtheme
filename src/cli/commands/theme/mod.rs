@@ -15,6 +15,6 @@ pub fn handle_subcommands(sub_matches: &ArgMatches) {
         Some(("new-skeleton", sub_sub_matches)) => newskeleton::run(sub_sub_matches),
         Some(("remove", sub_sub_matches)) => remove::run(sub_sub_matches),
         Some(("apply", sub_sub_matches)) => apply::run(sub_sub_matches),
-        _ => (),
+        _ =>  unreachable!("Exhausted list of subcommands and subcommand_required prevents `None`"),
     }
 }

@@ -13,6 +13,6 @@ pub fn handle_subcommands(sub_matches: &ArgMatches) {
         Some(("edit", _)) => edit::run(),
         Some(("set", sub_sub_matches)) => set::run(sub_sub_matches),
         Some(("unset", sub_sub_matches)) => unset::run(sub_sub_matches),
-        _ => (),
+        _ =>  unreachable!("Exhausted list of subcommands and subcommand_required prevents `None`"),
     }
 }
