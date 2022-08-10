@@ -1,8 +1,8 @@
 use chrono::Local;
 use colored::*;
 use file_rotate::{compression::Compression, suffix::AppendCount, ContentLimit, FileRotate};
-use log::{Level, Log, Metadata, Record};
-use std::io::Write;
+use log::{Level, LevelFilter, Log, Metadata, Record};
+use std::{fs, io::Write, path::Path};
 
 use crate::core;
 
@@ -21,7 +21,8 @@ impl Log for CliLogger {
                 Level::Error => Color::Red,
                 Level::Warn => Color::Yellow,
                 Level::Info => Color::Blue,
-                _ => Color::Green,
+                Level::Debug => Color::White,
+                _ => unreachable!("Unhandled log level"),
             };
 
             print!("{} • ", record.level().to_string().color(color).bold());
@@ -54,4 +55,25 @@ impl Log for CliLogger {
     }
 
     fn flush(&self) {}
+}
+
+impl CliLogger {
+    pub fn init_logger(verbose_level: u64) {
+        let log_dir = Path::new(&core::expand_path(core::GTHEME_MISC)).join("logs");
+        let _ = fs::create_dir_all(&log_dir);
+
+        log::set_max_level(LevelFilter::Debug);
+        if verbose_level == 0 {
+            static CLI_LOGGER: CliLogger = CliLogger { level: Level::Warn };
+            log::set_logger(&CLI_LOGGER).unwrap();
+        } else if verbose_level == 1 {
+            static CLI_LOGGER: CliLogger = CliLogger { level: Level::Info };
+            log::set_logger(&CLI_LOGGER).unwrap();
+        } else {
+            static CLI_LOGGER: CliLogger = CliLogger {
+                level: Level::Debug,
+            };
+            log::set_logger(&CLI_LOGGER).unwrap();
+        }
+    }
 }

@@ -23,6 +23,7 @@ pub fn create_app<'a>(
                 .short('v')
                 .long("verbose")
                 .global(true)
+                .multiple_occurrences(true)
                 .help("Show more information"),
         );
 

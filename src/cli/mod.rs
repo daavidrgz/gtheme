@@ -3,11 +3,12 @@ mod commands;
 mod completions;
 mod setup;
 pub mod specification;
-mod utils;
 
 use clap::ArgMatches;
 
+use self::clilogger::CliLogger;
+
 pub fn start_cli(matches: ArgMatches) {
-    utils::init_logger(&matches);
+    CliLogger::init_logger(matches.occurrences_of("verbose"));
     commands::handle_command(&matches);
 }
