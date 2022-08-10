@@ -40,5 +40,5 @@ pub fn init(app: Command) -> Command {
 		)
 	);
 
-    return app;
+    app
 }

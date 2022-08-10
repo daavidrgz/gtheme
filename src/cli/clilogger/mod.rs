@@ -36,7 +36,7 @@ impl Log for CliLogger {
                     _ => (),
                 }
             }
-            println!("");
+            println!();
         }
 
         let log_path: String = format!("{}/logs/gtheme.log", core::expand_path(core::GTHEME_MISC));
@@ -48,7 +48,7 @@ impl Log for CliLogger {
         );
 
         let time = Local::now().format("%H:%M:%S %Y-%m-%d");
-        let record_text = record.args().to_string().replace("|", "");
+        let record_text = record.args().to_string().replace('|', "");
         let plain_text = format!("[{}] {}: {}\n", time, record.level(), record_text);
 
         let _ = log_file.write_all(plain_text.as_bytes());

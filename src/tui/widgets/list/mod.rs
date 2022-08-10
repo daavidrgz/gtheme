@@ -110,10 +110,7 @@ impl<'a> ListWidget<'a> {
             .block(
                 Block::default()
                     .borders(Borders::ALL)
-                    .title(Span::styled(
-                        String::from(format!(" {} ", title)),
-                        title_style,
-                    ))
+                    .title(Span::styled(format!(" {} ", title), title_style))
                     .border_style(border_style)
                     .border_type(BorderType::Thick),
             )

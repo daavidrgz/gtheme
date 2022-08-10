@@ -18,7 +18,7 @@ pub fn run(matches: &ArgMatches) {
         return;
     }
 
-    println!("");
+    println!();
     println!("{} {}", "Name:".green().bold(), desktop.get_name());
     println!("{} {}", "Author:".green().bold(), desktop_info.get_author());
     println!(
@@ -36,5 +36,5 @@ pub fn run(matches: &ArgMatches) {
     for dep in dependencies {
         println!(" • {}", dep)
     }
-    println!("");
+    println!();
 }

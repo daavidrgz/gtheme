@@ -34,7 +34,7 @@ pub fn create_app<'a>(
     app = extra::init(app, extras, desktops);
     app = fav::init(app, fav_themes, themes);
 
-    return app;
+    app
 }
 
 const EMPTY_SLICE: &[&str] = &[];

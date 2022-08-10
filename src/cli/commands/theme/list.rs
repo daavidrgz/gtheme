@@ -8,9 +8,9 @@ use crate::core::{
     theme::{Theme, ThemeFile},
 };
 
-fn get_themes(all_themes: &Vec<ThemeFile>, current_theme: &str) -> Vec<String> {
+fn get_themes(all_themes: &[ThemeFile], current_theme: &str) -> Vec<String> {
     let themes = all_themes
-        .into_iter()
+        .iter()
         .map(|t| {
             if t.get_name() == current_theme {
                 format!("{} {} (Active)", "•".green(), t.get_name())
@@ -20,7 +20,7 @@ fn get_themes(all_themes: &Vec<ThemeFile>, current_theme: &str) -> Vec<String> {
         })
         .collect();
 
-    return themes;
+    themes
 }
 
 fn create_grid(items: Vec<String>, options: GridOptions) -> Grid {
@@ -28,7 +28,7 @@ fn create_grid(items: Vec<String>, options: GridOptions) -> Grid {
     for s in items {
         grid.add(s.into());
     }
-    return grid;
+    grid
 }
 
 pub fn run(matches: &ArgMatches) {
@@ -51,7 +51,7 @@ pub fn run(matches: &ArgMatches) {
         return;
     }
 
-    println!("");
+    println!();
     println!("{}\n", "THEMES".bold().underline().yellow());
     let formatted_themes = get_themes(&all_themes, current_theme);
     let options = GridOptions {

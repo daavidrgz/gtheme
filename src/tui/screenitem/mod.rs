@@ -31,8 +31,8 @@ impl ScreenItem {
             ScreenItem::Theme(t) => t.get_name(),
             ScreenItem::Pattern(p) => p.get_name(),
             ScreenItem::Extra(e) => e.get_name(),
-            ScreenItem::Help(s) => &s,
-            ScreenItem::Info(s) => &s,
+            ScreenItem::Help(s) => s,
+            ScreenItem::Info(s) => s,
         }
     }
 
@@ -58,11 +58,11 @@ impl ScreenItem {
                     Some(ps) => return Some(ps.get_path().clone()),
                     None => {
                         info!("The pattern |{}| has no postscript", p.get_name());
-                        return None;
+                        None
                     }
                 }
             }
-            _ => return None,
+            _ => None,
         }
     }
 
@@ -160,8 +160,8 @@ impl ScreenItem {
             }
         };
         match md.is_dir() {
-            true => Self::explore_dir(&path),
-            false => Self::edit_file(&path),
+            true => Self::explore_dir(path),
+            false => Self::edit_file(path),
         }
     }
 
@@ -202,41 +202,35 @@ impl ScreenItem {
                 return;
             }
         };
-        match self {
-            ScreenItem::Theme(t) => {
-                desktop_config.set_default_theme(t);
-                desktop_config.save()
-            }
-            _ => {}
+        if let ScreenItem::Theme(t) = self {
+            desktop_config.set_default_theme(t);
+            desktop_config.save()
         }
     }
 
     pub fn create_desktop_info(&self, stateful_list: &mut StatefulList<ScreenItem>) {
-        match self {
-            ScreenItem::Desktop(d) => {
-                let desktop_info = DesktopInfo::new(&d);
+        if let ScreenItem::Desktop(d) = self {
+            let desktop_info = DesktopInfo::new(d);
 
-                let mut lines: Vec<ScreenItem> = vec![];
-                let name_str = format!("Name: {}", d.get_name());
-                let author_str = format!("Author: {}", desktop_info.get_author());
-                let credits_str = format!("Credits: {}", desktop_info.get_credits());
-                let description_str = format!("Description: {}", desktop_info.get_description());
-                let dependencies_str = format!("Dependencies:");
+            let mut lines: Vec<ScreenItem> = vec![];
+            let name_str = format!("Name: {}", d.get_name());
+            let author_str = format!("Author: {}", desktop_info.get_author());
+            let credits_str = format!("Credits: {}", desktop_info.get_credits());
+            let description_str = format!("Description: {}", desktop_info.get_description());
+            let dependencies_str = "Dependencies:".to_string();
 
-                lines.push(ScreenItem::Info(name_str));
-                lines.push(ScreenItem::Info(author_str));
-                lines.push(ScreenItem::Info(credits_str));
-                lines.push(ScreenItem::Info(description_str));
-                lines.push(ScreenItem::Info(dependencies_str));
+            lines.push(ScreenItem::Info(name_str));
+            lines.push(ScreenItem::Info(author_str));
+            lines.push(ScreenItem::Info(credits_str));
+            lines.push(ScreenItem::Info(description_str));
+            lines.push(ScreenItem::Info(dependencies_str));
 
-                for dependency in desktop_info.get_dependencies() {
-                    lines.push(ScreenItem::Info(format!("- {}", dependency)));
-                }
-                *stateful_list = StatefulList::with_items(lines)
-                    .color(Color::Green)
-                    .title("INFO ")
+            for dependency in desktop_info.get_dependencies() {
+                lines.push(ScreenItem::Info(format!("- {}", dependency)));
             }
-            _ => (),
+            *stateful_list = StatefulList::with_items(lines)
+                .color(Color::Green)
+                .title("INFO ")
         }
     }
 
@@ -248,23 +242,22 @@ impl ScreenItem {
                 return;
             }
         };
-        match self {
-            ScreenItem::Pattern(p) => {
-                desktop_config.toggle_invert_pattern(p);
-                desktop_config.save()
-            }
-            _ => {}
+        if let ScreenItem::Pattern(p) = self {
+            desktop_config.toggle_invert_pattern(p);
+            desktop_config.save()
         }
     }
 
     pub fn is_inverted(&self, desktop_config: &Option<DesktopConfig>) -> bool {
-        match self {
-            ScreenItem::Pattern(p) => match desktop_config {
-                Some(d_config) => *d_config.get_inverted().get(p.get_name()).unwrap_or(&false),
-                None => false,
-            },
-            _ => false,
+        if let ScreenItem::Pattern(pattern) = self {
+            if let Some(desktop_config) = desktop_config {
+                return *desktop_config
+                    .get_inverted()
+                    .get(pattern.get_name())
+                    .unwrap_or(&false);
+            }
         }
+        false
     }
 
     pub fn is_active(
@@ -342,12 +335,12 @@ impl ScreenItem {
     }
 
     fn apply_desktop(next_desktop: &DesktopFile, global_config: &mut GlobalConfig) {
-        let current_desktop = match global_config.get_current_desktop() {
-            Some(d) => Some(d.to_desktop()),
-            None => None,
-        };
+        let current_desktop = global_config
+            .get_current_desktop()
+            .as_ref()
+            .map(|d| d.to_desktop());
 
-        let next_desktop_config = DesktopConfig::new(&next_desktop);
+        let next_desktop_config = DesktopConfig::new(next_desktop);
         let theme = match next_desktop_config.get_default_theme() {
             Some(t) => t.clone(),
             None => {

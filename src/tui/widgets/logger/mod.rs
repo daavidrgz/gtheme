@@ -9,7 +9,7 @@ pub struct LoggerWidget<'a> {
 }
 
 impl<'a> LoggerWidget<'a> {
-    pub fn new() -> Self {
+    pub fn default() -> Self {
         let tui_lg = TuiLoggerWidget::default()
             .style_error(Style::default().fg(Color::Red))
             .style_debug(Style::default().fg(Color::Green))

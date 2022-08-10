@@ -28,7 +28,7 @@ pub fn run(matches: &ArgMatches) {
 
     let desktop_title = format!("({})", desktop.get_name());
 
-    println!("");
+    println!();
     println!(
         "{} {}\n",
         "PATTERNS".bold().underline().magenta(),
@@ -62,17 +62,17 @@ pub fn run(matches: &ArgMatches) {
             None => (),
         }
 
-        println!("");
+        println!();
         if matches.is_present("submodules") {
             list_pattern_submodules("  ".to_string(), p.to_pattern().get_submodules());
         }
     }
-    println!("");
+    println!();
 }
 
 fn list_pattern_submodules(pre: String, submodules_opt: &Option<Vec<PatternFile>>) {
     if let Some(submodules) = submodules_opt {
-        if submodules.len() == 0 {
+        if submodules.is_empty() {
             return;
         }
         for s in submodules.iter().take(submodules.len() - 1) {
@@ -81,6 +81,6 @@ fn list_pattern_submodules(pre: String, submodules_opt: &Option<Vec<PatternFile>
         }
         let last = submodules.last().unwrap().to_pattern();
         println!("{}{} {}", pre.magenta(), "└".magenta(), last.get_name());
-        list_pattern_submodules(pre.clone() + "  ", last.get_submodules());
+        list_pattern_submodules(pre + "  ", last.get_submodules());
     }
 }

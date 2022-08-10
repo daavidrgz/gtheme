@@ -93,5 +93,5 @@ pub fn init<'a>(app: Command<'a>, themes: &'a [&'a str], patterns: &'a [&'a str]
 		)
 	);
 
-    return app;
+    app
 }

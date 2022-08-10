@@ -64,7 +64,7 @@ impl Section {
             format!("{})", length + 1).bold().green(),
             "[None]".bold()
         );
-        println!("");
+        println!();
 
         print!("Write the number (if there's only one, select that): ");
         loop {
@@ -76,16 +76,10 @@ impl Section {
             }
             option_str = option_str.trim().to_string();
 
-            match option_str.parse::<usize>() {
-                Ok(i) => {
-                    if i > 0 && i <= length + 1 {
-                        return match elements.get(i - 1) {
-                            Some((e, _)) => Some(e.clone()),
-                            None => None,
-                        };
-                    }
+            if let Ok(i) = option_str.parse::<usize>() {
+                if i > 0 && i <= length + 1 {
+                    return elements.get(i - 1).map(|(e, _)| e.clone());
                 }
-                Err(_) => (),
             }
             print!("{} try again: ", "Invalid option,".red().bold())
         }
@@ -139,7 +133,7 @@ impl Section {
         }
     }
 
-    fn awk(content: &String, index: usize) -> Vec<String> {
+    fn awk(content: &str, index: usize) -> Vec<String> {
         let mut connected = vec![];
         for line in content.trim().split('\n') {
             let words: Vec<&str> = line.split_whitespace().collect();
@@ -151,7 +145,7 @@ impl Section {
     }
 
     fn pipeline(commands: &Vec<(&str, Vec<&str>)>) -> (Option<i32>, String) {
-        if commands.len() == 0 {
+        if commands.is_empty() {
             return (None, String::new());
         }
 
@@ -322,7 +316,7 @@ impl Section {
         }
 
         fn validate_font(font: &String) -> Result<(), String> {
-            let font_cmd = vec![("fc-list", vec!["-q", &font])];
+            let font_cmd = vec![("fc-list", vec!["-q", font])];
             let (exit_code, _) = Section::pipeline(&font_cmd);
             return match exit_code {
                 Some(c) => {
@@ -401,7 +395,7 @@ impl Setup {
             if current_section == s {
                 println!("{}", format!("• {}", s.to_string()).bold().yellow())
             } else {
-                println!("{}", format!("• {}", s.to_string()))
+                println!("• {}", s.to_string())
             }
         }
     }

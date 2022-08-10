@@ -1,7 +1,6 @@
 use clap::ArgMatches;
 use colored::*;
 use log::error;
-use std::collections::BTreeSet;
 
 use crate::core::{config::GlobalConfig, theme::Theme};
 use crate::utils;
@@ -25,14 +24,13 @@ pub fn run(matches: &ArgMatches) {
     };
 
     let theme = theme_file.to_theme();
-    let sorted_colors = theme.get_colors().into_iter().collect::<BTreeSet<_>>();
 
     println!(
         "\n{} {}\n",
         "THEME".bold().underline().green(),
         theme.get_name().bold()
     );
-    for (color_key, color_value) in sorted_colors {
+    for (color_key, color_value) in theme.get_colors() {
         let hex_color = format!("#{}", &color_value);
         match utils::hex_to_rgb(&hex_color) {
             Some((r, g, b)) => println!(
@@ -40,10 +38,7 @@ pub fn run(matches: &ArgMatches) {
                 "██".truecolor(r, g, b),
                 color_key.bold().cyan()
             ),
-            None => error!(
-                "Invalid hexadcimal color '|{}|' in property |{}|",
-                color_value, color_key
-            ),
+            None => error!("Invalid hexadcimal color '|{color_value}|' in property |{color_key}|"),
         }
     }
     println!();

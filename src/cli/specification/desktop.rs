@@ -135,5 +135,5 @@ pub fn init<'a>(app: Command<'a>, desktops: &'a [&'a str], themes: &'a [&'a str]
 		)
 	);
 
-    return app;
+    app
 }

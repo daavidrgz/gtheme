@@ -8,7 +8,7 @@ pub struct OptionsWidget<'a> {
     widget: Block<'a>,
 }
 impl<'a> OptionsWidget<'a> {
-    pub fn new() -> Self {
+    pub fn default() -> Self {
         let title_style = Style::default()
             .fg(Color::Yellow)
             .add_modifier(Modifier::BOLD);

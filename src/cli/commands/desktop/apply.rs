@@ -18,10 +18,10 @@ pub fn run(matches: &ArgMatches) {
     };
 
     let mut global_config = GlobalConfig::new();
-    let previous_desktop = match global_config.get_current_desktop() {
-        Some(d) => Some(d.to_desktop()),
-        None => None,
-    };
+    let previous_desktop = global_config
+        .get_current_desktop()
+        .as_ref()
+        .map(|d| d.to_desktop());
 
     let desktop_config = DesktopConfig::new(&current_desktop);
 

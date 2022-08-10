@@ -35,10 +35,10 @@ pub struct AppState {
 }
 impl AppState {
     pub fn default(global_config: GlobalConfig) -> AppState {
-        let desktop_config = match global_config.get_current_desktop() {
-            Some(desktop_file) => Some(DesktopConfig::new(&desktop_file)),
-            None => None,
-        };
+        let desktop_config = global_config
+            .get_current_desktop()
+            .as_ref()
+            .map(DesktopConfig::new);
 
         AppState {
             current_screen: Screen::Desktop,
@@ -95,7 +95,7 @@ impl AppState {
     ) -> HashMap<Screen, [StatefulList<ScreenItem>; 2]> {
         let desktops = Desktop::get_desktops()
             .into_iter()
-            .map(|d| ScreenItem::Desktop(d))
+            .map(ScreenItem::Desktop)
             .collect();
         let desktops_list = StatefulList::with_items(desktops)
             .color(Color::Cyan)
@@ -106,7 +106,7 @@ impl AppState {
             None => vec![],
             Some(desktop) => Pattern::get_patterns(desktop)
                 .into_iter()
-                .map(|p| ScreenItem::Pattern(p))
+                .map(ScreenItem::Pattern)
                 .collect(),
         };
         let patterns_list = StatefulList::with_items(patterns)
@@ -120,7 +120,7 @@ impl AppState {
 
         let fav_themes = global_config
             .get_fav_themes()
-            .into_iter()
+            .iter()
             .map(|f| ScreenItem::Theme(f.clone()))
             .collect();
         let fav_themes_list = StatefulList::with_items(fav_themes)
@@ -130,7 +130,7 @@ impl AppState {
 
         let themes = Theme::get_themes()
             .into_iter()
-            .map(|t| ScreenItem::Theme(t))
+            .map(ScreenItem::Theme)
             .collect();
         let themes_list = StatefulList::with_items(themes)
             .color(Color::Green)
@@ -166,7 +166,7 @@ impl AppState {
             None => vec![],
             Some(desktop) => PostScript::get_extras(desktop)
                 .into_iter()
-                .map(|e| ScreenItem::Extra(e))
+                .map(ScreenItem::Extra)
                 .collect(),
         };
 

@@ -56,7 +56,7 @@ impl<'a> LogoWidget<'a> {
     fn create_logo(colors: Vec<Color>) -> Vec<Spans<'a>> {
         let mut spans: Vec<Spans> = vec![];
         for l in LOGO_CONTENT.lines() {
-            let words: Vec<&str> = l.split('$').collect();
+            let words = l.split('$');
 
             let mut line_spans: Vec<Span> = vec![];
             for (idx, word) in words.into_iter().enumerate() {

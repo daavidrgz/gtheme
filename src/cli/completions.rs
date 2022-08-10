@@ -12,26 +12,24 @@ use crate::core::{
     theme::Theme,
 };
 
+fn escape_string(s: String) -> String {
+    s.replace('(', "\\(").replace(')', "\\)")
+}
+
 pub fn get_themes() -> Vec<String> {
     let themes = Theme::get_themes();
     let themes = themes
         .into_iter()
         .map(|t| t.get_name().to_string().to_lowercase());
-    let themes = themes
-        .map(|s| s.replace("(", "\\(").replace(")", "\\)"))
-        .collect();
-    themes
+    themes.map(escape_string).collect()
 }
 
 pub fn get_fav_themes(global_config: &GlobalConfig) -> Vec<String> {
     let fav_themes = global_config.get_fav_themes();
     let fav_themes = fav_themes
-        .into_iter()
+        .iter()
         .map(|t| t.get_name().to_string().to_lowercase());
-    let fav_themes = fav_themes
-        .map(|s| s.replace("(", "\\(").replace(")", "\\)"))
-        .collect();
-    fav_themes
+    fav_themes.map(escape_string).collect()
 }
 
 pub fn get_desktops() -> Vec<String> {
@@ -39,10 +37,7 @@ pub fn get_desktops() -> Vec<String> {
     let desktops = desktops
         .into_iter()
         .map(|d| d.get_name().to_string().to_lowercase());
-    let desktops = desktops
-        .map(|s| s.replace("(", "\\(").replace(")", "\\)"))
-        .collect();
-    desktops
+    desktops.map(escape_string).collect()
 }
 
 pub fn get_patterns(global_config: &GlobalConfig) -> Vec<String> {
@@ -54,10 +49,7 @@ pub fn get_patterns(global_config: &GlobalConfig) -> Vec<String> {
     let patterns = patterns
         .into_iter()
         .map(|p| p.get_name().to_string().to_lowercase());
-    let patterns = patterns
-        .map(|s| s.replace("(", "\\(").replace(")", "\\)"))
-        .collect();
-    patterns
+    patterns.map(escape_string).collect()
 }
 
 pub fn get_extras(global_config: &GlobalConfig) -> Vec<String> {
@@ -69,10 +61,7 @@ pub fn get_extras(global_config: &GlobalConfig) -> Vec<String> {
     let extras = extras
         .into_iter()
         .map(|p| p.get_name().to_string().to_lowercase());
-    let extras = extras
-        .map(|s| s.replace("(", "\\(").replace(")", "\\)"))
-        .collect();
-    extras
+    extras.map(escape_string).collect()
 }
 
 pub fn generate_completion_files(app: &mut clap::Command, completions_dir: &PathBuf) -> Result<()> {
@@ -112,6 +101,5 @@ pub fn generate_completions() {
     }
     if let Err(e) = generate_completion_files(&mut app, &completions_dir) {
         error!("Error while generating completion scripts: |{e}|");
-        return;
     }
 }

@@ -78,10 +78,7 @@ pub fn edit_file(path: &str) {
 
 pub fn get_desktop(desktop_opt: Option<&str>) -> Option<DesktopFile> {
     match desktop_opt {
-        Some(desktop_str) => match Desktop::get_by_name(desktop_str) {
-            Some(d) => Some(d),
-            None => None,
-        },
+        Some(desktop_str) => Desktop::get_by_name(desktop_str),
         None => {
             let global_config = GlobalConfig::new();
             match global_config.get_current_desktop() {
@@ -104,7 +101,7 @@ pub fn get_actived(
     match values_opt {
         Some(patterns) => {
             for p in patterns {
-                if let Some(_) = Pattern::get_by_name(current_desktop, p) {
+                if Pattern::get_by_name(current_desktop, p).is_some() {
                     actived.insert(p.to_string(), true);
                 };
             }

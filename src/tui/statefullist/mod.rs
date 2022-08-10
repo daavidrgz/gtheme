@@ -119,10 +119,7 @@ impl<T> StatefulList<T> {
     }
 
     pub fn is_selected(&self) -> bool {
-        match self.state.selected() {
-            Some(_) => true,
-            None => false,
-        }
+        self.state.selected().is_some()
     }
 
     pub fn next(&mut self) {
@@ -170,42 +167,32 @@ impl<T> StatefulList<T> {
 
 impl StatefulList<ScreenItem> {
     pub fn add_fav(&mut self, item: &ScreenItem, global_config: &mut GlobalConfig) {
-        match item {
-            ScreenItem::Theme(t) => {
-                global_config.add_fav_theme(t);
-                global_config.save();
+        if let ScreenItem::Theme(t) = item {
+            global_config.add_fav_theme(t);
+            global_config.save();
 
-                let theme_name = t.get_name().to_lowercase();
-                match self
-                    .items
-                    .binary_search_by(|item| item.get_name().to_lowercase().cmp(&theme_name))
-                {
-                    Ok(_) => (),
-                    Err(pos) => self.items.insert(pos, item.clone()),
-                }
+            let theme_name = t.get_name().to_lowercase();
+            if let Err(pos) = self
+                .items
+                .binary_search_by(|item| item.get_name().to_lowercase().cmp(&theme_name))
+            {
+                self.items.insert(pos, item.clone())
             }
-            _ => (),
         }
     }
 
     pub fn remove_fav(&mut self, item: &ScreenItem, global_config: &mut GlobalConfig) {
-        match item {
-            ScreenItem::Theme(t) => {
-                global_config.remove_fav_theme(t);
-                global_config.save();
+        if let ScreenItem::Theme(theme) = item {
+            global_config.remove_fav_theme(theme);
+            global_config.save();
 
-                let theme_name = t.get_name().to_lowercase();
-                match self
-                    .items
-                    .binary_search_by(|item| item.get_name().to_lowercase().cmp(&theme_name))
-                {
-                    Ok(pos) => {
-                        self.items.remove(pos);
-                    }
-                    Err(_) => (),
-                }
+            let theme_name = theme.get_name().to_lowercase();
+            if let Ok(pos) = self
+                .items
+                .binary_search_by(|item| item.get_name().to_lowercase().cmp(&theme_name))
+            {
+                self.items.remove(pos);
             }
-            _ => (),
         }
     }
 }

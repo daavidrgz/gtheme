@@ -6,7 +6,7 @@ use crate::cli::commands::utils;
 use crate::core::config::{DesktopConfig, GlobalConfig};
 
 pub fn run(matches: &ArgMatches) {
-    println!("");
+    println!();
     let global_config = GlobalConfig::new();
     let desktop = match utils::get_desktop(matches.value_of("desktop")) {
         Some(d) => d,
@@ -39,7 +39,7 @@ pub fn run(matches: &ArgMatches) {
             println!("{} {}", "• Current theme:".yellow().bold(), current_theme)
         }
     }
-    println!("");
+    println!();
 
     commands::pattern::list::run(matches);
     commands::extra::list::run(matches);

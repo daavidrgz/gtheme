@@ -120,5 +120,5 @@ pub fn init<'a>(app: Command<'a>, patterns: &'a [&'a str], desktops: &'a [&'a st
 		)
 	);
 
-    return app;
+    app
 }

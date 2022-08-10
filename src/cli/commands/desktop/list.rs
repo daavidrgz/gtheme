@@ -18,7 +18,7 @@ pub fn run(matches: &ArgMatches) {
         return;
     }
 
-    println!("");
+    println!();
     println!("{}\n", "DESKTOPS".bold().underline().cyan());
 
     for d in all_desktops {
@@ -32,5 +32,5 @@ pub fn run(matches: &ArgMatches) {
             println!("{} {}", "•".cyan(), d.get_name());
         };
     }
-    println!("");
+    println!();
 }

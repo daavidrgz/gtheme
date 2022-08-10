@@ -79,7 +79,7 @@ fn manage_input(
 ) -> bool {
     let (current_screen, screens, current_popup, popups, show_log, global_config, desktop_config) =
         app_state.get_mut_state();
-    let lists = screens.get_mut(&current_screen).unwrap();
+    let lists = screens.get_mut(current_screen).unwrap();
 
     let current_list = if lists[LEFT_LIST].is_selected() {
         LEFT_LIST
@@ -274,7 +274,7 @@ fn draw_ui(f: &mut Frame<CrosstermBackend<io::Stdout>>, app_state: &mut AppState
     let (current_screen, screens, current_popup, popups, show_log, global_config, desktop_config) =
         app_state.get_mut_state();
 
-    let lists = screens.get_mut(&current_screen).unwrap();
+    let lists = screens.get_mut(current_screen).unwrap();
 
     // Colors preview
     let current_list = if lists[LEFT_LIST].is_selected() {
@@ -283,10 +283,7 @@ fn draw_ui(f: &mut Frame<CrosstermBackend<io::Stdout>>, app_state: &mut AppState
         RIGHT_LIST
     };
     let theme = match lists[current_list].get_selected() {
-        Some(item) => match item.get_theme() {
-            Some(t) => Some(t.to_theme()),
-            None => None,
-        },
+        Some(item) => item.get_theme().map(|theme| theme.to_theme()),
         None => None,
     };
 
@@ -308,8 +305,7 @@ fn draw_ui(f: &mut Frame<CrosstermBackend<io::Stdout>>, app_state: &mut AppState
 
     let mut main_container = f.size();
     main_container.y = logo_container.height + v_padding;
-    main_container.height =
-        main_container.height - (logo_container.height + logs_height + v_padding);
+    main_container.height -= logo_container.height + logs_height + v_padding;
 
     let mut logs_container = f.size();
     logs_container.height = logs_height;
@@ -345,7 +341,7 @@ fn draw_ui(f: &mut Frame<CrosstermBackend<io::Stdout>>, app_state: &mut AppState
     );
 
     // Logger
-    let logger_widget = LoggerWidget::new();
+    let logger_widget = LoggerWidget::default();
     f.render_widget(logger_widget.get_widget(), logs_container);
 
     // Help popup

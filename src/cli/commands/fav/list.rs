@@ -19,7 +19,7 @@ pub fn run(matches: &ArgMatches) {
         return;
     }
 
-    println!("");
+    println!();
     println!("{}\n", "FAV THEMES".bold().underline().blue());
 
     for t in fav_themes {
@@ -33,5 +33,5 @@ pub fn run(matches: &ArgMatches) {
             println!("{} {}", "•".blue(), t.get_name());
         };
     }
-    println!("");
+    println!();
 }

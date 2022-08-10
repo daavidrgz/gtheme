@@ -58,5 +58,5 @@ pub fn init<'a>(app: Command<'a>, fav_themes: &'a [&'a str], themes: &'a [&'a st
             ),
     );
 
-    return app;
+    app
 }

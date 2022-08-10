@@ -14,5 +14,5 @@ pub fn run() {
     for (key, value) in sorted_props {
         println!("{} = '{}'", key.bold().green(), value)
     }
-    println!("");
+    println!();
 }
