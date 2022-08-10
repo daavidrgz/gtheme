@@ -1,5 +1,3 @@
-mod logo_content;
-
 use log::error;
 use tui::{
     layout::Alignment,
@@ -10,8 +8,8 @@ use tui::{
 
 use crate::core::theme::Theme;
 use crate::utils;
-use logo_content::LOGO_CONTENT;
 
+const LOGO_CONTENT: &str = include_str!("logo.txt");
 pub struct LogoWidget<'a> {
     widget: Paragraph<'a>,
 }
