@@ -227,6 +227,7 @@ impl Desktop {
             self.clean_files(); // Clean files to install
         }
 
+        // TODO: dont get config files. Just use utils copy_dir_all and copy all .config folder.
         let config_files = self.get_config_files();
         info!("Copying config files to |{}|...", &config_home);
         for entry in config_files {

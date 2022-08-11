@@ -87,7 +87,7 @@ impl Pattern {
             }
         }
         let output_path = match re.captures(&content) {
-            Some(capture) => Some(core::expand_path(&capture[1])),
+            Some(capture) => Some(core::utils::expand_path(&capture[1])),
             None => None,
         };
         content = String::from(re.replace(&content, ""));
@@ -244,7 +244,7 @@ impl Pattern {
 
         // Return if dry_run mode. i.e, dont write content to output path
         if !dry_run {
-            if let Err(e) = core::write_content_to(&filled_content, Path::new(output_path)) {
+            if let Err(e) = core::utils::write_content_to(&filled_content, Path::new(output_path)) {
                 error!("Could not create |{}|: |{}|", output_path, e);
             }
         }
