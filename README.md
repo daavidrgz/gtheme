@@ -54,7 +54,7 @@ Wiki is now on construction, so it is not hosted yet.
 
 ## How to build wiki docs
 
-```
+```console
 cargo install mdbook
 git clone git@github.com:daavidrgz/gtheme-docs.git
 cd gtheme-docs
