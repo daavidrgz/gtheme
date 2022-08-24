@@ -48,8 +48,23 @@ cd gtheme
 <summary><strong>&nbsp;W I K I &nbsp;🪧</strong></summary>
 <br>
 
-Refer to the [Wiki →](https://github.com/daavidrgz/gtheme/wiki) to know how to apply desktops, themes, and create your own ones.
+Refer to the WIKI to know how to apply desktops, themes, and create your own ones.
 
+Wiki is now on construction, so it is not hosted yet. 
+
+## How to build wiki docs
+
+```
+cargo install mdbook
+git clone git@github.com:daavidrgz/gtheme-docs.git
+cd gtheme-docs
+mdbook serve
+# Now you have wiki running on http://localhost:3000
+
+# Alternatively, you could build html files and then open static files with browser
+mdbook build
+<browser> book/index.html
+```
 </details>
 
 #
