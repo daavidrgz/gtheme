@@ -62,8 +62,8 @@ mdbook serve
 # Now you have wiki running on http://localhost:3000
 
 # Alternatively, you could build html files and then open static files with browser
-mdbook build
-<browser> book/index.html
+#mdbook build
+#<browser> book/index.html
 ```
 </details>
 
