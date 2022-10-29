@@ -40,7 +40,7 @@ function copyFiles() {
 		git clone --depth=1 $REPO /tmp/$REPO_NAME || echo -e "${R}->${W} There was an error while cloning ${W_B}$FOLDER/${W}!\n"
 		rm -rf /tmp/$REPO_NAME/.git /tmp/$REPO_NAME/desktops.gif &>/dev/null
 		echo -e "${G}->${W} Transfering ${W_B}$REPO_NAME${W}..."
-		mv /tmp/$REPO_NAME $GTHEME_PATH/$FOLDER &>/dev/null || echo -e "${R}->${W} There was an error while copying ${W_B}$FOLDER/${W}!\n"
+		rm -rf $GTHEME_PATH/$FOLDER &>/dev/null && mv /tmp/$REPO_NAME $GTHEME_PATH/$FOLDER || echo -e "${R}->${W} There was an error while transfering ${W_B}$FOLDER/${W}!\n"
 	done
 	mv $GTHEME_PATH/themes/themes/* $GTHEME_PATH/themes
 	mv $GTHEME_PATH/themes/global_config.json $GTHEME_PATH
