@@ -449,7 +449,7 @@ pub fn start() {
             Err(e) => println!("\n{} {}\n", "Error while reading input: ".red().bold(), e),
         }
         match option_str.trim() {
-            "y" | "yes" => (),
+            "y" | "yes" | "Y" | "YES" => (),
             _ => return,
         }
     }
