@@ -266,7 +266,9 @@ impl Pattern {
         extended_keys.extend(theme.get_colors().clone().into_iter());
         extended_keys.insert("theme-name".to_string(), theme.get_name().to_string());
 
-        let re = Regex::new(r"<\[((?:\w|-)+)?(?:\|(.*))?\]>").unwrap();
+        // default values can have alfanumeric,underscore and spaces. Keys can only have alfanumeric,underscores and -
+        let re = Regex::new(r"<\[((?:\w|-)+)?(?:\|([\w  -]*))?\]>").unwrap();
+        
 
         let result =re.replace_all(pattern_content,|captured:&Captures|{
 
