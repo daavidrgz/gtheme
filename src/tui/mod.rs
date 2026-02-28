@@ -293,18 +293,12 @@ fn draw_ui(f: &mut Frame<CrosstermBackend<io::Stdout>>, app_state: &mut AppState
     // •• Layout definition ••
 
     let v_padding = 2;
-    let h_padding = 4;
 
     let logs_height = if *show_log { 10 } else { 0 };
 
     let mut logo_container = f.size();
     logo_container.height = 6;
     // logo_container.width = logo_container.width / 2;
-
-    let mut options_container = f.size();
-    options_container.height = 6;
-    options_container.width = options_container.width / 2 - h_padding;
-    options_container.x = logo_container.width + h_padding;
 
     let mut main_container = f.size();
     main_container.y = logo_container.height + v_padding;
@@ -327,9 +321,6 @@ fn draw_ui(f: &mut Frame<CrosstermBackend<io::Stdout>>, app_state: &mut AppState
     f.render_widget(logo_widget.get_widget(), logo_container);
 
     // Options
-    // let options_widget = OptionsWidget::new();
-    // f.render_widget(options_widget.get_widget(), options_container);
-
     // Lists
     let widget_list_1 = ListWidget::new(&lists[0], global_config, desktop_config);
     let widget_list_2 = ListWidget::new(&lists[1], global_config, desktop_config);

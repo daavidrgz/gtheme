@@ -12,11 +12,7 @@ pub fn run(matches: &ArgMatches) {
 
     let desktop_info = DesktopInfo::new(&desktop);
     let dependencies = desktop_info.get_dependencies();
-
-    if matches.is_present("deps") {
-        dependencies.iter().for_each(|dep| println!("{}", dep));
-        return;
-    }
+    let optional_dependencies = desktop_info.get_optional_dependencies();
 
     println!("");
     println!("{} {}", "Name:".green().bold(), desktop.get_name());
@@ -31,10 +27,18 @@ pub fn run(matches: &ArgMatches) {
         "Description:".green().bold(),
         desktop_info.get_description()
     );
-    println!("{}", "Dependecies:".green().bold());
 
+    println!("{}", "Dependencies:".green().bold());
     for dep in dependencies {
         println!(" • {}", dep)
     }
+
+    if !optional_dependencies.is_empty() {
+        println!("{}", "Optional Dependencies:".green().bold());
+        for dep in optional_dependencies {
+            println!(" • {}", dep)
+        }
+    }
+
     println!("");
 }

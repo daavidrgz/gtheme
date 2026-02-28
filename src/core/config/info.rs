@@ -11,6 +11,8 @@ pub struct DesktopInfo {
     author: String,
     description: String,
     dependencies: Vec<String>,
+    #[serde(default)]
+    optional_dependencies: Vec<String>,
     credits: String,
 }
 
@@ -80,6 +82,9 @@ impl DesktopInfo {
     pub fn get_dependencies(&self) -> &Vec<String> {
         &self.dependencies
     }
+    pub fn get_optional_dependencies(&self) -> &Vec<String> {
+        &self.optional_dependencies
+    }
     pub fn get_credits(&self) -> &String {
         &self.credits
     }
@@ -91,6 +96,7 @@ impl Default for DesktopInfo {
             author: "".to_string(),
             description: "".to_string(),
             dependencies: vec![],
+            optional_dependencies: vec![],
             credits: "".to_string(),
         }
     }

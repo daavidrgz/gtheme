@@ -25,14 +25,23 @@ pub fn init<'a>(app: Command<'a>, desktops: &'a [&'a str], themes: &'a [&'a str]
 		)
 		.subcommand(Command::new("info")
 			.about("Show desktop information")
+			.arg(Arg::new("desktop")
+				.takes_value(true)
+				.possible_values(desktops)
+				.help("Desktop to show info")
+			)
+		)
+		.subcommand(Command::new("deps")
+			.about("List desktop dependencies")
 			.args([
 				Arg::new("desktop")
 					.takes_value(true)
 					.possible_values(desktops)
-					.help("Desktop to show info"),
-				Arg::new("deps")
-					.long("deps")
-					.help("Show only desktop dependencies")
+					.help("Desktop to list dependencies for"),
+				Arg::new("all")
+					.short('a')
+					.long("all")
+					.help("Include optional dependencies"),
 			])
 		)
 		.subcommand(Command::new("add")
