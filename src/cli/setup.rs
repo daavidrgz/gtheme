@@ -305,6 +305,19 @@ impl Section {
         );
     }
 
+    fn validate_dpi(dpi: &String) -> Result<(), String> {
+        match dpi.parse::<u32>() {
+            Ok(value) => {
+                if value >= 48 && value <= 384 {
+                    Ok(())
+                } else {
+                    Err(format!("DPI must be between 48 and 384"))
+                }
+            }
+            Err(e) => Err(format!("Invalid DPI value: {}", e)),
+        }
+    }
+
     fn others_section(user_config: &mut UserConfig) {
         fn validate_program(program: &String) -> Result<(), String> {
             let program_cmd = vec![("which", vec![program.as_str()])];
@@ -375,6 +388,13 @@ impl Section {
             "Select default font size",
             validate_font_size,
             "default-font-size",
+            user_config,
+        );
+
+        Self::type_question(
+            "Select DPI (common values: 96, 120, 144, 168, 192)",
+            Section::validate_dpi,
+            "dpi",
             user_config,
         );
     }
@@ -455,4 +475,35 @@ pub fn start() {
     }
 
     Setup::new().run_setup();
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Section;
+
+    #[test]
+    fn test_validate_dpi_valid_values() {
+        // Test common valid DPI values
+        assert!(Section::validate_dpi(&"96".to_string()).is_ok());
+        assert!(Section::validate_dpi(&"120".to_string()).is_ok());
+        assert!(Section::validate_dpi(&"144".to_string()).is_ok());
+        assert!(Section::validate_dpi(&"168".to_string()).is_ok());
+        assert!(Section::validate_dpi(&"192".to_string()).is_ok());
+        assert!(Section::validate_dpi(&"48".to_string()).is_ok());
+        assert!(Section::validate_dpi(&"384".to_string()).is_ok());
+    }
+
+    #[test]
+    fn test_validate_dpi_invalid_values() {
+        // Out of range values
+        assert!(Section::validate_dpi(&"47".to_string()).is_err());
+        assert!(Section::validate_dpi(&"385".to_string()).is_err());
+        assert!(Section::validate_dpi(&"0".to_string()).is_err());
+        assert!(Section::validate_dpi(&"1000".to_string()).is_err());
+
+        // Invalid formats
+        assert!(Section::validate_dpi(&"abc".to_string()).is_err());
+        assert!(Section::validate_dpi(&"-100".to_string()).is_err());
+        assert!(Section::validate_dpi(&"96.5".to_string()).is_err());
+    }
 }
