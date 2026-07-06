@@ -10,3 +10,6 @@
 [submodule "docs"]
 	path = docs
 	url = git@github.com:daavidrgz/gtheme-docs.git
+[submodule "web"]
+	path = web
+	url = git@github.com:daavidrgz/gtheme-web.git
